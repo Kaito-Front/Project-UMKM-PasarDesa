@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import ProductCard from '../../components/common/ProductCard';
 import LurikDivider from '../../components/common/LurikDivider';
+import { KECAMATAN_LOCATIONS } from '../../data/mockData';
 import { 
-  Store, 
   MapPin, 
   Phone, 
   Clock, 
@@ -22,18 +22,19 @@ export default function ShopDetailPage() {
 
   const shop = shops.find(s => s.id === selectedShopId) || shops[0];
   const shopProducts = products.filter(p => p.shopId === shop.id && !p.isHidden);
+  const fallbackLocation = KECAMATAN_LOCATIONS[shop.kecamatan] || KECAMATAN_LOCATIONS['Kecamatan Sumedang Utara'];
+  const shopLat = shop.lat ?? fallbackLocation.lat;
+  const shopLng = shop.lng ?? fallbackLocation.lng;
 
-  const [activeTab, setActiveTab] = useState('produk'); // 'produk', 'tentang', 'lokasi'
-
+  const [activeTab, setActiveTab] = useState('produk');
   const handleOpenMap = () => {
-    const query = encodeURIComponent(`${shop.name}, ${shop.address}`);
-    window.open(`https://maps.google.com/?q=${query}`, '_blank');
+    window.open(`https://www.google.com/maps?q=${shopLat},${shopLng}`, '_blank', 'noopener,noreferrer');
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       
-      {/* Back button */}
+      
       <button
         onClick={() => setWebPage('catalog')}
         className="inline-flex items-center gap-2 text-xs font-semibold text-desa-primary hover:text-desa-accent transition-colors"
@@ -42,10 +43,10 @@ export default function ShopDetailPage() {
         <span>Kembali ke Katalog</span>
       </button>
 
-      {/* Shop Hero Banner & Profile Header */}
+      
       <div className="bg-white rounded-3xl overflow-hidden border border-desa-primary/20 shadow-md">
         
-        {/* Cover / Sampul Toko */}
+        
         <div className="h-48 sm:h-64 lg:h-80 relative overflow-hidden bg-desa-primary/10">
           <img
             src={shop.banner}
@@ -54,15 +55,15 @@ export default function ShopDetailPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
           
-          {/* Traditional Lurik bottom line on cover */}
+          
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-[repeating-linear-gradient(90deg,#EFEDE6_0px,#EFEDE6_2px,transparent_2px,transparent_8px)] opacity-80" />
         </div>
 
-        {/* Profile Info Overlay Box */}
+        
         <div className="p-6 sm:p-8 pt-0 relative">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 -mt-16 sm:-mt-20">
             
-            {/* Avatar & Title */}
+            
             <div className="flex flex-col sm:flex-row items-start sm:items-end gap-5">
               <img
                 src={shop.avatar}
@@ -95,7 +96,7 @@ export default function ShopDetailPage() {
               </div>
             </div>
 
-            {/* Quick Actions (Chat Toko, WhatsApp & Map) */}
+            
             <div className="flex flex-wrap items-center gap-2.5">
               <button
                 onClick={() => openChatWithShop(shop.id)}
@@ -116,7 +117,7 @@ export default function ShopDetailPage() {
 
           </div>
 
-          {/* Quick Metrics Bar */}
+          
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-6 border-t border-desa-primary/10 text-center">
             <div className="p-3 rounded-xl bg-desa-bg/60">
               <span className="text-[11px] text-desa-text/60 block">Rating Toko</span>
@@ -153,7 +154,7 @@ export default function ShopDetailPage() {
 
       </div>
 
-      {/* Navigation Tabs */}
+      
       <div className="flex border-b border-desa-primary/20 gap-6 text-sm font-semibold">
         <button
           onClick={() => setActiveTab('produk')}
@@ -185,14 +186,14 @@ export default function ShopDetailPage() {
             activeTab === 'lokasi' ? 'text-desa-accent' : 'text-desa-text/60 hover:text-desa-primary'
           }`}
         >
-          Lokasi & Kontak Dusun
+          Lokasi & Kontak Kecamatan
           {activeTab === 'lokasi' && (
             <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-desa-accent rounded-full" />
           )}
         </button>
       </div>
 
-      {/* TAB 1: DAFTAR PRODUK */}
+      
       {activeTab === 'produk' && (
         <div className="space-y-6">
           {shopProducts.length > 0 ? (
@@ -211,7 +212,7 @@ export default function ShopDetailPage() {
         </div>
       )}
 
-      {/* TAB 2: TENTANG USAHA */}
+      
       {activeTab === 'tentang' && (
         <div className="bg-white rounded-2xl p-8 border border-desa-primary/15 shadow-sm space-y-6">
           <div>
@@ -244,13 +245,13 @@ export default function ShopDetailPage() {
         </div>
       )}
 
-      {/* TAB 3: LOKASI & PETA EMBED MOCK */}
+      
       {activeTab === 'lokasi' && (
         <div className="bg-white rounded-2xl p-8 border border-desa-primary/15 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h3 className="font-heading font-bold text-xl text-desa-primary">
-                Peta Lokasi Toko di Dusun
+                Peta lokasi toko di kecamatan
               </h3>
               <p className="text-xs text-desa-text/60 mt-0.5">
                 {shop.address}
@@ -265,29 +266,15 @@ export default function ShopDetailPage() {
             </button>
           </div>
 
-          {/* Interactive Map Mockup Representation */}
-          <div className="relative h-72 sm:h-96 rounded-2xl overflow-hidden bg-desa-bg border border-desa-primary/20 flex items-center justify-center">
-            {/* Map styling grid mock */}
-            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#3A3A38_1px,transparent_1px)] [background-size:16px_16px]" />
-            
-            {/* Road lines simulation */}
-            <div className="absolute w-full h-8 bg-desa-primary/15 top-1/2 -translate-y-1/2 rotate-6" />
-            <div className="absolute h-full w-8 bg-desa-primary/15 left-1/3 rotate-12" />
-
-            {/* Pin Center */}
-            <div className="relative z-10 flex flex-col items-center animate-bounce">
-              <div className="p-3 rounded-full bg-desa-accent text-white shadow-xl">
-                <Store className="w-6 h-6" />
-              </div>
-              <div className="bg-white px-3 py-1.5 rounded-lg shadow-lg border border-desa-primary/20 text-xs font-bold text-desa-primary mt-2 flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5 text-desa-accent" />
-                <span>{shop.name}</span>
-              </div>
-            </div>
-
-            <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg text-[10px] text-desa-text/70 border border-desa-primary/10">
-              Peta Sentra UMKM Dusun Terintegrasi
-            </div>
+          
+          <div className="relative h-72 overflow-hidden rounded-2xl border border-desa-primary/20 bg-desa-bg sm:h-96">
+            <iframe
+              title={`Peta ${shop.name} di ${shop.kecamatan}`}
+              src={`https://maps.google.com/maps?q=${shopLat},${shopLng}&hl=id&z=15&output=embed`}
+              className="h-full w-full border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
         </div>
       )}

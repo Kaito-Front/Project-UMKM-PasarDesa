@@ -55,23 +55,15 @@ export default function MobileAppView() {
     triggerNotification,
     setCurrentView 
   } = useApp();
-
-  // Mobile App Internal States
   const [deviceFrameMode, setDeviceFrameMode] = useState(true); // phone frame vs full screen
   const [splashActive, setSplashActive] = useState(true);
   const [onboardingOpen, setOnboardingOpen] = useState(false);
   const [onboardingSlide, setOnboardingSlide] = useState(0);
-
-  // Role: 'pembeli' or 'penjual'
   const [mobileRole, setMobileRole] = useState(currentUser?.role === 'penjual' ? 'penjual' : 'pembeli');
   const [currentTab, setCurrentTab] = useState('beranda');
-  
-  // Mobile search & detail modals
   const [mobileSearch, setMobileSearch] = useState('');
   const [mobileSelectedProduct, setMobileSelectedProduct] = useState(null);
   const [orderStatusFilter, setOrderStatusFilter] = useState('semua');
-  
-  // Add Product Modal for Seller
   const [showAddProductModal, setShowAddProductModal] = useState(false);
   const [newProdName, setNewProdName] = useState('');
   const [newProdPrice, setNewProdPrice] = useState('');
@@ -79,16 +71,12 @@ export default function MobileAppView() {
   const [newProdCategory, setNewProdCategory] = useState('kuliner');
   const [newProdDesc, setNewProdDesc] = useState('');
   const [newProdImage, setNewProdImage] = useState('https://images.unsplash.com/photo-1606744888344-498238f01769?auto=format&fit=crop&w=600&q=80');
-
-  // Auto dismiss splash after 1.5s
   useEffect(() => {
     const timer = setTimeout(() => {
       setSplashActive(false);
     }, 1500);
     return () => clearTimeout(timer);
   }, []);
-
-  // Filtered products for buyer
   const displayedProducts = products.filter(p => {
     if (p.isHidden) return false;
     if (mobileSearch.trim()) {
@@ -96,12 +84,8 @@ export default function MobileAppView() {
     }
     return true;
   });
-
-  // Seller specific products
   const sellerProducts = products.filter(p => p.shopId === (currentUser?.shopId || 'toko-1'));
   const sellerOrders = orders.filter(o => o.shopName === (currentUser?.shopName || 'Griya Tenun Lurik Lestari'));
-
-  // Handle Add Product submit
   const handleAddProductSubmit = (e) => {
     e.preventDefault();
     if (!newProdName || !newProdPrice) return;
@@ -124,14 +108,14 @@ export default function MobileAppView() {
   return (
     <div className="py-6 px-4 bg-desa-bg/70 min-h-screen relative z-10 isolate">
       
-      {/* Top Controller Bar */}
-      <div className="max-w-md mx-auto mb-4 bg-white p-3 rounded-2xl border border-desa-primary/20 shadow-sm flex items-center justify-between text-xs">
+      
+      <div className="max-w-md mx-auto mb-4 bg-white p-3 rounded-2xl border border-desa-primary/20 shadow-sm flex flex-wrap items-center justify-between gap-2 text-xs">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-desa-highlight animate-ping" />
           <span className="font-bold text-desa-primary">PWA Simulasi Mobile</span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => setSplashActive(true)}
@@ -159,14 +143,14 @@ export default function MobileAppView() {
         </div>
       </div>
 
-      {/* Main Mobile App Frame */}
+      
       <div className={`mx-auto transition-all ${
         deviceFrameMode 
           ? 'max-w-[390px] h-[810px] rounded-[48px] border-[8px] border-desa-primary shadow-2xl relative overflow-hidden bg-desa-bg flex flex-col' 
           : 'max-w-md min-h-[700px] rounded-3xl border border-desa-primary/20 shadow-xl relative overflow-hidden bg-desa-bg flex flex-col'
       }`}>
 
-        {/* Realistic Phone Notch & Status Bar */}
+        
         {deviceFrameMode && (
           <div className="bg-desa-bg px-6 pt-3 pb-1 flex items-center justify-between text-[11px] font-semibold text-desa-primary shrink-0 select-none border-b border-black/5">
             <span>09:41</span>
@@ -180,7 +164,7 @@ export default function MobileAppView() {
           </div>
         )}
 
-        {/* 2.1 SPLASH SCREEN OVERLAY WITH ANIMATEPRESENCE */}
+        
         <AnimatePresence>
           {splashActive && (
             <motion.div 
@@ -226,7 +210,7 @@ export default function MobileAppView() {
           )}
         </AnimatePresence>
 
-        {/* 2.1 ONBOARDING SLIDES MODAL WITH SPRING PHYSICS */}
+        
         <AnimatePresence>
           {onboardingOpen && (
             <motion.div 
@@ -260,13 +244,13 @@ export default function MobileAppView() {
                     {onboardingSlide === 2 && 'Buka Toko UMKM Anda'}
                   </h3>
                   <p className="text-xs text-desa-text/70 mt-1 leading-relaxed">
-                    {onboardingSlide === 0 && 'Dapatkan kain lurik, olahan pangan, dan kerajinan tangan langsung dari pengrajin dusun.'}
+                    {onboardingSlide === 0 && 'Dapatkan kain lurik, olahan pangan, dan kerajinan langsung dari UMKM Kabupaten Sumedang.'}
                     {onboardingSlide === 1 && 'Konfirmasi pesanan dan pembayaran langsung ke nomor WhatsApp penjual dengan aman.'}
                     {onboardingSlide === 2 && 'Warga desa dapat beralih ke mode penjual untuk memajang produk dan menerima pesanan masuk.'}
                   </p>
                 </div>
 
-                {/* Dots Indicator */}
+                
                 <div className="flex justify-center gap-1.5">
                   {[0, 1, 2].map((s) => (
                     <motion.span
@@ -309,7 +293,7 @@ export default function MobileAppView() {
           )}
         </AnimatePresence>
 
-        {/* PUSH NOTIFICATION TOAST */}
+        
         <AnimatePresence>
           {pushNotification && (
             <motion.div 
@@ -327,7 +311,7 @@ export default function MobileAppView() {
           )}
         </AnimatePresence>
 
-        {/* TOP MOBILE APP HEADER */}
+        
         <div className="px-4 py-2.5 bg-white border-b border-desa-primary/10 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-desa-primary text-desa-light flex items-center justify-center font-bold text-xs">
@@ -341,7 +325,7 @@ export default function MobileAppView() {
             </div>
           </div>
 
-          {/* Role Switcher Pill with Tap Motion */}
+          
           <motion.button
             whileTap={{ scale: 0.92 }}
             onClick={() => {
@@ -357,14 +341,14 @@ export default function MobileAppView() {
           </motion.button>
         </div>
 
-        {/* MOBILE CONTENT AREA (Scrollable) */}
+        
         <div className="flex-1 overflow-y-auto no-scrollbar pb-24">
 
-          {/* MODE PEMBELI */}
+          
           {mobileRole === 'pembeli' && (
             <div className="p-4 space-y-4">
               
-              {/* TAB 1: BERANDA PEMBELI */}
+              
               {currentTab === 'beranda' && (
                 <>
                   <div className="relative">
@@ -378,7 +362,7 @@ export default function MobileAppView() {
                     />
                   </div>
 
-                  {/* Banner Pengumuman Desa */}
+                  
                   {announcements.length > 0 && (
                     <motion.div 
                       initial={{ scale: 0.96, opacity: 0 }}
@@ -402,7 +386,7 @@ export default function MobileAppView() {
                     </motion.div>
                   )}
 
-                  {/* Kategori scroll horizontal */}
+                  
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-bold text-desa-primary">Kategori Produk</span>
@@ -429,7 +413,7 @@ export default function MobileAppView() {
                     </div>
                   </div>
 
-                  {/* List Produk Rekomendasi (2 Kolom) */}
+                  
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-bold text-desa-primary">Rekomendasi Warga</span>
@@ -488,7 +472,7 @@ export default function MobileAppView() {
                 </>
               )}
 
-              {/* TAB 2: KATALOG */}
+              
               {currentTab === 'katalog' && (
                 <div className="space-y-3">
                   <h3 className="font-heading font-bold text-base text-desa-primary">
@@ -506,7 +490,7 @@ export default function MobileAppView() {
                           <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover" />
                         </div>
                         <div>
-                          <span className="text-[10px] text-desa-accent font-semibold block">{p.dusun}</span>
+                          <span className="text-[10px] text-desa-accent font-semibold block">{p.kecamatan}</span>
                           <h4 className="font-medium text-xs text-desa-primary line-clamp-1">{p.name}</h4>
                           <span className="font-heading font-bold text-xs text-desa-primary block mt-1">
                             Rp {p.price.toLocaleString('id-ID')}
@@ -518,7 +502,7 @@ export default function MobileAppView() {
                 </div>
               )}
 
-              {/* TAB 3: PESANAN SAYA */}
+              
               {currentTab === 'pesanan' && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -528,7 +512,7 @@ export default function MobileAppView() {
                     <span className="text-xs text-desa-text/60">{orders.length} Transaksi</span>
                   </div>
 
-                  {/* Filter Status Pills */}
+                  
                   <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
                     {['semua', 'diproses', 'dikirim', 'selesai'].map((st) => (
                       <button
@@ -545,7 +529,7 @@ export default function MobileAppView() {
                     ))}
                   </div>
 
-                  {/* Orders List */}
+                  
                   <div className="space-y-3">
                     {orders
                       .filter(o => orderStatusFilter === 'semua' || o.status === orderStatusFilter)
@@ -584,7 +568,7 @@ export default function MobileAppView() {
                 </div>
               )}
 
-              {/* TAB 4: AKUN PEMBELI */}
+              
               {currentTab === 'akun' && (
                 <div className="space-y-4">
                   <div className="bg-white rounded-2xl p-4 border border-desa-primary/15 flex items-center gap-3 shadow-sm">
@@ -641,11 +625,11 @@ export default function MobileAppView() {
             </div>
           )}
 
-          {/* MODE PENJUAL */}
+          
           {mobileRole === 'penjual' && (
             <div className="p-4 space-y-4">
               
-              {/* TAB 1: DASHBOARD TOKO */}
+              
               {currentTab === 'dashboard' && (
                 <>
                   <div className="flex items-center justify-between">
@@ -653,14 +637,14 @@ export default function MobileAppView() {
                       <h3 className="font-heading font-bold text-base text-desa-primary">
                         {currentUser?.shopName || 'Griya Tenun Lurik Lestari'}
                       </h3>
-                      <p className="text-[11px] text-desa-text/60">Kelola operasional UMKM dusun</p>
+                      <p className="text-[11px] text-desa-text/60">Kelola operasional UMKM Sumedang</p>
                     </div>
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-desa-highlight text-white">
                       Toko Aktif
                     </span>
                   </div>
 
-                  {/* Ringkasan Singkat KPI */}
+                  
                   <div className="grid grid-cols-3 gap-2">
                     <motion.div whileHover={{ y: -2 }} className="bg-white p-3 rounded-2xl border border-desa-primary/15 text-center shadow-xs">
                       <span className="text-[10px] text-desa-text/60 block">Pesanan Baru</span>
@@ -684,7 +668,7 @@ export default function MobileAppView() {
                     </motion.div>
                   </div>
 
-                  {/* Quick Action: Tambah Produk Banner */}
+                  
                   <div className="p-4 bg-desa-primary text-desa-light rounded-2xl flex items-center justify-between shadow-md relative overflow-hidden">
                     <div className="absolute inset-0 bg-lurik-stripes-light opacity-15" />
                     <div className="relative z-10">
@@ -701,7 +685,7 @@ export default function MobileAppView() {
                     </motion.button>
                   </div>
 
-                  {/* List Pesanan Masuk Cepat */}
+                  
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-bold text-desa-primary">Pesanan Masuk Terbaru</span>
@@ -725,7 +709,7 @@ export default function MobileAppView() {
                 </>
               )}
 
-              {/* TAB 2: KELOLA PRODUK */}
+              
               {currentTab === 'produk' && (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -754,7 +738,7 @@ export default function MobileAppView() {
                           </div>
                         </div>
 
-                        {/* Toggle Aktif / Nonaktif */}
+                        
                         <div className="flex flex-col items-end gap-1.5">
                           <button
                             onClick={() => toggleProductStatus(p.id)}
@@ -777,7 +761,7 @@ export default function MobileAppView() {
                 </div>
               )}
 
-              {/* TAB 3: KELOLA PESANAN PENJUAL */}
+              
               {currentTab === 'pesanan' && (
                 <div className="space-y-3">
                   <h3 className="font-heading font-bold text-base text-desa-primary">
@@ -837,7 +821,7 @@ export default function MobileAppView() {
                 </div>
               )}
 
-              {/* TAB 4: TOKO SAYA */}
+              
               {currentTab === 'toko' && (
                 <div className="space-y-4">
                   <div className="bg-white rounded-2xl p-4 border border-desa-primary/15 text-xs space-y-3 shadow-xs">
@@ -849,14 +833,14 @@ export default function MobileAppView() {
                         <h4 className="font-heading font-bold text-sm text-desa-primary">
                           {currentUser?.shopName || 'Griya Tenun Lurik Lestari'}
                         </h4>
-                        <p className="text-desa-text/60">{currentUser?.dusun}</p>
+                        <p className="text-desa-text/60">{currentUser?.kecamatan}</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="bg-white rounded-2xl border border-desa-primary/15 divide-y divide-desa-primary/10 text-xs font-medium shadow-xs">
                     <button 
-                      onClick={() => alert('Kelola Data Toko: Anda dapat mengubah jam buka, alamat dusun, dan rekening pencairan di Balai Desa.')}
+                      onClick={() => alert('Kelola Data Toko: Anda dapat mengubah jam buka, alamat toko di Sumedang, dan rekening pencairan.')}
                       className="w-full p-3.5 flex items-center justify-between hover:bg-black/5"
                     >
                       <span>Kelola Data Toko</span>
@@ -881,7 +865,7 @@ export default function MobileAppView() {
 
         </div>
 
-        {/* FLOATING ACTION BUTTONS */}
+        
         {mobileRole === 'pembeli' && (
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -910,7 +894,7 @@ export default function MobileAppView() {
           </motion.button>
         )}
 
-        {/* BOTTOM NAVIGATION BAR WITH SPRING INDICATOR */}
+        
         <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-desa-primary/15 py-2 px-3 flex items-center justify-around z-30 select-none">
           {mobileRole === 'pembeli' ? (
             <>
@@ -1023,7 +1007,7 @@ export default function MobileAppView() {
           )}
         </div>
 
-        {/* MOBILE PRODUCT DETAIL SHEET WITH SPRING MOTION */}
+        
         <AnimatePresence>
           {mobileSelectedProduct && (
             <motion.div 
@@ -1083,7 +1067,7 @@ export default function MobileAppView() {
           )}
         </AnimatePresence>
 
-        {/* SELLER ADD PRODUCT MODAL SHEET WITH SPRING MOTION */}
+        
         <AnimatePresence>
           {showAddProductModal && (
             <motion.div 
@@ -1116,7 +1100,7 @@ export default function MobileAppView() {
                   <input
                     type="text"
                     required
-                    placeholder="Contoh: Kripik Singkong Balado Dusun"
+                    placeholder="Contoh: Keripik Singkong Sumedang"
                     value={newProdName}
                     onChange={(e) => setNewProdName(e.target.value)}
                     className="w-full p-2 bg-desa-bg/50 border border-desa-primary/20 rounded-xl text-xs"

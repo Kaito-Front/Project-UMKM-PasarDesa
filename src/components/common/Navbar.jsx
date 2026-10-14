@@ -38,12 +38,12 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-desa-bg/95 backdrop-blur-md shadow-sm border-b border-desa-primary/10 transition-all">
-      {/* Top Banner & Multi-view Switcher with Dynamic Layout Motion */}
+      
       <div className="bg-desa-primary text-desa-light text-xs py-1.5 px-4 relative overflow-hidden">
-        {/* Subtle shimmering beam across top banner */}
+        
         <div className="absolute inset-0 bg-lurik-stripes-light opacity-10" />
 
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 relative z-10">
+        <div className="max-w-screen-2xl mx-auto flex flex-wrap items-center justify-between gap-2 relative z-10">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-desa-highlight animate-ping" />
             <span className="font-medium tracking-wide">
@@ -51,7 +51,7 @@ export default function Navbar() {
             </span>
           </div>
 
-          {/* Mode Switcher Pill with Spring Layout Transition */}
+          
           <div className="flex items-center gap-1 bg-black/40 p-1 rounded-full border border-white/20 text-xs">
             <span className="text-[10px] uppercase font-bold tracking-wider px-2 text-desa-light/60 hidden sm:inline">
               Mode Pratinjau:
@@ -116,11 +116,11 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Main Navbar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
-          {/* Logo & Tagline with Spring Hover */}
+          
           <motion.div 
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
@@ -129,7 +129,7 @@ export default function Navbar() {
           >
             <div className="w-12 h-12 rounded-2xl bg-desa-primary text-desa-light flex items-center justify-center shadow-lg relative overflow-hidden group-hover:bg-[#2B2B2A] transition-colors">
               <Store className="w-6 h-6 text-desa-light relative z-10" />
-              {/* Animated subtle lurik watermark */}
+              
               <div className="absolute inset-0 bg-lurik-stripes-light opacity-30 animate-pulse" />
             </div>
             <div>
@@ -147,8 +147,8 @@ export default function Navbar() {
             </div>
           </motion.div>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8">
+          
+          <nav className="hidden xl:flex items-center gap-8">
             <button
               onClick={() => handleNavClick('home')}
               className={`font-medium text-sm transition-colors py-1 relative ${
@@ -213,9 +213,9 @@ export default function Navbar() {
             </button>
           </nav>
 
-          {/* Right Action Buttons with Interactive Motions */}
-          <div className="hidden md:flex items-center gap-2.5">
-            {/* Tombol Keranjang Belanja dengan Badge Counter */}
+          
+          <div className="hidden xl:flex items-center gap-2.5">
+            
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -232,7 +232,7 @@ export default function Navbar() {
               )}
             </motion.button>
 
-            {/* Tombol Buka Chatbox */}
+            
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -255,7 +255,7 @@ export default function Navbar() {
               <span>Aplikasi PWA</span>
             </motion.button>
 
-            {/* Auth / Account Button */}
+            
             {isLoggedIn ? (
               <motion.button
                 whileHover={{ scale: 1.03 }}
@@ -279,8 +279,8 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile Actions: Cart + Hamburger */}
-          <div className="flex md:hidden items-center gap-2">
+          
+          <div className="flex xl:hidden items-center gap-2">
             <button
               onClick={() => setIsCartOpen(true)}
               className="relative p-2 text-desa-primary hover:bg-desa-primary/10 rounded-lg transition-colors"
@@ -305,17 +305,17 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Decorative Traditional Lurik Line below navbar */}
+      
       <LurikDivider variant="dark" height="2px" />
 
-      {/* Mobile Drawer Navigation with AnimatePresence */}
+      
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div 
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-desa-bg border-b border-desa-primary/20 px-4 pt-3 pb-6 space-y-3 overflow-hidden"
+            className="xl:hidden bg-desa-bg border-b border-desa-primary/20 px-4 pt-3 pb-6 space-y-3 overflow-hidden"
           >
             <div className="flex flex-col gap-2">
               <button

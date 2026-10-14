@@ -1,21 +1,20 @@
-// Mock Data Komprehensif - Pasar Desa (Palet Lurik Kontemporer)
 
 export const CATEGORIES = [
   { id: 'semua', name: 'Semua Kategori', icon: 'LayoutGrid', count: 48 },
   { id: 'kuliner', name: 'Kuliner Tradisional', icon: 'Utensils', count: 18, desc: 'Oleh-oleh, jajanan pasar, bumbu racik desa' },
-  { id: 'pertanian', name: 'Hasil Tani & Kebun', icon: 'Sprout', count: 12, desc: 'Sayur organik, buah segar, beras organik dusun' },
+  { id: 'pertanian', name: 'Hasil Tani & Kebun', icon: 'Sprout', count: 12, desc: 'Sayur segar dan hasil tani dari Sumedang' },
   { id: 'kerajinan', name: 'Kerajinan Tangan', icon: 'Palette', count: 9, desc: 'Anyaman bambu, tenun lurik, gerabah tanah liat' },
   { id: 'kesehatan', name: 'Herbal & Jamu', icon: 'HeartPulse', count: 5, desc: 'Madu hutan murni, jamu rempah, minyak kelapa dara' },
   { id: 'fashion', name: 'Pakaian & Tenun', icon: 'Shirt', count: 4, desc: 'Kain lurik ATBM, selendang tenun, kaos desa' },
 ];
 
-export const DUSUN_LIST = [
-  'Semua Dusun',
-  'Dusun Krajan (Pusat)',
-  'Dusun Sumberagung',
-  'Dusun Wates Kulon',
-  'Dusun Karangrejo',
-  'Dusun Sukamaju',
+export const KECAMATAN_LIST = [
+  'Semua Kecamatan',
+  'Kecamatan Sumedang Utara',
+  'Kecamatan Sumedang Selatan',
+  'Kecamatan Cimalaka',
+  'Kecamatan Tanjungsari',
+  'Kecamatan Jatinangor',
 ];
 
 export const SHOPS = [
@@ -25,8 +24,10 @@ export const SHOPS = [
     owner: 'Ibu Sumarsih',
     category: 'Kerajinan Tangan & Fashion',
     categorySlug: 'kerajinan',
-    dusun: 'Dusun Krajan (Pusat)',
-    address: 'Jl. Pemuda No. 14, RT 02/RW 01, Dusun Krajan',
+    kecamatan: 'Kecamatan Sumedang Utara',
+    address: 'Kecamatan Sumedang Utara, Kabupaten Sumedang, Jawa Barat',
+    lat: -6.8293742,
+    lng: 107.9116474,
     phone: '081234567890',
     whatsapp: '6281234567890',
     rating: 4.9,
@@ -41,12 +42,14 @@ export const SHOPS = [
   },
   {
     id: 'toko-2',
-    name: 'Kripik Tempe Bu Darmi Dusun Wates',
+    name: 'Kripik Tempe Bu Darmi',
     owner: 'Ibu Darmiyah',
     category: 'Kuliner Tradisional',
     categorySlug: 'kuliner',
-    dusun: 'Dusun Wates Kulon',
-    address: 'Gang Salak 3, RT 04/RW 02, Dusun Wates Kulon',
+    kecamatan: 'Kecamatan Cimalaka',
+    address: 'Kecamatan Cimalaka, Kabupaten Sumedang, Jawa Barat',
+    lat: -6.8025187,
+    lng: 107.9413323,
     phone: '085678901234',
     whatsapp: '6285678901234',
     rating: 4.8,
@@ -61,12 +64,14 @@ export const SHOPS = [
   },
   {
     id: 'toko-3',
-    name: 'Madu Hutan & Gula Aren Karangrejo',
+    name: 'Madu Hutan & Gula Aren Tanjungsari',
     owner: 'Pak Joko Sukirno',
     category: 'Herbal & Jamu',
     categorySlug: 'kesehatan',
-    dusun: 'Dusun Karangrejo',
-    address: 'Kawasan Lereng Hutan RT 01/RW 05, Dusun Karangrejo',
+    kecamatan: 'Kecamatan Tanjungsari',
+    address: 'Kecamatan Tanjungsari, Kabupaten Sumedang, Jawa Barat',
+    lat: -6.8440915,
+    lng: 107.7932319,
     phone: '087812345678',
     whatsapp: '6287812345678',
     rating: 5.0,
@@ -85,8 +90,10 @@ export const SHOPS = [
     owner: 'Pak Marto Wiyono',
     category: 'Kerajinan Tangan',
     categorySlug: 'kerajinan',
-    dusun: 'Dusun Sumberagung',
-    address: 'Jl. Rawa Indah No. 7, RT 03/RW 01, Dusun Sumberagung',
+    kecamatan: 'Kecamatan Sumedang Selatan',
+    address: 'Kecamatan Sumedang Selatan, Kabupaten Sumedang, Jawa Barat',
+    lat: -6.859079,
+    lng: 107.9202767,
     phone: '082198765432',
     whatsapp: '6282198765432',
     rating: 4.7,
@@ -101,12 +108,14 @@ export const SHOPS = [
   },
   {
     id: 'toko-5',
-    name: 'Kopi Robusta Lereng Sukamaju',
+    name: 'Kopi Robusta Jatinangor',
     owner: 'Mas Hendra Pratama',
     category: 'Kuliner Tradisional',
     categorySlug: 'kuliner',
-    dusun: 'Dusun Sukamaju',
-    address: 'Ketinggian 800 MDPL, RT 02/RW 04, Dusun Sukamaju',
+    kecamatan: 'Kecamatan Jatinangor',
+    address: 'Kecamatan Jatinangor, Kabupaten Sumedang, Jawa Barat',
+    lat: -6.9370992,
+    lng: 107.7813872,
     phone: '089533344455',
     whatsapp: '6289533344455',
     rating: 4.9,
@@ -131,7 +140,7 @@ export const PRODUCTS = [
     categoryName: 'Kerajinan Tangan',
     shopId: 'toko-1',
     shopName: 'Griya Tenun Lurik Lestari',
-    dusun: 'Dusun Krajan (Pusat)',
+    kecamatan: 'Kecamatan Sumedang Utara',
     stock: 24,
     rating: 4.9,
     sold: 168,
@@ -163,8 +172,8 @@ export const PRODUCTS = [
     category: 'kuliner',
     categoryName: 'Kuliner Tradisional',
     shopId: 'toko-2',
-    shopName: 'Kripik Tempe Bu Darmi Dusun Wates',
-    dusun: 'Dusun Wates Kulon',
+    shopName: 'Kripik Tempe Bu Darmi',
+    kecamatan: 'Kecamatan Cimalaka',
     stock: 50,
     rating: 4.8,
     sold: 430,
@@ -194,8 +203,8 @@ export const PRODUCTS = [
     category: 'kesehatan',
     categoryName: 'Herbal & Jamu',
     shopId: 'toko-3',
-    shopName: 'Madu Hutan & Gula Aren Karangrejo',
-    dusun: 'Dusun Karangrejo',
+    shopName: 'Madu Hutan & Gula Aren Tanjungsari',
+    kecamatan: 'Kecamatan Tanjungsari',
     stock: 18,
     rating: 5.0,
     sold: 89,
@@ -206,7 +215,7 @@ export const PRODUCTS = [
       'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80'
     ],
-    description: 'Madu murni hasil panen kelompok petani lebah liar di tepian hutan desa Karangrejo. Tanpa proses pasteurisasi berlebih sehingga kandungan enzim dan probiotik alaminya tetap terjaga utuh.',
+    description: 'Madu murni hasil panen kelompok petani lebah di wilayah Tanjungsari. Tanpa proses pasteurisasi berlebih sehingga kandungan alaminya tetap terjaga.',
     specifications: [
       { label: 'Volume', value: '500 ml' },
       { label: 'Kemasan', value: 'Botol kaca food-grade' },
@@ -225,7 +234,7 @@ export const PRODUCTS = [
     categoryName: 'Kerajinan Tangan',
     shopId: 'toko-4',
     shopName: 'Anyaman Bambu Berkah Jaya',
-    dusun: 'Dusun Sumberagung',
+    kecamatan: 'Kecamatan Sumedang Selatan',
     stock: 35,
     rating: 4.7,
     sold: 120,
@@ -252,8 +261,8 @@ export const PRODUCTS = [
     category: 'kuliner',
     categoryName: 'Kuliner Tradisional',
     shopId: 'toko-5',
-    shopName: 'Kopi Robusta Lereng Sukamaju',
-    dusun: 'Dusun Sukamaju',
+    shopName: 'Kopi Robusta Jatinangor',
+    kecamatan: 'Kecamatan Jatinangor',
     stock: 40,
     rating: 4.9,
     sold: 95,
@@ -266,7 +275,7 @@ export const PRODUCTS = [
     ],
     description: 'Biji kopi pilihan yang dipetik hanya saat matang merah di perkebunan rakyat lereng desa. Profil sangrai medium roast menghasilkan cita rasa karamel dengan aftertaste rempah cengkeh yang hangat.',
     specifications: [
-      { label: 'Varietas', value: 'Robusta Java Highland' },
+      { label: 'Varietas', value: 'Robusta Sumedang' },
       { label: 'Proses', value: 'Natural Process' },
       { label: 'Gilingan', value: 'Medium (cocok untuk tubruk & pour over)' }
     ],
@@ -280,8 +289,8 @@ export const PRODUCTS = [
     category: 'kuliner',
     categoryName: 'Kuliner Tradisional',
     shopId: 'toko-3',
-    shopName: 'Madu Hutan & Gula Aren Karangrejo',
-    dusun: 'Dusun Karangrejo',
+    shopName: 'Madu Hutan & Gula Aren Tanjungsari',
+    kecamatan: 'Kecamatan Tanjungsari',
     stock: 30,
     rating: 4.9,
     sold: 145,
@@ -306,7 +315,7 @@ export const VILLAGE_STATS = {
   totalProducts: 186,
   totalTransactions: 1240,
   turnoverThisMonth: 84500000,
-  activeVillages: 5,
+  activeKecamatan: 5,
 };
 
 export const MOCK_ORDERS = [
@@ -320,8 +329,8 @@ export const MOCK_ORDERS = [
     qty: 1,
     status: 'diproses', // diproses, dikirim, selesai, ditolak
     shopName: 'Griya Tenun Lurik Lestari',
-    dusun: 'Dusun Krajan (Pusat)',
-    address: 'Jl. Melati No. 8, Dusun Krajan',
+    kecamatan: 'Kecamatan Sumedang Utara',
+    address: 'Kecamatan Sumedang Utara, Kabupaten Sumedang, Jawa Barat',
   },
   {
     id: 'ORD-2026-080',
@@ -332,8 +341,8 @@ export const MOCK_ORDERS = [
     total: 36000,
     qty: 2,
     status: 'dikirim',
-    shopName: 'Kripik Tempe Bu Darmi Dusun Wates',
-    dusun: 'Dusun Wates Kulon',
+    shopName: 'Kripik Tempe Bu Darmi',
+    kecamatan: 'Kecamatan Cimalaka',
     address: 'Komplek Balai Desa RT 01',
   },
   {
@@ -345,8 +354,8 @@ export const MOCK_ORDERS = [
     total: 95000,
     qty: 1,
     status: 'selesai',
-    shopName: 'Madu Hutan & Gula Aren Karangrejo',
-    dusun: 'Dusun Karangrejo',
+    shopName: 'Madu Hutan & Gula Aren Tanjungsari',
+    kecamatan: 'Kecamatan Tanjungsari',
     address: 'Pondok Pesantren Nurul Huda',
   }
 ];
@@ -374,23 +383,21 @@ export const MOCK_USERS = [
   { id: 'usr-1', name: 'Ibu Sumarsih', email: 'sumarsih@pasardesa.id', phone: '081234567890', role: 'penjual', shopName: 'Griya Tenun Lurik Lestari', status: 'aktif' },
   { id: 'usr-2', name: 'Bambang Sudiro', email: 'bambang.s@gmail.com', phone: '081399887766', role: 'pembeli', shopName: '-', status: 'aktif' },
   { id: 'usr-3', name: 'Pak Joko Sukirno', email: 'joko.madu@pasardesa.id', phone: '087812345678', role: 'keduanya', shopName: 'Madu Hutan & Gula Aren', status: 'aktif' },
-  { id: 'usr-4', name: 'Mas Hendra Pratama', email: 'hendra.kopi@pasardesa.id', phone: '089533344455', role: 'penjual', shopName: 'Kopi Robusta Sukamaju', status: 'menunggu_verifikasi' },
+  { id: 'usr-4', name: 'Mas Hendra Pratama', email: 'hendra.kopi@pasardesa.id', phone: '089533344455', role: 'penjual', shopName: 'Kopi Robusta Jatinangor', status: 'menunggu_verifikasi' },
   { id: 'usr-5', name: 'Admin Perangkat Desa', email: 'admin@pasardesa.go.id', phone: '081122334455', role: 'admin', shopName: 'Pemerintah Desa', status: 'aktif' },
 ];
-
-// Alamat Tersimpan Pengguna dengan Koordinat Google Maps
 export const INITIAL_USER_ADDRESSES = [
   {
     id: 'addr-1',
-    label: 'Rumah Utama (Dusun Krajan)',
+    label: 'Rumah Utama (Kecamatan Sumedang Utara)',
     receiverName: 'Bambang Sudiro',
     phone: '0813-9988-7766',
-    dusun: 'Dusun Krajan (Pusat)',
+    kecamatan: 'Kecamatan Sumedang Utara',
     rtRw: 'RT 03 / RW 01',
-    fullAddress: 'Jl. Sentra Tenun Lurik No. 14, Dusun Krajan',
+    fullAddress: 'Kecamatan Sumedang Utara, Kabupaten Sumedang, Jawa Barat',
     notes: 'Depan gapura bambu ukir khas desa, pagar cat cokelat kayu',
-    lat: -7.7715,
-    lng: 110.3775,
+    lat: -6.8293742,
+    lng: 107.9116474,
     isDefault: true
   },
   {
@@ -398,51 +405,47 @@ export const INITIAL_USER_ADDRESSES = [
     label: 'Kantor BUMDes & Workshop',
     receiverName: 'Bambang Sudiro',
     phone: '0813-9988-7766',
-    dusun: 'Dusun Sumberagung',
+    kecamatan: 'Kecamatan Sumedang Selatan',
     rtRw: 'RT 02 / RW 03',
-    fullAddress: 'Kompleks Balai Pelatihan Kerajinan Desa, Dusun Sumberagung',
+    fullAddress: 'Kecamatan Sumedang Selatan, Kabupaten Sumedang, Jawa Barat',
     notes: 'Gedung warna krem dekat lapangan voli desa',
-    lat: -7.7650,
-    lng: 110.3850,
+    lat: -6.859079,
+    lng: 107.9202767,
     isDefault: false
   }
 ];
-
-// Titik Koordinat Pusat Tiap Dusun untuk Preset Google Maps
-export const DUSUN_LOCATIONS = {
-  'Dusun Krajan (Pusat)': {
-    lat: -7.7715,
-    lng: 110.3775,
-    name: 'Dusun Krajan (Pusat Balai Desa)',
+export const KECAMATAN_LOCATIONS = {
+  'Kecamatan Sumedang Utara': {
+    lat: -6.8293742,
+    lng: 107.9116474,
+    name: 'Kecamatan Sumedang Utara',
     desc: 'Sentra Pemerintahan & Galeri Tenun Lurik'
   },
-  'Dusun Sumberagung': {
-    lat: -7.7650,
-    lng: 110.3850,
-    name: 'Dusun Sumberagung',
+  'Kecamatan Sumedang Selatan': {
+    lat: -6.859079,
+    lng: 107.9202767,
+    name: 'Kecamatan Sumedang Selatan',
     desc: 'Sentra Anyaman Bambu & Hasil Kebun'
   },
-  'Dusun Wates Kulon': {
-    lat: -7.7780,
-    lng: 110.3620,
-    name: 'Dusun Wates Kulon',
+  'Kecamatan Cimalaka': {
+    lat: -6.8025187,
+    lng: 107.9413323,
+    name: 'Kecamatan Cimalaka',
     desc: 'Sentra Olahan Pangan & Kripik Tempe Tradisional'
   },
-  'Dusun Karangrejo': {
-    lat: -7.7850,
-    lng: 110.3950,
-    name: 'Dusun Karangrejo',
+  'Kecamatan Tanjungsari': {
+    lat: -6.8440915,
+    lng: 107.7932319,
+    name: 'Kecamatan Tanjungsari',
     desc: 'Kawasan Lereng Hutan Madu & Gula Aren'
   },
-  'Dusun Sukamaju': {
-    lat: -7.7520,
-    lng: 110.3700,
-    name: 'Dusun Sukamaju',
+  'Kecamatan Jatinangor': {
+    lat: -6.9370992,
+    lng: 107.7813872,
+    name: 'Kecamatan Jatinangor',
     desc: 'Perkebunan Kopi Robusta Lereng Pegunungan'
   }
 };
-
-// Metode Pengiriman Lokal Desa
 export const SHIPPING_METHODS = [
   {
     id: 'kurir-desa',
@@ -453,7 +456,7 @@ export const SHIPPING_METHODS = [
   },
   {
     id: 'ambil-sendiri',
-    name: 'Ambil di Toko / Balai Dusun',
+    name: 'Ambil di Toko',
     eta: 'Bisa Diambil Kapan Saja',
     price: 0,
     desc: 'Gratis ongkir. Silakan ambil langsung di workshop penjual atau posko BUMDes.'
@@ -466,8 +469,6 @@ export const SHIPPING_METHODS = [
     desc: 'Khusus pesanan kirim ke luar area kecamatan/kota dengan resi otomatis.'
   }
 ];
-
-// Metode Pembayaran Resmi Desa
 export const PAYMENT_METHODS = [
   {
     id: 'qris-desa',
@@ -483,13 +484,11 @@ export const PAYMENT_METHODS = [
   },
   {
     id: 'cod-desa',
-    name: 'Bayar Tunai di Tempat (COD Dusun)',
+    name: 'Bayar Tunai di Tempat (COD)',
     type: 'Tanpa Biaya Tambahan',
     desc: 'Bayar uang tunai pas saat kurir desa menyerahkan paket barang ke tangan Anda.'
   }
 ];
-
-// Initial Chat Threads untuk Chatbot & Admin Toko
 export const INITIAL_CHAT_THREADS = {
   'general-bot': [
     {
@@ -499,7 +498,7 @@ export const INITIAL_CHAT_THREADS = {
       time: 'Baru saja',
       quickOptions: [
         'Cek Ketersediaan Stok',
-        'Tanya Ongkir & Kurir Dusun',
+        'Tanya Ongkir & Kurir Sumedang',
         'Hubungkan ke Admin Toko',
         'Komplain atau Bantuan Pesanan'
       ]
@@ -516,7 +515,7 @@ export const INITIAL_CHAT_THREADS = {
       id: 't1-m2',
       sender: 'seller',
       senderName: 'Ibu Sumarsih',
-      text: 'Halo kak, salam hangat dari pengrajin tenun lurik Dusun Krajan. Kami siap melayani pemesanan kain lurik ATBM motif klasik maupun modern. Silakan tanyakan stok atau ukuran kustom.',
+      text: 'Halo kak, salam hangat dari pengrajin tenun lurik Kecamatan Sumedang Utara. Kami siap melayani pemesanan kain lurik ATBM motif klasik maupun modern. Silakan tanyakan stok atau ukuran kustom.',
       time: '09:16'
     }
   ],
@@ -534,7 +533,7 @@ export const INITIAL_CHAT_THREADS = {
       id: 't3-m1',
       sender: 'seller',
       senderName: 'Pak Joko Sukirno',
-      text: 'Madu hutan murni baru panen dari lereng Karangrejo siap kirim hari ini kak.',
+      text: 'Madu murni dari petani Tanjungsari siap dikirim hari ini kak.',
       time: 'Kemarin'
     }
   ]

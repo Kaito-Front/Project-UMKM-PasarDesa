@@ -15,15 +15,10 @@ import {
 const AppContext = createContext();
 
 export function AppProvider({ children }) {
-  // Navigation & View Mode: 'web', 'mobile', 'admin'
   const [currentView, setCurrentView] = useState('web');
-  
-  // Web Pages: 'home', 'catalog', 'product-detail', 'shop-detail', 'auth', 'about'
   const [webPage, setWebPage] = useState('home');
   const [selectedProductId, setSelectedProductId] = useState('prod-1');
   const [selectedShopId, setSelectedShopId] = useState('toko-1');
-  
-  // Shared state for products, shops, etc.
   const [products, setProducts] = useState(INITIAL_PRODUCTS);
   const [shops, setShops] = useState(INITIAL_SHOPS);
   const [categories, setCategories] = useState(INITIAL_CATEGORIES);
@@ -31,38 +26,28 @@ export function AppProvider({ children }) {
   const [announcements, setAnnouncements] = useState(INITIAL_ANNOUNCEMENTS);
   const [users, setUsers] = useState(INITIAL_USERS);
   const [stats, setStats] = useState(VILLAGE_STATS);
-
-  // Search & Catalog filters
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('semua');
-  const [selectedDusun, setSelectedDusun] = useState('Semua Dusun');
+  const [selectedKecamatan, setSelectedKecamatan] = useState('Semua Kecamatan');
   const [priceRange, setPriceRange] = useState([0, 300000]);
   const [sortBy, setSortBy] = useState('terbaru');
-
-  // Authentication State
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [currentUser, setCurrentUser] = useState({
     id: 'usr-1',
     name: 'Ibu Sumarsih',
     phone: '081234567890',
     email: 'sumarsih@pasardesa.id',
-    role: 'keduanya', // 'pembeli', 'penjual', 'keduanya', 'admin'
+    role: 'keduanya',
     shopId: 'toko-1',
     shopName: 'Griya Tenun Lurik Lestari',
-    dusun: 'Dusun Krajan (Pusat)'
+    kecamatan: 'Kecamatan Sumedang Utara'
   });
-
-  // Mobile PWA State
   const [mobileRole, setMobileRole] = useState('pembeli');
   const [mobileTab, setMobileTab] = useState('beranda');
   const [showMobileSplash, setShowMobileSplash] = useState(false);
   const [showMobileOnboarding, setShowMobileOnboarding] = useState(false);
   const [savedFavorites, setSavedFavorites] = useState(['prod-1', 'prod-2']);
   const [pushNotification, setPushNotification] = useState(null);
-
-  // ==========================================
-  // FITUR 1: KERANJANG BELANJA & CHECKOUT
-  // ==========================================
   const [cart, setCart] = useState([
     {
       id: 'cart-1',
@@ -123,8 +108,6 @@ export function AppProvider({ children }) {
 
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
   const cartSubtotal = cart.reduce((sum, item) => sum + (item.product.price * item.qty), 0);
-
-  // Buka checkout langsung untuk 1 produk (Beli Sekarang)
   const openDirectCheckout = (product, qty = 1, note = '') => {
     setCheckoutDirectItem({
       productId: product.id,
@@ -134,8 +117,6 @@ export function AppProvider({ children }) {
     });
     setIsCheckoutOpen(true);
   };
-
-  // Buka checkout untuk semua barang di keranjang
   const openCartCheckout = () => {
     if (cart.length === 0) {
       triggerNotification('Keranjang Kosong', 'Silakan pilih dan masukkan produk ke keranjang terlebih dahulu.');
@@ -145,8 +126,6 @@ export function AppProvider({ children }) {
     setIsCartOpen(false);
     setIsCheckoutOpen(true);
   };
-
-  // Eksekusi checkout dan buat pesanan resmi
   const processCheckout = ({ items, address, shippingMethod, paymentMethod, notes = '' }) => {
     const totalItems = items.reduce((sum, item) => sum + item.qty, 0);
     const subtotal = items.reduce((sum, item) => sum + (item.product.price * item.qty), 0);
@@ -164,8 +143,8 @@ export function AppProvider({ children }) {
       qty: totalItems,
       status: 'diproses',
       shopName: items[0].product.shopName,
-      dusun: address?.dusun || items[0].product.dusun,
-      address: `${address?.fullAddress || 'Alamat Dusun'} (${address?.notes || 'Patokan Rumah'})`,
+      kecamatan: address?.kecamatan || items[0].product.kecamatan,
+      address: `${address?.fullAddress || 'Alamat Kecamatan'} (${address?.notes || 'Patokan Rumah'})`,
       items,
       shippingMethod: shippingMethod?.name || 'Kurir Kilat Desa',
       paymentMethod: paymentMethod?.name || 'Bayar di Tempat (COD)',
@@ -173,8 +152,6 @@ export function AppProvider({ children }) {
     };
 
     setOrders(prev => [newOrder, ...prev]);
-
-    // Jika checkout dari keranjang umum, bersihkan item yang dibeli
     if (!checkoutDirectItem) {
       clearCart();
     }
@@ -186,10 +163,6 @@ export function AppProvider({ children }) {
 
     return orderId;
   };
-
-  // ==========================================
-  // FITUR 2: ALAMAT PENGGUNA & GOOGLE MAPS
-  // ==========================================
   const [addresses, setAddresses] = useState(INITIAL_USER_ADDRESSES);
   const [selectedAddressId, setSelectedAddressId] = useState(INITIAL_USER_ADDRESSES[0]?.id || null);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
@@ -199,11 +172,9 @@ export function AppProvider({ children }) {
 
   const saveAddress = (addrData) => {
     if (addrData.id) {
-      // Update existing
       setAddresses(prev => prev.map(a => a.id === addrData.id ? { ...addrData } : a));
       triggerNotification('Alamat Diperbarui', `Alamat "${addrData.label}" berhasil disimpan.`);
     } else {
-      // Add new
       const newAddr = {
         ...addrData,
         id: `addr-${Date.now()}`,
@@ -239,17 +210,11 @@ export function AppProvider({ children }) {
     setSelectedAddressId(addrId);
     triggerNotification('Alamat Utama', 'Alamat utama pengiriman berhasil diperbarui.');
   };
-
-  // ==========================================
-  // FITUR 3: CHATBOX (CHATBOT & ADMIN TOKO KATALOG)
-  // ==========================================
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [activeChatShopId, setActiveChatShopId] = useState('general-bot'); // 'general-bot' or shopId like 'toko-1'
+  const [activeChatShopId, setActiveChatShopId] = useState('general-bot');
   const [chatContextProduct, setChatContextProduct] = useState(null);
   const [chatThreads, setChatThreads] = useState(INITIAL_CHAT_THREADS);
   const [isConnectingSeller, setIsConnectingSeller] = useState(false);
-
-  // Buka chatbox langsung terhubung ke toko & konteks produk spesifik
   const openChatWithShop = (shopId, product = null) => {
     setActiveChatShopId(shopId);
     if (product) {
@@ -259,8 +224,6 @@ export function AppProvider({ children }) {
       setChatContextProduct(shopProducts[0] || null);
     }
     setIsChatOpen(true);
-
-    // Pastikan thread toko tersedia
     setChatThreads(prev => {
       if (!prev[shopId]) {
         const targetShop = shops.find(s => s.id === shopId) || { name: 'Penjual UMKM' };
@@ -279,8 +242,6 @@ export function AppProvider({ children }) {
       return prev;
     });
   };
-
-  // Kirim pesan dalam chat
   const sendChatMessage = (text, targetShopId = null) => {
     const threadId = targetShopId || activeChatShopId;
     if (!text || !text.trim()) return;
@@ -291,8 +252,6 @@ export function AppProvider({ children }) {
       text: text.trim(),
       time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
     };
-
-    // Tambah pesan user ke thread
     setChatThreads(prev => {
       const currentMessages = prev[threadId] || [];
       return {
@@ -300,15 +259,11 @@ export function AppProvider({ children }) {
         [threadId]: [...currentMessages, userMsg]
       };
     });
-
-    // Otomatis respon cerdas: jika mode general-bot vs mode admin toko
     handleSmartBotOrSellerReply(text.trim(), threadId);
   };
 
   const handleSmartBotOrSellerReply = (query, threadId) => {
     const lower = query.toLowerCase();
-
-    // Skenario 1: General Bot (Asisten Virtual Desa)
     if (threadId === 'general-bot') {
       setTimeout(() => {
         let replyText = '';
@@ -316,9 +271,9 @@ export function AppProvider({ children }) {
 
         if (lower.includes('stok') || lower.includes('ketersediaan') || lower.includes('barang')) {
           replyText = 'Untuk pengecekan ketersediaan stok produk secara akurat, Anda dapat melihat langsung di katalog desa atau kami hubungkan ke Admin Toko yang bersangkutan. Toko mana yang ingin Anda hubungi?';
-          options = ['Griya Tenun Lurik Lestari', 'Kripik Tempe Bu Darmi', 'Madu Hutan Karangrejo'];
+          options = ['Griya Tenun Lurik Lestari', 'Kripik Tempe Bu Darmi', 'Madu Hutan Tanjungsari'];
         } else if (lower.includes('ongkir') || lower.includes('kirim') || lower.includes('kurir')) {
-          replyText = 'Pengiriman dalam kawasan desa dilayani oleh Kurir Kilat Desa Mandiri dengan tarif tetap Rp 5.000 (tiba hari ini). Untuk ambil langsung di balai dusun atau toko pengrajin dikenakan biaya Rp 0 (Gratis).';
+          replyText = 'Pengiriman di wilayah Sumedang dilayani oleh Kurir Kilat Desa dengan tarif mulai Rp 5.000. Untuk ambil langsung di toko pengrajin tidak dikenakan biaya.';
           options = ['Cek Ketersediaan Stok', 'Hubungkan ke Admin Toko', 'Cara Pembayaran'];
         } else if (lower.includes('komplain') || lower.includes('keluhan') || lower.includes('rusak') || lower.includes('salah')) {
           replyText = 'Kami siap menindaklanjuti kendala pesanan Anda. Tim pengawas BUMDes menjamin garansi penggantian produk 100% jika terjadi cacat atau salah kirim. Mohon sebutkan nomor pesanan atau hubungi admin toko terkait.';
@@ -328,7 +283,7 @@ export function AppProvider({ children }) {
           options = ['Toko Tenun Ibu Sumarsih', 'Kripik Tempe Bu Darmi', 'Madu Pak Joko'];
         } else {
           replyText = 'Terima kasih atas pesan Anda. Sebagai Asisten Virtual Desa, saya dapat membantu memberikan informasi produk UMKM, tarif kurir desa, atau menghubungkan langsung ke Admin Toko pengrajin.';
-          options = ['Cek Ketersediaan Stok', 'Tanya Ongkir & Kurir Dusun', 'Hubungkan ke Admin Toko'];
+          options = ['Cek Ketersediaan Stok', 'Tanya Ongkir & Kurir Sumedang', 'Hubungkan ke Admin Toko'];
         }
 
         const botReply = {
@@ -346,8 +301,6 @@ export function AppProvider({ children }) {
       }, 700);
       return;
     }
-
-    // Skenario 2: Obrolan Toko Spesifik (Admin Toko)
     const targetShop = shops.find(s => s.id === threadId) || shops[0];
 
     setTimeout(() => {
@@ -376,8 +329,6 @@ export function AppProvider({ children }) {
       }));
     }, 900);
   };
-
-  // Alihkan percakapan langsung dari bot ke toko tertentu
   const connectToShopFromBot = (shopId) => {
     setIsConnectingSeller(true);
     setTimeout(() => {
@@ -385,8 +336,6 @@ export function AppProvider({ children }) {
       openChatWithShop(shopId);
     }, 500);
   };
-
-  // Trigger celebratory confetti effect
   const shootConfetti = () => {
     try {
       confetti({
@@ -396,19 +345,14 @@ export function AppProvider({ children }) {
         colors: ['#A85C3C', '#7C8C6B', '#3A3A38', '#E5A93B']
       });
     } catch (e) {
-      // safe fallback
     }
   };
-
-  // Trigger push notification helper (Bebas emoji)
   const triggerNotification = (title, message) => {
     setPushNotification({ title, message, id: Date.now() });
     setTimeout(() => {
       setPushNotification(null);
     }, 4500);
   };
-
-  // Switch to Product Detail
   const viewProduct = (productId, fromMobile = false) => {
     setSelectedProductId(productId);
     if (fromMobile) {
@@ -418,15 +362,11 @@ export function AppProvider({ children }) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
-
-  // Switch to Shop Detail
   const viewShop = (shopId) => {
     setSelectedShopId(shopId);
     setWebPage('shop-detail');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  // Add Product (Bebas emoji)
   const addProduct = (newProd) => {
     const id = `prod-${Date.now()}`;
     const product = {
@@ -436,7 +376,7 @@ export function AppProvider({ children }) {
       sold: 0,
       shopId: currentUser?.shopId || 'toko-1',
       shopName: currentUser?.shopName || 'Toko Saya',
-      dusun: currentUser?.dusun || 'Dusun Krajan',
+      kecamatan: currentUser?.kecamatan || 'Kecamatan Sumedang Utara',
       isPopular: false,
       isFeatured: false,
       isNew: true,
@@ -446,8 +386,6 @@ export function AppProvider({ children }) {
     shootConfetti();
     triggerNotification('Produk Ditambahkan', `"${newProd.name}" berhasil dipublikasikan ke katalog desa.`);
   };
-
-  // Toggle Product Active / Hidden
   const toggleProductStatus = (productId) => {
     setProducts(prev => prev.map(p => {
       if (p.id === productId) {
@@ -457,20 +395,14 @@ export function AppProvider({ children }) {
       return p;
     }));
   };
-
-  // Update Order Status
   const updateOrderStatus = (orderId, newStatus) => {
     setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
     triggerNotification('Status Pesanan Diperbarui', `Pesanan #${orderId} kini berstatus "${newStatus}".`);
   };
-
-  // UMKM Verification
   const verifyShop = (shopId, newStatus) => {
     setShops(prev => prev.map(s => s.id === shopId ? { ...s, status: newStatus, verified: newStatus === 'aktif' } : s));
     triggerNotification('Verifikasi UMKM', `Status UMKM telah diubah menjadi "${newStatus}".`);
   };
-
-  // Broadcast announcement (Bebas emoji)
   const broadcastAnnouncement = (ann) => {
     const newAnn = {
       id: `ann-${Date.now()}`,
@@ -483,8 +415,6 @@ export function AppProvider({ children }) {
     setAnnouncements(prev => [newAnn, ...prev]);
     triggerNotification('Pengumuman Terkirim', `Broadcast "${ann.title}" telah disiarkan ke semua pengguna.`);
   };
-
-  // Toggle favorite
   const toggleFavorite = (productId) => {
     setSavedFavorites(prev => 
       prev.includes(productId) 
@@ -508,7 +438,7 @@ export function AppProvider({ children }) {
       stats, setStats,
       searchQuery, setSearchQuery,
       selectedCategory, setSelectedCategory,
-      selectedDusun, setSelectedDusun,
+      selectedKecamatan, setSelectedKecamatan,
       priceRange, setPriceRange,
       sortBy, setSortBy,
       isLoggedIn, setIsLoggedIn,
@@ -520,8 +450,6 @@ export function AppProvider({ children }) {
       savedFavorites, toggleFavorite,
       pushNotification, triggerNotification,
       viewProduct, viewShop,
-      
-      // Keranjang & Checkout
       cart,
       cartCount,
       cartSubtotal,
@@ -537,8 +465,6 @@ export function AppProvider({ children }) {
       openDirectCheckout,
       openCartCheckout,
       processCheckout,
-
-      // Alamat & Google Maps
       addresses,
       selectedAddressId,
       setSelectedAddressId,
@@ -550,8 +476,6 @@ export function AppProvider({ children }) {
       setIsAddressModalOpen,
       editingAddress,
       setEditingAddress,
-
-      // Chatbox & Admin Toko
       isChatOpen,
       setIsChatOpen,
       activeChatShopId,
@@ -563,8 +487,6 @@ export function AppProvider({ children }) {
       sendChatMessage,
       connectToShopFromBot,
       isConnectingSeller,
-
-      // Penjual & Admin
       addProduct,
       toggleProductStatus,
       updateOrderStatus,

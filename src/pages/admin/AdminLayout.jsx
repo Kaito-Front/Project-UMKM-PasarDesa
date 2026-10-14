@@ -56,31 +56,19 @@ export default function AdminLayout() {
 
   const [selectedAdminThread, setSelectedAdminThread] = useState('general-bot');
   const [adminReplyText, setAdminReplyText] = useState('');
-
-  // Admin Auth State (3.1 Login Admin)
   const [isAdminAuth, setIsAdminAuth] = useState(true);
   const [adminUsername, setAdminUsername] = useState('admin@pasardesa.go.id');
   const [adminPassword, setAdminPassword] = useState('admin123');
-
-  // Sidebar Menu Tabs (3.2)
   const [adminTab, setAdminTab] = useState('dashboard');
-
-  // Search & Filter States
   const [umkmFilter, setUmkmFilter] = useState('semua');
   const [userRoleFilter, setUserRoleFilter] = useState('semua');
   const [userSearch, setUserSearch] = useState('');
   const [selectedUmkmDetail, setSelectedUmkmDetail] = useState(null);
-
-  // New Category form
   const [newCategoryName, setNewCategoryName] = useState('');
-
-  // New Broadcast announcement form (3.6)
   const [broadcastTitle, setBroadcastTitle] = useState('');
   const [broadcastMessage, setBroadcastMessage] = useState('');
   const [broadcastTarget, setBroadcastTarget] = useState('Semua Pengguna');
   const [isUrgent, setIsUrgent] = useState(false);
-
-  // Handle Admin Login
   const handleAdminLogin = (e) => {
     e.preventDefault();
     if (adminUsername && adminPassword) {
@@ -88,8 +76,6 @@ export default function AdminLayout() {
       triggerNotification('Login Admin Berhasil', 'Selamat datang di Panel Pengelola Balai Desa.');
     }
   };
-
-  // Handle Broadcast submit
   const handleSendBroadcast = (e) => {
     e.preventDefault();
     if (!broadcastTitle || !broadcastMessage) return;
@@ -102,8 +88,6 @@ export default function AdminLayout() {
     setBroadcastTitle('');
     setBroadcastMessage('');
   };
-
-  // Add Category
   const handleAddCategory = (e) => {
     e.preventDefault();
     if (!newCategoryName.trim()) return;
@@ -118,8 +102,6 @@ export default function AdminLayout() {
     setNewCategoryName('');
     triggerNotification('Kategori Ditambahkan', `Kategori "${newCat.name}" berhasil dibuat.`);
   };
-
-  // Export Report Simulation
   const handleExportReport = () => {
     const csvContent = "data:text/csv;charset=utf-8," 
       + "ID_Pesanan,Produk,Pembeli,UMKM,Total,Status,Tanggal\n"
@@ -133,10 +115,6 @@ export default function AdminLayout() {
     document.body.removeChild(link);
     alert('Laporan transaksi berformat CSV berhasil diunduh!');
   };
-
-  // ---------------------------------------------------------------------------
-  // 3.1 FORM LOGIN ADMIN KHUSUS
-  // ---------------------------------------------------------------------------
   if (!isAdminAuth) {
     return (
       <div className="min-h-screen bg-desa-bg flex items-center justify-center p-4">
@@ -207,17 +185,13 @@ export default function AdminLayout() {
       </div>
     );
   }
-
-  // ---------------------------------------------------------------------------
-  // ADMIN DASHBOARD MAIN LAYOUT (Sidebar + Content)
-  // ---------------------------------------------------------------------------
   return (
-    <div className="min-h-screen bg-desa-bg flex flex-col md:flex-row">
+    <div className="min-h-screen bg-desa-bg flex flex-col xl:flex-row">
       
-      {/* 3.2 SIDEBAR ADMIN */}
-      <aside className="w-full md:w-64 bg-desa-primary text-desa-light flex flex-col justify-between shrink-0 border-r border-black/20">
+      
+      <aside className="w-full xl:w-64 bg-desa-primary text-desa-light flex flex-col justify-between shrink-0 border-r border-black/20">
         <div>
-          {/* Admin Header & Logo */}
+          
           <div className="p-6 pb-4 border-b border-white/10">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-desa-light text-desa-primary flex items-center justify-center font-bold shadow">
@@ -234,8 +208,8 @@ export default function AdminLayout() {
             </div>
           </div>
 
-          {/* Sidebar Nav Links with Smooth Transitions */}
-          <nav className="p-4 space-y-1.5 text-xs font-medium">
+          
+          <nav className="grid grid-cols-2 gap-1.5 p-3 text-xs font-medium sm:grid-cols-3 xl:grid-cols-1 xl:p-4">
             <button
               onClick={() => setAdminTab('dashboard')}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
@@ -329,8 +303,8 @@ export default function AdminLayout() {
           </nav>
         </div>
 
-        {/* Sidebar Footer */}
-        <div className="p-4 border-t border-white/10 space-y-2">
+        
+        <div className="grid grid-cols-2 gap-2 border-t border-white/10 p-3 xl:grid-cols-1 xl:p-4">
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={() => setCurrentView('web')}
@@ -349,12 +323,12 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      {/* MAIN CONTENT AREA WITH PROFESSIONAL ADMIN TOP BAR */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+      
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col xl:h-screen xl:overflow-hidden">
         
-        {/* Dedicated Admin Top Navigation Header (Menggantikan Navbar Publik) */}
-        <header className="bg-white border-b border-desa-primary/15 px-6 sm:px-8 py-3.5 flex items-center justify-between shadow-xs shrink-0 z-20">
-          <div className="flex items-center gap-3">
+        
+        <header className="bg-white border-b border-desa-primary/15 px-4 sm:px-6 xl:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3 shadow-xs shrink-0 z-20">
+          <div className="flex min-w-0 flex-wrap items-center gap-3">
             <span className="text-xs font-bold uppercase tracking-wider text-desa-accent bg-desa-accent/10 px-2.5 py-1 rounded-md">
               Panel Pengelola BUMDes
             </span>
@@ -364,8 +338,8 @@ export default function AdminLayout() {
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* Pratinjau Pengguna (Switch Mode) Buttons */}
+          <div className="flex max-w-full flex-wrap items-center justify-end gap-2 sm:gap-3">
+            
             <div className="flex items-center gap-1.5 bg-desa-bg p-1 rounded-xl border border-desa-primary/15 text-xs">
               <span className="text-[10px] uppercase font-bold text-desa-text/50 px-2 hidden lg:inline">
                 Lihat Pratinjau:
@@ -392,7 +366,7 @@ export default function AdminLayout() {
               </motion.button>
             </div>
 
-            {/* Admin Profile & Status */}
+            
             <div className="flex items-center gap-2.5 pl-2 border-l border-desa-primary/15">
               <div className="w-8 h-8 rounded-full bg-desa-primary text-desa-light flex items-center justify-center font-bold text-xs shadow-xs">
                 AD
@@ -405,10 +379,10 @@ export default function AdminLayout() {
           </div>
         </header>
 
-        {/* Scrollable Admin Content Body */}
-        <main className="flex-1 p-6 sm:p-10 overflow-y-auto space-y-8 bg-desa-bg/60">
+        
+        <main className="min-w-0 flex-1 space-y-8 overflow-y-auto bg-desa-bg/60 p-4 sm:p-6 xl:p-10">
 
-        {/* 3.2 TAB: DASHBOARD UTAMA */}
+        
         {adminTab === 'dashboard' && (
           <div className="space-y-8 animate-fadeIn">
             <div>
@@ -420,7 +394,7 @@ export default function AdminLayout() {
               </p>
             </div>
 
-            {/* KPI Cards */}
+            
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               <motion.div whileHover={{ y: -4 }} className="bg-white p-5 rounded-2xl border border-desa-primary/15 shadow-sm space-y-2">
                 <span className="text-xs text-desa-text/60 block font-medium">Total UMKM Aktif</span>
@@ -463,10 +437,10 @@ export default function AdminLayout() {
               </motion.div>
             </div>
 
-            {/* Grafik Sederhana Tren Transaksi & Aktivitas Terbaru */}
+            
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               
-              {/* Tren Transaksi Mingguan with Dynamic Animated Height Bars */}
+              
               <div className="lg:col-span-7 bg-white p-6 rounded-2xl border border-desa-primary/15 shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="font-heading font-bold text-base text-desa-primary">
@@ -481,7 +455,7 @@ export default function AdminLayout() {
                   Volume transaksi produk lurik dan kuliner menunjukkan kenaikan stabil setiap akhir pekan.
                 </p>
 
-                {/* Animated Growing Bars */}
+                
                 <div className="pt-6 pb-2 flex items-end justify-between gap-3 h-48 border-b border-desa-primary/10">
                   {[
                     { label: 'Sen', val: 35, count: '14 order' },
@@ -510,7 +484,7 @@ export default function AdminLayout() {
                 </div>
               </div>
 
-              {/* Daftar Aktivitas Terbaru */}
+              
               <div className="lg:col-span-5 bg-white p-6 rounded-2xl border border-desa-primary/15 shadow-sm space-y-4">
                 <h3 className="font-heading font-bold text-base text-desa-primary">
                   Aktivitas Terbaru
@@ -521,7 +495,7 @@ export default function AdminLayout() {
                     <span className="w-2 h-2 rounded-full bg-amber-500 mt-1.5 shrink-0 animate-ping" />
                     <div>
                       <p className="font-semibold text-desa-primary">
-                        Pendaftaran UMKM Baru: <strong>Kopi Robusta Sukamaju</strong>
+                        Pendaftaran UMKM Baru: <strong>Kopi Robusta Jatinangor</strong>
                       </p>
                       <span className="text-[10px] text-desa-text/50">10 menit yang lalu</span>
                     </div>
@@ -553,7 +527,7 @@ export default function AdminLayout() {
           </div>
         )}
 
-        {/* 3.3 TAB: MANAJEMEN UMKM */}
+        
         {adminTab === 'umkm' && (
           <div className="space-y-6 animate-fadeIn">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -566,7 +540,7 @@ export default function AdminLayout() {
                 </p>
               </div>
 
-              {/* Filter Status */}
+              
               <div className="flex items-center gap-2">
                 {['semua', 'menunggu', 'aktif', 'ditolak'].map((st) => (
                   <button
@@ -584,7 +558,7 @@ export default function AdminLayout() {
               </div>
             </div>
 
-            {/* UMKM Table */}
+            
             <div className="bg-white rounded-2xl border border-desa-primary/15 overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
@@ -611,7 +585,7 @@ export default function AdminLayout() {
                           <td className="p-3.5 text-desa-text/80">{shop.owner}</td>
                           <td className="p-3.5 text-desa-text/70">
                             <div>{shop.category}</div>
-                            <span className="text-[10px] text-desa-accent font-semibold">{shop.dusun}</span>
+                            <span className="text-[10px] text-desa-accent font-semibold">{shop.kecamatan}</span>
                           </td>
                           <td className="p-3.5">
                             <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold capitalize ${
@@ -663,7 +637,7 @@ export default function AdminLayout() {
           </div>
         )}
 
-        {/* 3.4 TAB: PRODUK & KATEGORI */}
+        
         {adminTab === 'produk' && (
           <div className="space-y-8 animate-fadeIn">
             <div>
@@ -709,7 +683,7 @@ export default function AdminLayout() {
               </div>
             </div>
 
-            {/* Tabel Moderasi */}
+            
             <div className="bg-white rounded-2xl border border-desa-primary/15 overflow-hidden shadow-sm">
               <div className="p-4 border-b border-desa-primary/10">
                 <h3 className="font-heading font-bold text-sm text-desa-primary">
@@ -769,7 +743,7 @@ export default function AdminLayout() {
           </div>
         )}
 
-        {/* 3.5 TAB: MANAJEMEN PENGGUNA */}
+        
         {adminTab === 'pengguna' && (
           <div className="space-y-6 animate-fadeIn">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -782,7 +756,7 @@ export default function AdminLayout() {
                 </p>
               </div>
 
-              {/* Filter Role */}
+              
               <div className="flex items-center gap-2">
                 {['semua', 'pembeli', 'penjual', 'keduanya', 'admin'].map((role) => (
                   <button
@@ -800,7 +774,7 @@ export default function AdminLayout() {
               </div>
             </div>
 
-            {/* Users Table */}
+            
             <div className="bg-white rounded-2xl border border-desa-primary/15 overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
@@ -857,7 +831,7 @@ export default function AdminLayout() {
           </div>
         )}
 
-        {/* 3.6 TAB: LAPORAN & PENGUMUMAN */}
+        
         {adminTab === 'laporan' && (
           <div className="space-y-8 animate-fadeIn">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -870,7 +844,7 @@ export default function AdminLayout() {
                 </p>
               </div>
 
-              {/* Tombol Ekspor with Tap Animation */}
+              
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
@@ -882,7 +856,7 @@ export default function AdminLayout() {
               </motion.button>
             </div>
 
-            {/* Form Buat Pengumuman Baru */}
+            
             <div className="bg-white p-6 rounded-2xl border border-desa-primary/15 shadow-sm space-y-4">
               <div className="flex items-center gap-2">
                 <Bell className="w-5 h-5 text-desa-accent" />
@@ -899,7 +873,7 @@ export default function AdminLayout() {
                   <input
                     type="text"
                     required
-                    placeholder="Contoh: Bazar Pasar Kuliner Dusun Minggu Depan..."
+                    placeholder="Contoh: Bazar Kuliner Sumedang Minggu Depan..."
                     value={broadcastTitle}
                     onChange={(e) => setBroadcastTitle(e.target.value)}
                     className="w-full p-2.5 bg-desa-bg/50 border border-desa-primary/20 rounded-xl text-xs"
@@ -918,7 +892,7 @@ export default function AdminLayout() {
                     >
                       <option value="Semua Pengguna">Semua Pengguna (Pembeli & Penjual)</option>
                       <option value="Khusus Penjual UMKM">Khusus Penjual UMKM</option>
-                      <option value="Warga Dusun Krajan">Warga Dusun Krajan</option>
+                      <option value="Warga Kecamatan Sumedang Utara">Warga Kecamatan Sumedang Utara</option>
                     </select>
                   </div>
 
@@ -959,7 +933,7 @@ export default function AdminLayout() {
               </form>
             </div>
 
-            {/* Riwayat Pengumuman */}
+            
             <div className="bg-white rounded-2xl border border-desa-primary/15 overflow-hidden shadow-sm">
               <div className="p-4 border-b border-desa-primary/10">
                 <h3 className="font-heading font-bold text-sm text-desa-primary">
@@ -984,7 +958,7 @@ export default function AdminLayout() {
           </div>
         )}
 
-        {/* 3.7 TAB: PUSAT PESAN & KOMPLAIN WARGA */}
+        
         {adminTab === 'pesan' && (
           <div className="space-y-6 animate-fadeIn">
             <div>
@@ -997,7 +971,7 @@ export default function AdminLayout() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white rounded-3xl border border-desa-primary/15 shadow-sm overflow-hidden h-[620px]">
-              {/* Kolom Kiri: Daftar Saluran Obrolan */}
+              
               <div className="lg:col-span-4 border-r border-desa-primary/10 flex flex-col h-full bg-desa-bg/30">
                 <div className="p-4 border-b border-desa-primary/10 bg-white">
                   <h3 className="text-xs font-bold text-desa-primary uppercase tracking-wider">
@@ -1006,7 +980,7 @@ export default function AdminLayout() {
                 </div>
 
                 <div className="flex-1 overflow-y-auto divide-y divide-desa-primary/10">
-                  {/* General Bot */}
+                  
                   <div
                     onClick={() => setSelectedAdminThread('general-bot')}
                     className={`p-4 cursor-pointer transition-colors ${
@@ -1024,7 +998,7 @@ export default function AdminLayout() {
                     </p>
                   </div>
 
-                  {/* Threads per Toko */}
+                  
                   {shops.map((s) => {
                     const thread = chatThreads[s.id] || [];
                     const lastMsg = thread[thread.length - 1];
@@ -1048,7 +1022,7 @@ export default function AdminLayout() {
                             {thread.length} pesan
                           </span>
                         </div>
-                        <p className="text-[10px] text-desa-text/60 mb-0.5">{s.owner} • {s.dusun}</p>
+                        <p className="text-[10px] text-desa-text/60 mb-0.5">{s.owner} • {s.kecamatan}</p>
                         <p className="text-[11px] text-desa-text/75 line-clamp-1 italic">
                           {lastMsg ? lastMsg.text : 'Belum ada obrolan baru'}
                         </p>
@@ -1058,9 +1032,9 @@ export default function AdminLayout() {
                 </div>
               </div>
 
-              {/* Kolom Kanan: Isi Percakapan & Form Balas */}
+              
               <div className="lg:col-span-8 flex flex-col h-full bg-white">
-                {/* Header Percakapan */}
+                
                 <div className="p-4 border-b border-desa-primary/10 flex items-center justify-between bg-desa-bg/20">
                   <div>
                     <h4 className="text-xs font-bold text-desa-primary">
@@ -1078,7 +1052,7 @@ export default function AdminLayout() {
                   </span>
                 </div>
 
-                {/* List Pesan */}
+                
                 <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-desa-bg/10">
                   {(chatThreads[selectedAdminThread] || []).map((msg) => {
                     const isUser = msg.sender === 'user';
@@ -1113,7 +1087,7 @@ export default function AdminLayout() {
                   })}
                 </div>
 
-                {/* Form Kirim Balasan Admin */}
+                
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();

@@ -37,8 +37,6 @@ export default function ChatWidget() {
   const [inputMessage, setInputMessage] = useState('');
   const [showShopSelector, setShowShopSelector] = useState(false);
   const messagesEndRef = useRef(null);
-
-  // Ambil toko yang sedang aktif (jika bukan general-bot)
   const currentShop = activeChatShopId !== 'general-bot' 
     ? shops.find(s => s.id === activeChatShopId) || shops[0]
     : null;
@@ -79,8 +77,8 @@ export default function ChatWidget() {
       sendChatMessage('Saya ingin mengajukan komplain terkait pesanan saya.');
       return;
     }
-    if (optionText === 'Tanya Ongkir & Kurir Dusun') {
-      sendChatMessage('Berapa tarif ongkir kurir desa antar dusun?');
+    if (optionText === 'Tanya Ongkir & Kurir Sumedang') {
+      sendChatMessage('Berapa tarif ongkir kurir desa antar kecamatan?');
       return;
     }
 
@@ -89,7 +87,7 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* Floating Trigger Button (Pojok Kanan Bawah) */}
+      
       {!isChatOpen && (
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
@@ -108,7 +106,7 @@ export default function ChatWidget() {
             className="w-14 h-14 rounded-2xl bg-desa-accent text-white shadow-xl flex items-center justify-center relative overflow-hidden group border-2 border-white/40"
             aria-label="Buka Chatbox Desa"
           >
-            {/* Lurik motif effect */}
+            
             <div className="absolute inset-0 bg-lurik-stripes-light opacity-20" />
             <MessageSquare className="w-6 h-6 text-white relative z-10 group-hover:scale-110 transition-transform" />
             <span className="absolute top-2 right-2 w-3 h-3 bg-desa-highlight rounded-full border-2 border-white" />
@@ -116,7 +114,7 @@ export default function ChatWidget() {
         </motion.div>
       )}
 
-      {/* Chatbox Window Container */}
+      
       <AnimatePresence>
         {isChatOpen && (
           <motion.div
@@ -126,7 +124,7 @@ export default function ChatWidget() {
             transition={{ type: 'spring', damping: 25, stiffness: 280 }}
             className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-[94vw] sm:w-[400px] h-[580px] max-h-[85vh] bg-desa-bg rounded-3xl shadow-2xl border border-desa-primary/20 z-50 flex flex-col overflow-hidden"
           >
-            {/* Header Chatbox */}
+            
             <div className="p-4 bg-desa-primary text-desa-light relative overflow-hidden">
               <div className="absolute inset-0 bg-lurik-stripes-light opacity-10" />
 
@@ -154,12 +152,12 @@ export default function ChatWidget() {
                     <p className="text-[11px] text-desa-light/70 truncate max-w-[200px]">
                       {activeChatShopId === 'general-bot' 
                         ? 'Bot Layanan & Informasi Warga' 
-                        : `Admin: ${currentShop?.owner} (${currentShop?.dusun.split(' (')[0]})`}
+                        : `Admin: ${currentShop?.owner} (${currentShop?.kecamatan.split(' (')[0]})`}
                     </p>
                   </div>
                 </div>
 
-                {/* Kontrol Header */}
+                
                 <div className="flex items-center gap-1.5 relative z-10">
                   {activeChatShopId !== 'general-bot' ? (
                     <button
@@ -192,7 +190,7 @@ export default function ChatWidget() {
 
             <LurikDivider variant="accent" />
 
-            {/* Popup Pemilihan Toko Admin jika ingin beralih langsung */}
+            
             <AnimatePresence>
               {showShopSelector && (
                 <motion.div
@@ -225,7 +223,7 @@ export default function ChatWidget() {
                       >
                         <div className="truncate">
                           <p className="font-semibold text-desa-primary truncate">{s.name}</p>
-                          <p className="text-[10px] text-desa-text/60 truncate">{s.owner} • {s.dusun}</p>
+                          <p className="text-[10px] text-desa-text/60 truncate">{s.owner} • {s.kecamatan}</p>
                         </div>
                         <ChevronRight className="w-3.5 h-3.5 text-desa-accent shrink-0" />
                       </button>
@@ -235,7 +233,7 @@ export default function ChatWidget() {
               )}
             </AnimatePresence>
 
-            {/* Banner Konteks Produk yang Sedang Ditanyakan */}
+            
             {chatContextProduct && (
               <div className="bg-white px-3.5 py-2.5 border-b border-desa-primary/10 flex items-center justify-between gap-3 shadow-xs">
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -267,9 +265,9 @@ export default function ChatWidget() {
               </div>
             )}
 
-            {/* Area Pesan Obrolan */}
+            
             <div className="flex-1 overflow-y-auto p-4 space-y-3.5">
-              {/* Pesan status peralihan jika ada */}
+              
               {isConnectingSeller && (
                 <div className="text-center py-2">
                   <span className="text-[11px] bg-desa-primary/10 text-desa-primary font-medium px-3 py-1 rounded-full animate-pulse">
@@ -278,7 +276,7 @@ export default function ChatWidget() {
                 </div>
               )}
 
-              {/* Loop Messages */}
+              
               {currentMessages.map((msg) => {
                 const isUser = msg.sender === 'user';
                 const isBot = msg.sender === 'bot';
@@ -289,7 +287,7 @@ export default function ChatWidget() {
                     key={msg.id}
                     className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}
                   >
-                    {/* Label Pengirim */}
+                    
                     {!isUser && (
                       <span className="text-[10px] font-semibold text-desa-text/60 mb-1 ml-1">
                         {isBot ? 'Asisten Virtual Desa' : `${msg.senderName || 'Admin Toko'}`}
@@ -315,7 +313,7 @@ export default function ChatWidget() {
                       </span>
                     </div>
 
-                    {/* Quick Options Pills jika ada dari bot */}
+                    
                     {msg.quickOptions && msg.quickOptions.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-2 max-w-[90%]">
                         {msg.quickOptions.map((opt, i) => (
@@ -336,7 +334,7 @@ export default function ChatWidget() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Quick Action Chips Bar */}
+            
             <div className="px-3 py-1.5 bg-white/70 border-t border-desa-primary/5 flex items-center gap-1.5 overflow-x-auto text-[10px] no-scrollbar">
               <button
                 type="button"
@@ -347,7 +345,7 @@ export default function ChatWidget() {
               </button>
               <button
                 type="button"
-                onClick={() => handleQuickOptionClick('Tanya Ongkir & Kurir Dusun')}
+                onClick={() => handleQuickOptionClick('Tanya Ongkir & Kurir Sumedang')}
                 className="px-2.5 py-1 rounded-md bg-desa-primary/5 text-desa-primary hover:bg-desa-primary/10 font-medium shrink-0"
               >
                 Tarif Kurir Desa
@@ -370,7 +368,7 @@ export default function ChatWidget() {
               )}
             </div>
 
-            {/* Input Form Bar */}
+            
             <form
               onSubmit={handleSend}
               className="p-3 bg-white border-t border-desa-primary/10 flex items-center gap-2"

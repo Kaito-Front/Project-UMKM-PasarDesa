@@ -12,7 +12,7 @@ import {
   Store 
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { DUSUN_LIST, DUSUN_LOCATIONS } from '../../data/mockData';
+import { KECAMATAN_LIST, KECAMATAN_LOCATIONS } from '../../data/mockData';
 import LurikDivider from './LurikDivider';
 
 export default function AddressModal() {
@@ -28,17 +28,16 @@ export default function AddressModal() {
     label: 'Rumah Utama',
     receiverName: '',
     phone: '',
-    dusun: 'Dusun Krajan (Pusat)',
+    kecamatan: 'Kecamatan Sumedang Utara',
     rtRw: 'RT 01 / RW 01',
     fullAddress: '',
     notes: '',
-    lat: -7.7715,
-    lng: 110.3775,
+    lat: -6.8293742,
+    lng: 107.9116474,
     isDefault: false
   });
 
-  const [activeTab, setActiveTab] = useState('form'); // 'form' or 'map'
-
+  const [activeTab, setActiveTab] = useState('form');
   useEffect(() => {
     if (editingAddress) {
       setFormData(editingAddress);
@@ -47,12 +46,12 @@ export default function AddressModal() {
         label: 'Rumah Utama',
         receiverName: '',
         phone: '',
-        dusun: 'Dusun Krajan (Pusat)',
+        kecamatan: 'Kecamatan Sumedang Utara',
         rtRw: 'RT 01 / RW 01',
         fullAddress: '',
         notes: '',
-        lat: -7.7715,
-        lng: 110.3775,
+        lat: -6.8293742,
+        lng: 107.9116474,
         isDefault: false
       });
     }
@@ -60,11 +59,11 @@ export default function AddressModal() {
 
   if (!isAddressModalOpen) return null;
 
-  const handleDusunChange = (dusunName) => {
-    const loc = DUSUN_LOCATIONS[dusunName] || DUSUN_LOCATIONS['Dusun Krajan (Pusat)'];
+  const handleKecamatanChange = (kecamatanName) => {
+    const loc = KECAMATAN_LOCATIONS[kecamatanName] || KECAMATAN_LOCATIONS['Kecamatan Sumedang Utara'];
     setFormData(prev => ({
       ...prev,
-      dusun: dusunName,
+      kecamatan: kecamatanName,
       lat: loc.lat,
       lng: loc.lng
     }));
@@ -81,13 +80,11 @@ export default function AddressModal() {
           }));
         },
         () => {
-          // Fallback to random variation around Krajan
-          const latOffset = (Math.random() - 0.5) * 0.005;
-          const lngOffset = (Math.random() - 0.5) * 0.005;
+          // Use nearby coordinates when location access is unavailable.
           setFormData(prev => ({
             ...prev,
-            lat: Number((-7.7715 + latOffset).toFixed(5)),
-            lng: Number((110.3775 + lngOffset).toFixed(5))
+            lat: Number((-6.8293742).toFixed(7)),
+            lng: Number((107.9116474).toFixed(7))
           }));
         }
       );
@@ -109,7 +106,7 @@ export default function AddressModal() {
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6">
-        {/* Backdrop */}
+        
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -121,14 +118,14 @@ export default function AddressModal() {
           className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
         />
 
-        {/* Modal Window */}
+        
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           className="relative w-full max-w-2xl bg-desa-bg rounded-3xl shadow-2xl overflow-hidden border border-desa-primary/20 z-10 flex flex-col max-h-[92vh]"
         >
-          {/* Header */}
+          
           <div className="px-6 py-4 bg-desa-primary text-desa-light flex items-center justify-between relative overflow-hidden">
             <div className="absolute inset-0 bg-lurik-stripes-light opacity-10" />
             <div className="flex items-center gap-2.5 relative z-10">
@@ -158,9 +155,9 @@ export default function AddressModal() {
 
           <LurikDivider variant="accent" />
 
-          {/* Form and Map Body */}
+          
           <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-5">
-            {/* Label Jenis Alamat */}
+            
             <div>
               <label className="block text-xs font-semibold text-desa-primary mb-2">
                 Label Alamat
@@ -188,7 +185,7 @@ export default function AddressModal() {
               </div>
             </div>
 
-            {/* Nama Penerima & Telepon */}
+            
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-desa-primary mb-1">
@@ -219,18 +216,18 @@ export default function AddressModal() {
               </div>
             </div>
 
-            {/* Dusun & RT/RW */}
+            
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-desa-primary mb-1">
-                  Kawasan Dusun *
+                  Kecamatan *
                 </label>
                 <select
-                  value={formData.dusun}
-                  onChange={(e) => handleDusunChange(e.target.value)}
+                  value={formData.kecamatan}
+                  onChange={(e) => handleKecamatanChange(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-desa-primary/20 bg-white text-xs text-desa-text focus:outline-none focus:ring-2 focus:ring-desa-accent"
                 >
-                  {DUSUN_LIST.filter(d => d !== 'Semua Dusun').map(d => (
+                  {KECAMATAN_LIST.filter(d => d !== 'Semua Kecamatan').map(d => (
                     <option key={d} value={d}>{d}</option>
                   ))}
                 </select>
@@ -250,7 +247,7 @@ export default function AddressModal() {
               </div>
             </div>
 
-            {/* Alamat Lengkap */}
+            
             <div>
               <label className="block text-xs font-semibold text-desa-primary mb-1">
                 Alamat Lengkap (Nama Jalan, No. Rumah) *
@@ -258,14 +255,14 @@ export default function AddressModal() {
               <textarea
                 required
                 rows={2}
-                placeholder="Jl. Sentra Tenun No. 14, Dusun Krajan"
+                placeholder="Nama jalan, nomor rumah, kecamatan, Kabupaten Sumedang"
                 value={formData.fullAddress}
                 onChange={(e) => setFormData({ ...formData, fullAddress: e.target.value })}
                 className="w-full px-3.5 py-2.5 rounded-xl border border-desa-primary/20 bg-white text-xs text-desa-text focus:outline-none focus:ring-2 focus:ring-desa-accent"
               />
             </div>
 
-            {/* Patokan Rumah */}
+            
             <div>
               <label className="block text-xs font-semibold text-desa-primary mb-1">
                 Patokan Rumah / Catatan Pengiriman untuk Kurir Desa
@@ -279,7 +276,7 @@ export default function AddressModal() {
               />
             </div>
 
-            {/* INTEGRASI GOOGLE MAPS */}
+            
             <div className="pt-2 border-t border-desa-primary/10">
               <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                 <div className="flex items-center gap-1.5">
@@ -311,20 +308,20 @@ export default function AddressModal() {
                 </div>
               </div>
 
-              {/* Preset Tombol Titik Dusun Cepat */}
+              
               <div className="flex flex-wrap items-center gap-1.5 mb-3">
-                <span className="text-[11px] font-medium text-desa-text/70 mr-1">Preset Dusun:</span>
-                {Object.keys(DUSUN_LOCATIONS).map((dusunKey) => {
-                  const loc = DUSUN_LOCATIONS[dusunKey];
+                <span className="text-[11px] font-medium text-desa-text/70 mr-1">Preset kecamatan:</span>
+                {Object.keys(KECAMATAN_LOCATIONS).map((kecamatanKey) => {
+                  const loc = KECAMATAN_LOCATIONS[kecamatanKey];
                   const isSelected = formData.lat === loc.lat && formData.lng === loc.lng;
                   return (
                     <button
-                      key={dusunKey}
+                      key={kecamatanKey}
                       type="button"
                       onClick={() => {
                         setFormData(prev => ({
                           ...prev,
-                          dusun: dusunKey,
+                          kecamatan: kecamatanKey,
                           lat: loc.lat,
                           lng: loc.lng
                         }));
@@ -341,7 +338,7 @@ export default function AddressModal() {
                 })}
               </div>
 
-              {/* Iframe Peta Google Maps Embed */}
+              
               <div className="relative w-full h-56 rounded-2xl overflow-hidden border border-desa-primary/20 shadow-inner bg-desa-primary/5">
                 <iframe
                   title="Pratinjau Google Maps Alamat"
@@ -354,14 +351,14 @@ export default function AddressModal() {
                   className="w-full h-full"
                 />
 
-                {/* Pin visual overlay */}
+                
                 <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-xs px-2.5 py-1 rounded-lg border border-desa-primary/10 text-[10px] text-desa-primary font-semibold shadow-xs flex items-center gap-1.5 pointer-events-none">
                   <span className="w-2 h-2 rounded-full bg-desa-accent animate-ping" />
                   <span>Google Maps: {formData.lat}, {formData.lng}</span>
                 </div>
               </div>
 
-              {/* Input Koordinat Latitude & Longitude manual */}
+              
               <div className="grid grid-cols-2 gap-3 mt-2">
                 <div>
                   <span className="text-[10px] text-desa-text/60">Latitude (Garis Lintang):</span>
@@ -386,7 +383,7 @@ export default function AddressModal() {
               </div>
             </div>
 
-            {/* Checkbox Jadikan Alamat Utama */}
+            
             <div className="flex items-center gap-2 pt-1">
               <input
                 type="checkbox"
@@ -400,7 +397,7 @@ export default function AddressModal() {
               </label>
             </div>
 
-            {/* Action Buttons */}
+            
             <div className="flex items-center justify-end gap-3 pt-3 border-t border-desa-primary/10">
               <button
                 type="button"

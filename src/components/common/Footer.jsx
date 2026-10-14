@@ -19,14 +19,14 @@ export default function Footer() {
 
   return (
     <footer className="bg-desa-primary text-desa-light relative overflow-hidden mt-20">
-      {/* Decorative Traditional Lurik Line at Top of Footer */}
+      
       <LurikDivider variant="light" height="3px" />
 
-      {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
+      
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           
-          {/* Col 1: Brand & Desa Profile */}
+          
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-desa-light text-desa-primary flex items-center justify-center font-bold">
@@ -42,7 +42,7 @@ export default function Footer() {
               berbasis kearifan budaya dan teknologi modern.
             </p>
 
-            {/* Social Media SVG Icons */}
+            
             <div className="flex items-center gap-3 pt-2">
               <a 
                 href="#instagram" 
@@ -77,21 +77,21 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Col 2: Alamat Kantor Desa */}
+          
           <div className="space-y-4">
             <h4 className="font-heading text-lg font-semibold text-desa-light border-b border-white/20 pb-2 inline-block">
-              Alamat Kantor Desa
+              Wilayah layanan
             </h4>
             <ul className="space-y-3 text-sm text-desa-light/85">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-desa-accent shrink-0 mt-1" />
                 <span>
-                  Gedung Balai Desa Mandiri, Jl. Raya Utama No. 01, Dusun Krajan RT 01/RW 01, Kode Pos 55581
+                  Kecamatan Sumedang Utara, Kabupaten Sumedang, Jawa Barat
                 </span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-desa-accent shrink-0" />
-                <span>(0274) 890-123 / 0812-3456-7890</span>
+                <span>(0261) 890-123 / 0812-3456-7890</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-desa-accent shrink-0" />
@@ -104,7 +104,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 3: Navigasi Cepat */}
+          
           <div className="space-y-4">
             <h4 className="font-heading text-lg font-semibold text-desa-light border-b border-white/20 pb-2 inline-block">
               Navigasi Cepat
@@ -147,13 +147,13 @@ export default function Footer() {
                   onClick={() => { setWebPage('about'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                   className="hover:text-desa-accent transition-colors flex items-center gap-2"
                 >
-                  <span className="text-desa-accent">›</span> Profil 5 Dusun Pengrajin
+                  <span className="text-desa-accent">›</span> UMKM di 5 Kecamatan
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* Col 4: Aplikasi Mobile PWA Banner */}
+          
           <div className="space-y-4">
             <h4 className="font-heading text-lg font-semibold text-desa-light border-b border-white/20 pb-2 inline-block">
               Pasang Aplikasi Mobile
@@ -181,12 +181,12 @@ export default function Footer() {
 
         </div>
 
-        {/* Lurik Sub-divider */}
+        
         <div className="my-10">
           <LurikDivider variant="light" height="1px" />
         </div>
 
-        {/* Bottom Bar */}
+        
         <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-desa-light/70 gap-4">
           <p>© 2026 Pasar Desa Mandiri. Palet Lurik Kontemporer.</p>
           <div className="flex items-center gap-1">

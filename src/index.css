@@ -7,7 +7,7 @@
     background-color: #EFEDE6;
     color: #232220;
     font-family: 'Work Sans', sans-serif;
-    overflow-x: hidden;
+    min-width: 320px;
   }
 
   h1, h2, h3, h4, .font-heading {
@@ -15,7 +15,7 @@
   }
 }
 
-/* Dynamic Lurik Traditional Decorative Accents */
+
 .lurik-border-t {
   position: relative;
 }
@@ -44,7 +44,7 @@
   opacity: 0.8;
 }
 
-/* Shimmering Lurik Scan Animation */
+
 @keyframes lurikScan {
   0% {
     background-position: 0% 0%;
@@ -59,7 +59,7 @@
   animation: lurikScan 8s linear infinite;
 }
 
-/* Float Animations */
+
 @keyframes floatSlow {
   0%, 100% {
     transform: translateY(0px) rotate(0deg);
@@ -86,7 +86,7 @@
   animation: floatReverse 5s ease-in-out infinite;
 }
 
-/* Shimmer Light Beam Effect */
+
 @keyframes shimmerBeam {
   0% {
     transform: translateX(-100%);
@@ -117,7 +117,7 @@
   animation: shimmerBeam 3.5s infinite;
 }
 
-/* Custom Scrollbar */
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

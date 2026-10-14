@@ -15,11 +15,11 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
       whileHover={{ y: -6, transition: { duration: 0.2, ease: 'easeOut' } }}
       className="group bg-white rounded-2xl overflow-hidden border border-desa-primary/15 hover:border-desa-primary/40 hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative"
     >
-      {/* Dynamic Animated Lurik Top Edge on Hover */}
+      
       <div className="absolute top-0 left-0 right-0 h-1.5 bg-[repeating-linear-gradient(90deg,#3A3A38_0px,#3A3A38_2px,transparent_2px,transparent_7px)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
 
       <div>
-        {/* Product Image Container */}
+        
         <div 
           onClick={() => viewProduct(product.id)}
           className="relative aspect-square overflow-hidden bg-desa-primary/5 cursor-pointer"
@@ -33,7 +33,7 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
             loading="lazy"
           />
 
-          {/* Badges with subtle bounce */}
+          
           <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
             {product.isFeatured && (
               <motion.span 
@@ -51,7 +51,7 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
             )}
           </div>
 
-          {/* Discount Badge if available */}
+          
           {product.originalPrice && product.originalPrice > product.price && (
             <div className="absolute top-2.5 right-2.5">
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-desa-primary text-desa-light shadow-md">
@@ -60,7 +60,7 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
             </div>
           )}
 
-          {/* Floating Chat Toko Quick Button */}
+          
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -74,9 +74,9 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
           </button>
         </div>
 
-        {/* Content */}
+        
         <div className={`p-4 ${isCompact ? 'p-3' : 'p-4'}`}>
-          {/* Shop & Location */}
+          
           <div className="flex items-center justify-between text-xs text-desa-text/60 mb-1.5 gap-2">
             <button
               onClick={(e) => {
@@ -90,11 +90,11 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
             </button>
             <div className="flex items-center gap-0.5 shrink-0 text-[11px]">
               <MapPin className="w-3 h-3 text-desa-primary/60" />
-              <span className="truncate">{product.dusun.split(' ')[1] || 'Dusun'}</span>
+              <span className="truncate">{product.kecamatan.replace(/^Kecamatan /, '')}</span>
             </div>
           </div>
 
-          {/* Product Title */}
+          
           <h3 
             onClick={() => viewProduct(product.id)}
             className="font-medium text-desa-primary text-sm line-clamp-2 leading-snug cursor-pointer group-hover:text-desa-accent transition-colors mb-2"
@@ -103,7 +103,7 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
             {product.name}
           </h3>
 
-          {/* Rating & Sold count */}
+          
           <div className="flex items-center gap-2 text-xs mb-3">
             <div className="flex items-center text-amber-500 font-semibold gap-0.5">
               <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
@@ -119,7 +119,7 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
             </span>
           </div>
 
-          {/* Price */}
+          
           <div className="flex items-baseline gap-2">
             <span className="font-heading font-bold text-base text-desa-primary">
               Rp {product.price.toLocaleString('id-ID')}
@@ -133,7 +133,7 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
         </div>
       </div>
 
-      {/* Action Footer: Tambah Keranjang & Checkout Langsung */}
+      
       <div className="px-4 pb-4 pt-1 flex items-center gap-2 border-t border-desa-primary/10">
         <motion.button
           whileHover={{ scale: 1.02 }}

@@ -1,7 +1,7 @@
   import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import LurikDivider from '../../components/common/LurikDivider';
-import { DUSUN_LIST } from '../../data/mockData';
+import { KECAMATAN_LIST } from '../../data/mockData';
 import { 
   Store, 
   User, 
@@ -28,27 +28,19 @@ export default function AuthPage() {
     triggerNotification 
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState('masuk'); // 'masuk' or 'daftar'
+  const [activeTab, setActiveTab] = useState('masuk');
   const [showPassword, setShowPassword] = useState(false);
-
-  // Form Masuk States
   const [loginIdentifier, setLoginIdentifier] = useState('081234567890');
   const [loginPassword, setLoginPassword] = useState('password123');
-
-  // Form Daftar States
   const [regName, setRegName] = useState('');
   const [regPhone, setRegPhone] = useState('');
   const [regPassword, setRegPassword] = useState('');
   const [regConfirmPassword, setRegConfirmPassword] = useState('');
-  const [regRole, setRegRole] = useState('belanja'); // 'belanja', 'jualan', 'keduanya'
-  
-  // Conditional seller fields
+  const [regRole, setRegRole] = useState('belanja');
   const [regShopName, setRegShopName] = useState('');
   const [regShopCategory, setRegShopCategory] = useState('Kerajinan Tangan');
-  const [regDusun, setRegDusun] = useState('Dusun Krajan (Pusat)');
+  const [regKecamatan, setRegKecamatan] = useState('Kecamatan Sumedang Utara');
   const [agreedTerms, setAgreedTerms] = useState(true);
-
-  // Handle Login
   const handleLoginSubmit = (e) => {
     e.preventDefault();
     if (!loginIdentifier || !loginPassword) {
@@ -64,7 +56,7 @@ export default function AuthPage() {
       role: 'keduanya',
       shopId: 'toko-1',
       shopName: 'Griya Tenun Lurik Lestari',
-      dusun: 'Dusun Krajan (Pusat)'
+      kecamatan: 'Kecamatan Sumedang Utara'
     };
 
     setIsLoggedIn(true);
@@ -72,8 +64,6 @@ export default function AuthPage() {
     triggerNotification('Berhasil Masuk', `Selamat datang kembali, ${dummyUser.name}!`);
     setWebPage('home');
   };
-
-  // Handle Register
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
     if (!regName || !regPhone || !regPassword) {
@@ -97,7 +87,7 @@ export default function AuthPage() {
       role: regRole,
       shopId: (regRole === 'jualan' || regRole === 'keduanya') ? `toko-${Date.now()}` : null,
       shopName: regShopName || null,
-      dusun: regDusun
+      kecamatan: regKecamatan
     };
 
     setIsLoggedIn(true);
@@ -107,19 +97,19 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       
-      {/* Decorative Traditional Lurik Line at Top */}
+      
       <div className="mb-8">
         <LurikDivider variant="dark" height="2px" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        {/* Main Auth Form Container */}
+        
         <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-10 border border-desa-primary/20 shadow-xl relative overflow-hidden">
           
-          {/* Logo & Tagline Header */}
+          
           <div className="flex items-center gap-3.5 mb-8">
             <div className="w-12 h-12 rounded-xl bg-desa-primary text-desa-light flex items-center justify-center shadow">
               <Store className="w-6 h-6" />
@@ -139,7 +129,7 @@ export default function AuthPage() {
             </div>
           </div>
 
-          {/* Tab Switcher: Masuk / Daftar */}
+          
           <div className="flex border-b border-desa-primary/15 mb-6">
             <button
               type="button"
@@ -172,7 +162,7 @@ export default function AuthPage() {
             </button>
           </div>
 
-          {/* TAB 1: FORM MASUK */}
+          
           {activeTab === 'masuk' && (
             <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div>
@@ -235,7 +225,7 @@ export default function AuthPage() {
                 </button>
               </div>
 
-              {/* Demo Quick Account Helper */}
+              
               <div className="mt-4 p-3 bg-desa-bg/70 rounded-xl border border-desa-primary/10 text-xs text-desa-text/70">
                 <span className="font-bold text-desa-primary block mb-0.5">Akun Demo Pengujian Ujikom:</span>
                 <span>Klik langsung tombol Masuk di atas (data default akun penjual Ibu Sumarsih sudah terisi).</span>
@@ -243,7 +233,7 @@ export default function AuthPage() {
             </form>
           )}
 
-          {/* TAB 2: FORM DAFTAR */}
+          
           {activeTab === 'daftar' && (
             <form onSubmit={handleRegisterSubmit} className="space-y-4">
               <div>
@@ -306,12 +296,12 @@ export default function AuthPage() {
                 </div>
               </div>
 
-              {/* Pilihan Peran: Belanja / Jualan / Keduanya */}
+              
               <div className="pt-1">
                 <label className="block text-xs font-bold uppercase tracking-wider text-desa-primary mb-2">
                   Pilihan Peran Akun:
                 </label>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 min-[420px]:grid-cols-3 gap-2">
                   <button
                     type="button"
                     onClick={() => setRegRole('belanja')}
@@ -350,7 +340,7 @@ export default function AuthPage() {
                 </div>
               </div>
 
-              {/* Field Tambahan Khusus Jualan / Keduanya */}
+              
               {(regRole === 'jualan' || regRole === 'keduanya') && (
                 <div className="p-4 bg-desa-bg/60 rounded-2xl border border-desa-primary/15 space-y-3 animate-fadeIn">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-desa-accent">
@@ -392,14 +382,14 @@ export default function AuthPage() {
 
                     <div>
                       <label className="block text-[11px] font-semibold text-desa-primary mb-1">
-                        Dusun / Lokasi Sentra
+                        Kecamatan / Lokasi Sentra
                       </label>
                       <select
-                        value={regDusun}
-                        onChange={(e) => setRegDusun(e.target.value)}
+                        value={regKecamatan}
+                        onChange={(e) => setRegKecamatan(e.target.value)}
                         className="w-full px-3 py-2 bg-white border border-desa-primary/20 rounded-xl text-xs focus:outline-none focus:border-desa-primary"
                       >
-                        {DUSUN_LIST.filter(d => d !== 'Semua Dusun').map((d) => (
+                        {KECAMATAN_LIST.filter(d => d !== 'Semua Kecamatan').map((d) => (
                           <option key={d} value={d}>{d}</option>
                         ))}
                       </select>
@@ -408,7 +398,7 @@ export default function AuthPage() {
                 </div>
               )}
 
-              {/* Syarat & Ketentuan Checkbox */}
+              
               <div className="flex items-start gap-2 pt-1">
                 <input
                   type="checkbox"
@@ -430,7 +420,7 @@ export default function AuthPage() {
                 </label>
               </div>
 
-              {/* Submit Button */}
+              
               <div className="pt-2">
                 <button
                   type="submit"
@@ -445,10 +435,10 @@ export default function AuthPage() {
 
         </div>
 
-        {/* Right Mini Sidebar: Banner Ajakan Pasang Aplikasi PWA */}
+        
         <div className="lg:col-span-5 space-y-6">
           <div className="bg-gradient-to-br from-desa-primary to-[#2C2C2A] text-desa-light rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
-            {/* Lurik watermark */}
+            
             <div className="absolute inset-0 bg-lurik-stripes-light opacity-15 pointer-events-none" />
 
             <div className="relative z-10 space-y-4">
@@ -492,7 +482,7 @@ export default function AuthPage() {
             </div>
           </div>
 
-          {/* Quick Help Card */}
+          
           <div className="bg-white rounded-2xl p-5 border border-desa-primary/15 text-xs space-y-2">
             <h4 className="font-heading font-bold text-desa-primary text-sm flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-desa-highlight" />

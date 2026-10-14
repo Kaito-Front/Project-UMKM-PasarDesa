@@ -39,8 +39,6 @@ export default function CheckoutModal() {
   const [createdOrderId, setCreatedOrderId] = useState(null);
 
   if (!isCheckoutOpen) return null;
-
-  // Tentukan item apa yang sedang dicheckout: direct item atau seluruh keranjang
   const checkoutItems = checkoutDirectItem ? [checkoutDirectItem] : cart;
 
   const subtotal = checkoutItems.reduce((sum, item) => sum + (item.product.price * item.qty), 0);
@@ -75,7 +73,7 @@ export default function CheckoutModal() {
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-3 sm:p-6">
-        {/* Backdrop */}
+        
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -84,14 +82,14 @@ export default function CheckoutModal() {
           className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
         />
 
-        {/* Modal Window */}
+        
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           className="relative w-full max-w-3xl bg-desa-bg rounded-3xl shadow-2xl overflow-hidden border border-desa-primary/20 z-10 flex flex-col max-h-[92vh]"
         >
-          {/* Header */}
+          
           <div className="px-6 py-4 bg-desa-primary text-desa-light flex items-center justify-between relative overflow-hidden">
             <div className="absolute inset-0 bg-lurik-stripes-light opacity-10" />
             <div className="flex items-center gap-3 relative z-10">
@@ -103,7 +101,7 @@ export default function CheckoutModal() {
                   {isSuccess ? 'Pesanan Berhasil Diajukan' : 'Checkout & Pembayaran'}
                 </h3>
                 <p className="text-xs text-desa-light/70">
-                  {isSuccess ? 'Transaksi Anda telah tercatat di BUMDes' : 'Periksa alamat, kurir dusun, dan metode pembayaran'}
+                  {isSuccess ? 'Transaksi Anda telah tercatat di BUMDes' : 'Periksa alamat, kurir kecamatan, dan metode pembayaran'}
                 </p>
               </div>
             </div>
@@ -118,7 +116,7 @@ export default function CheckoutModal() {
 
           <LurikDivider variant="accent" />
 
-          {/* Sukses View */}
+          
           {isSuccess ? (
             <div className="p-8 text-center space-y-6 overflow-y-auto">
               <div className="w-20 h-20 rounded-full bg-desa-highlight/20 text-desa-highlight flex items-center justify-center mx-auto border-2 border-desa-highlight/30">
@@ -137,7 +135,7 @@ export default function CheckoutModal() {
                 </p>
               </div>
 
-              {/* Rincian Ringkas */}
+              
               <div className="max-w-md mx-auto bg-white rounded-2xl p-4 border border-desa-primary/10 text-left text-xs space-y-2.5">
                 <div className="flex justify-between pb-2 border-b border-desa-primary/10">
                   <span className="text-desa-text/60">Penerima</span>
@@ -173,9 +171,9 @@ export default function CheckoutModal() {
               </div>
             </div>
           ) : (
-            /* Checkout Form */
+            
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              {/* SEKSI 1: ALAMAT PENGIRIMAN & GOOGLE MAPS */}
+              
               <div className="bg-white rounded-2xl p-4 sm:p-5 border border-desa-primary/10 shadow-xs">
                 <div className="flex items-center justify-between pb-3 border-b border-desa-primary/10 mb-3">
                   <div className="flex items-center gap-2">
@@ -197,7 +195,7 @@ export default function CheckoutModal() {
                   </button>
                 </div>
 
-                {/* Pilihan Alamat yang Tersedia */}
+                
                 <div className="space-y-3">
                   {addresses.map((addr) => {
                     const isSelected = addr.id === selectedAddressId;
@@ -219,7 +217,7 @@ export default function CheckoutModal() {
                                 Utama
                               </span>
                             )}
-                            <span className="text-[11px] text-desa-text/60">({addr.dusun})</span>
+                            <span className="text-[11px] text-desa-text/60">({addr.kecamatan})</span>
                           </div>
                           <p className="text-xs font-semibold text-desa-text mt-1">
                             {addr.receiverName} <span className="font-normal text-desa-text/70">• {addr.phone}</span>
@@ -234,7 +232,7 @@ export default function CheckoutModal() {
                           )}
                         </div>
 
-                        {/* Google Maps link & Pin info */}
+                        
                         <div className="flex sm:flex-col items-center sm:items-end justify-between gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-desa-primary/5">
                           <a
                             href={`https://www.google.com/maps?q=${addr.lat},${addr.lng}`}
@@ -266,7 +264,7 @@ export default function CheckoutModal() {
                 </div>
               </div>
 
-              {/* SEKSI 2: DAFTAR PRODUK YANG DIBELI */}
+              
               <div className="bg-white rounded-2xl p-4 sm:p-5 border border-desa-primary/10 shadow-xs">
                 <div className="flex items-center gap-2 pb-3 border-b border-desa-primary/10 mb-3">
                   <Store className="w-4 h-4 text-desa-accent" />
@@ -313,7 +311,7 @@ export default function CheckoutModal() {
                 </div>
               </div>
 
-              {/* SEKSI 3: PILIHAN KURIR PENGIRIMAN DESA */}
+              
               <div className="bg-white rounded-2xl p-4 sm:p-5 border border-desa-primary/10 shadow-xs">
                 <div className="flex items-center gap-2 pb-3 border-b border-desa-primary/10 mb-3">
                   <Truck className="w-4 h-4 text-desa-accent" />
@@ -354,7 +352,7 @@ export default function CheckoutModal() {
                 </div>
               </div>
 
-              {/* SEKSI 4: METODE PEMBAYARAN */}
+              
               <div className="bg-white rounded-2xl p-4 sm:p-5 border border-desa-primary/10 shadow-xs">
                 <div className="flex items-center gap-2 pb-3 border-b border-desa-primary/10 mb-3">
                   <CreditCard className="w-4 h-4 text-desa-accent" />
@@ -389,7 +387,7 @@ export default function CheckoutModal() {
                 </div>
               </div>
 
-              {/* SEKSI 5: RINCIAN HARGA TOTAL */}
+              
               <div className="p-4 bg-desa-primary/5 rounded-2xl border border-desa-primary/10 space-y-2 text-xs">
                 <div className="flex justify-between text-desa-text/70">
                   <span>Subtotal Produk ({checkoutItems.reduce((acc, i) => acc + i.qty, 0)} item)</span>
@@ -413,7 +411,7 @@ export default function CheckoutModal() {
             </div>
           )}
 
-          {/* Footer Actions (hanya jika belum sukses) */}
+          
           {!isSuccess && (
             <div className="p-5 bg-white border-t border-desa-primary/10 flex items-center justify-between gap-4">
               <div className="hidden sm:block">

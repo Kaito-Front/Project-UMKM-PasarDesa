@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
 import ProductCard from '../../components/common/ProductCard';
 import LurikDivider from '../../components/common/LurikDivider';
-import { DUSUN_LIST } from '../../data/mockData';
+import { KECAMATAN_LIST } from '../../data/mockData';
 import { 
   Search, 
   SlidersHorizontal, 
@@ -22,8 +22,8 @@ export default function CatalogPage() {
     setSearchQuery,
     selectedCategory, 
     setSelectedCategory,
-    selectedDusun, 
-    setSelectedDusun,
+    selectedKecamatan, 
+    setSelectedKecamatan,
     priceRange, 
     setPriceRange,
     sortBy, 
@@ -34,14 +34,9 @@ export default function CatalogPage() {
   const [showMobileFilter, setShowMobileFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-
-  // Filter & sort logic
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
-      // Exclude hidden products (from moderation)
       if (p.isHidden) return false;
-
-      // Search query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const matchName = p.name.toLowerCase().includes(q);
@@ -49,23 +44,15 @@ export default function CatalogPage() {
         const matchDesc = p.description.toLowerCase().includes(q);
         if (!matchName && !matchShop && !matchDesc) return false;
       }
-
-      // Category filter
       if (selectedCategory !== 'semua' && p.category !== selectedCategory) {
         return false;
       }
-
-      // Dusun filter
-      if (selectedDusun !== 'Semua Dusun' && p.dusun !== selectedDusun) {
+      if (selectedKecamatan !== 'Semua Kecamatan' && p.kecamatan !== selectedKecamatan) {
         return false;
       }
-
-      // Price range
       if (p.price < priceRange[0] || p.price > priceRange[1]) {
         return false;
       }
-
-      // Rating filter
       if (minRating > 0 && p.rating < minRating) {
         return false;
       }
@@ -76,12 +63,9 @@ export default function CatalogPage() {
       if (sortBy === 'termahal') return b.price - a.price;
       if (sortBy === 'terlaris') return b.sold - a.sold;
       if (sortBy === 'rating') return b.rating - a.rating;
-      // Default: terbaru
       return 0;
     });
-  }, [products, searchQuery, selectedCategory, selectedDusun, priceRange, minRating, sortBy]);
-
-  // Pagination
+  }, [products, searchQuery, selectedCategory, selectedKecamatan, priceRange, minRating, sortBy]);
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage) || 1;
   const paginatedProducts = filteredProducts.slice(
     (currentPage - 1) * itemsPerPage,
@@ -91,7 +75,7 @@ export default function CatalogPage() {
   const resetFilters = () => {
     setSearchQuery('');
     setSelectedCategory('semua');
-    setSelectedDusun('Semua Dusun');
+    setSelectedKecamatan('Semua Kecamatan');
     setPriceRange([0, 300000]);
     setMinRating(0);
     setSortBy('terbaru');
@@ -99,18 +83,18 @@ export default function CatalogPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       
-      {/* Top Search & Filter Bar (Tetap terlihat di atas) */}
+      
       <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-desa-primary/15">
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
           
-          {/* Search Input */}
+          
           <div className="relative flex-1">
             <Search className="w-5 h-5 text-desa-accent absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
-              placeholder="Cari produk lurik, kuliner, kerajinan dusun..."
+              placeholder="Cari produk lurik, kuliner, dan kerajinan Sumedang..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -128,9 +112,9 @@ export default function CatalogPage() {
             )}
           </div>
 
-          {/* Right Controls: Sorting & Mobile Filter Button */}
+          
           <div className="flex items-center gap-3 justify-between md:justify-end">
-            {/* Mobile Filter Toggle */}
+            
             <button
               onClick={() => setShowMobileFilter(!showMobileFilter)}
               className="lg:hidden flex items-center gap-2 px-4 py-2.5 rounded-xl border border-desa-primary/25 bg-desa-bg text-desa-primary text-xs font-semibold"
@@ -139,7 +123,7 @@ export default function CatalogPage() {
               <span>Filter ({selectedCategory !== 'semua' ? '1+' : '0'})</span>
             </button>
 
-            {/* Sorting Dropdown */}
+            
             <div className="flex items-center gap-2 text-xs">
               <span className="text-desa-text/60 font-medium hidden sm:inline">Urutkan:</span>
               <select
@@ -161,8 +145,8 @@ export default function CatalogPage() {
 
         </div>
 
-        {/* Active Filter Pills Indicator */}
-        {(selectedCategory !== 'semua' || selectedDusun !== 'Semua Dusun' || searchQuery || minRating > 0) && (
+        
+        {(selectedCategory !== 'semua' || selectedKecamatan !== 'Semua Kecamatan' || searchQuery || minRating > 0) && (
           <div className="flex flex-wrap items-center gap-2 pt-4 mt-4 border-t border-desa-primary/10 text-xs">
             <span className="text-desa-text/60 font-medium">Filter aktif:</span>
             {selectedCategory !== 'semua' && (
@@ -171,10 +155,10 @@ export default function CatalogPage() {
                 <button onClick={() => setSelectedCategory('semua')}>×</button>
               </span>
             )}
-            {selectedDusun !== 'Semua Dusun' && (
+            {selectedKecamatan !== 'Semua Kecamatan' && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-desa-primary/10 text-desa-primary font-medium">
-                Dusun: {selectedDusun}
-                <button onClick={() => setSelectedDusun('Semua Dusun')}>×</button>
+                Kecamatan: {selectedKecamatan}
+                <button onClick={() => setSelectedKecamatan('Semua Kecamatan')}>×</button>
               </span>
             )}
             {minRating > 0 && (
@@ -195,10 +179,10 @@ export default function CatalogPage() {
         )}
       </div>
 
-      {/* Main Grid & Sidebar Layout */}
+      
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
         
-        {/* SIDEBAR FILTER (Desktop & Collapsible Mobile) */}
+        
         <aside className={`lg:col-span-1 bg-white rounded-2xl p-6 border border-desa-primary/15 shadow-sm space-y-6 ${showMobileFilter ? 'block' : 'hidden lg:block'}`}>
           
           <div className="flex items-center justify-between pb-4 border-b border-desa-primary/15">
@@ -216,7 +200,7 @@ export default function CatalogPage() {
             </button>
           </div>
 
-          {/* 1. Kategori Filter */}
+          
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-desa-primary">
               Kategori Produk
@@ -248,27 +232,27 @@ export default function CatalogPage() {
 
           <LurikDivider height="1px" />
 
-          {/* 2. Lokasi / Dusun Filter */}
+          
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-desa-primary">
-              Dusun / Lokasi Sentra
+              Kecamatan / Lokasi Sentra
             </h4>
             <div className="space-y-1.5">
-              {DUSUN_LIST.map((dusun) => (
+              {KECAMATAN_LIST.map((kecamatan) => (
                 <button
-                  key={dusun}
+                  key={kecamatan}
                   onClick={() => {
-                    setSelectedDusun(dusun);
+                    setSelectedKecamatan(kecamatan);
                     setCurrentPage(1);
                   }}
                   className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all flex items-center justify-between ${
-                    selectedDusun === dusun
+                    selectedKecamatan === kecamatan
                       ? 'bg-desa-accent text-white font-semibold shadow-sm'
                       : 'text-desa-text/80 hover:bg-desa-bg'
                   }`}
                 >
-                  <span className="truncate">{dusun}</span>
-                  {selectedDusun === dusun && <Check className="w-3.5 h-3.5" />}
+                  <span className="truncate">{kecamatan}</span>
+                  {selectedKecamatan === kecamatan && <Check className="w-3.5 h-3.5" />}
                 </button>
               ))}
             </div>
@@ -276,7 +260,7 @@ export default function CatalogPage() {
 
           <LurikDivider height="1px" />
 
-          {/* 3. Rentang Harga */}
+          
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-bold uppercase tracking-wider text-desa-primary">
@@ -306,7 +290,7 @@ export default function CatalogPage() {
 
           <LurikDivider height="1px" />
 
-          {/* 4. Rating Minimal */}
+          
           <div className="space-y-3">
             <h4 className="text-xs font-bold uppercase tracking-wider text-desa-primary">
               Rating Pembeli
@@ -334,10 +318,10 @@ export default function CatalogPage() {
 
         </aside>
 
-        {/* PRODUCT GRID & RESULTS */}
+        
         <main className="lg:col-span-3 space-y-6">
           
-          {/* Header Info */}
+          
           <div className="flex items-center justify-between text-xs text-desa-text/70">
             <span>
               Menampilkan <strong>{filteredProducts.length}</strong> produk lokal desa
@@ -345,7 +329,7 @@ export default function CatalogPage() {
             <span className="text-[11px]">Halaman {currentPage} dari {totalPages}</span>
           </div>
 
-          {/* Products List */}
+          
           {paginatedProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {paginatedProducts.map((product) => (
@@ -374,7 +358,7 @@ export default function CatalogPage() {
             </div>
           )}
 
-          {/* Pagination */}
+          
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 pt-6">
               <button

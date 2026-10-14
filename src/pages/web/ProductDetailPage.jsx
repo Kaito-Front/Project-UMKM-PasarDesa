@@ -78,9 +78,9 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+    <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
       
-      {/* Breadcrumb Navigation */}
+      
       <div className="flex items-center gap-2 text-xs text-desa-text/60">
         <button 
           onClick={() => setWebPage('home')} 
@@ -101,19 +101,19 @@ export default function ProductDetailPage() {
         </span>
       </div>
 
-      {/* Main Product Info Grid */}
+      
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         
-        {/* Left: Multi-Image Gallery */}
+        
         <div className="lg:col-span-6 space-y-4">
-          {/* Main Large Image */}
+          
           <div className="relative aspect-square rounded-2xl overflow-hidden bg-white border border-desa-primary/20 shadow-md">
             <img
               src={product.images[activeImageIndex] || product.images[0]}
               alt={product.name}
               className="w-full h-full object-cover object-center transition-all duration-300"
             />
-            {/* Lurik edge decorative highlight */}
+            
             <div className="absolute top-0 left-0 right-0 h-1 bg-[repeating-linear-gradient(90deg,#3A3A38_0px,#3A3A38_2px,transparent_2px,transparent_7px)] opacity-60" />
 
             <button
@@ -125,7 +125,7 @@ export default function ProductDetailPage() {
             </button>
           </div>
 
-          {/* Thumbnails Gallery */}
+          
           {product.images.length > 1 && (
             <div className="flex items-center gap-3 overflow-x-auto pb-2 no-scrollbar">
               {product.images.map((img, idx) => (
@@ -144,7 +144,7 @@ export default function ProductDetailPage() {
             </div>
           )}
 
-          {/* Trust Guarantees */}
+          
           <div className="grid grid-cols-3 gap-3 p-4 bg-white/60 rounded-xl border border-desa-primary/10 text-xs">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-desa-highlight shrink-0" />
@@ -161,24 +161,24 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Right: Product Details & Purchase Actions */}
+        
         <div className="lg:col-span-6 space-y-6">
           
-          {/* Header & Title */}
+          
           <div>
             <div className="flex items-center gap-2 mb-2">
               <span className="text-xs font-bold uppercase tracking-wider text-desa-accent bg-desa-accent/10 px-2.5 py-0.5 rounded-full">
                 {product.categoryName}
               </span>
               <span className="text-xs text-desa-text/50">•</span>
-              <span className="text-xs text-desa-text/70">{product.dusun}</span>
+              <span className="text-xs text-desa-text/70">{product.kecamatan}</span>
             </div>
 
             <h1 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary leading-snug">
               {product.name}
             </h1>
 
-            {/* Rating & Sold count */}
+            
             <div className="flex items-center gap-3 text-xs mt-3">
               <div className="flex items-center text-amber-500 font-semibold gap-1">
                 <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
@@ -191,7 +191,7 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Price & Stock Section */}
+          
           <div className="p-5 rounded-2xl bg-white border border-desa-primary/15 space-y-2">
             <div className="flex items-baseline gap-3">
               <span className="font-heading text-3xl font-bold text-desa-primary">
@@ -209,7 +209,7 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Quantity Selector & Note */}
+          
           <div className="space-y-3">
             <div className="flex items-center gap-4">
               <span className="text-xs font-bold uppercase tracking-wider text-desa-primary">
@@ -248,7 +248,7 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Action CTA Buttons (Tambah ke Keranjang, Checkout Langsung, dan Chat Toko) */}
+          
           <div className="space-y-3 pt-2">
             <div className="flex flex-col sm:flex-row items-stretch gap-3">
               <button
@@ -276,7 +276,7 @@ export default function ProductDetailPage() {
               </button>
             </div>
 
-            {/* Tombol Chat Admin Toko Spesifik */}
+            
             <button
               onClick={() => openChatWithShop(product.shopId, product)}
               className="w-full py-3 px-4 rounded-xl bg-desa-primary/5 hover:bg-desa-primary/10 border border-desa-primary/15 text-desa-primary text-xs font-bold transition-all flex items-center justify-center gap-2"
@@ -286,7 +286,7 @@ export default function ProductDetailPage() {
             </button>
           </div>
 
-          {/* Seller / Toko Profile Card (Sesuai Spek: nama toko, lokasi, rating, tombol Lihat Toko & Chat Toko) */}
+          
           <div className="p-5 rounded-2xl bg-white border border-desa-primary/20 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <img
@@ -307,7 +307,7 @@ export default function ProductDetailPage() {
                 </div>
                 <p className="text-xs text-desa-text/60 flex items-center gap-1 mt-0.5">
                   <MapPin className="w-3 h-3 text-desa-accent" />
-                  <span>{shop.dusun}</span>
+                  <span>{shop.kecamatan}</span>
                 </p>
                 <div className="flex items-center gap-2 text-[11px] text-desa-text/70 mt-1">
                   <div className="flex items-center text-amber-600 font-semibold gap-0.5">
@@ -340,7 +340,7 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Deskripsi Lengkap Produk */}
+          
           <div className="space-y-3 pt-2">
             <h3 className="font-heading font-bold text-base text-desa-primary border-b border-desa-primary/15 pb-2">
               Deskripsi Produk
@@ -349,10 +349,10 @@ export default function ProductDetailPage() {
               {product.description}
             </p>
 
-            {/* Specifications Table */}
+            
             {product.specifications && (
-              <div className="mt-4 border border-desa-primary/15 rounded-xl overflow-hidden">
-                <table className="w-full text-xs">
+              <div className="mt-4 overflow-x-auto rounded-xl border border-desa-primary/15">
+                <table className="w-full min-w-[24rem] text-xs">
                   <tbody>
                     {product.specifications.map((spec, i) => (
                       <tr key={i} className={i % 2 === 0 ? 'bg-desa-bg/40' : 'bg-white'}>
@@ -374,7 +374,7 @@ export default function ProductDetailPage() {
 
       </div>
 
-      {/* SECTION ULASAN PEMBELI */}
+      
       <section className="bg-white rounded-2xl p-6 sm:p-8 border border-desa-primary/15 shadow-sm space-y-6">
         <div className="flex items-center justify-between border-b border-desa-primary/15 pb-4">
           <div>
@@ -397,7 +397,7 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Add Review Form */}
+        
         <form onSubmit={handleAddReview} className="bg-desa-bg/50 p-4 rounded-xl border border-desa-primary/10 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-desa-primary">Tulis Ulasan Anda:</span>
@@ -429,7 +429,7 @@ export default function ProductDetailPage() {
           </button>
         </form>
 
-        {/* Reviews List */}
+        
         <div className="space-y-4 divide-y divide-desa-primary/10">
           {reviewsList.map((rev) => (
             <div key={rev.id} className="pt-4 first:pt-0 space-y-1.5">
@@ -450,7 +450,7 @@ export default function ProductDetailPage() {
         </div>
       </section>
 
-      {/* SECTION PRODUK LAIN DARI TOKO INI */}
+      
       {relatedProducts.length > 0 && (
         <section className="space-y-6">
           <div className="flex items-center justify-between">

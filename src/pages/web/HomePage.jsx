@@ -25,14 +25,12 @@ import {
   MapPin,
   ExternalLink
 } from 'lucide-react';
-
-// Animated Counter Component for Statistics
 function Counter({ value, suffix = '' }) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     let start = 0;
-    const duration = 1600; // ms
+    const duration = 1600;
     const stepTime = 20;
     const steps = duration / stepTime;
     const increment = value / steps;
@@ -68,8 +66,6 @@ export default function HomePage() {
 
   const [heroSearch, setHeroSearch] = useState('');
   const [carouselIndex, setCarouselIndex] = useState(0);
-
-  // Icon mapping for categories
   const getCategoryIcon = (iconName) => {
     switch(iconName) {
       case 'Utensils': return <Utensils className="w-6 h-6 text-desa-accent" />;
@@ -93,8 +89,6 @@ export default function HomePage() {
     setWebPage('catalog');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  // Filter products for sections
   const featuredProducts = products.filter(p => p.isFeatured || p.isPopular);
   const newUmkmShops = shops.slice(0, 4);
 
@@ -109,15 +103,15 @@ export default function HomePage() {
   return (
     <div className="space-y-20">
       
-      {/* 1. HERO SECTION WITH STAGGERED ENTRANCES */}
+      
       <section className="relative overflow-hidden pt-8 pb-16 lg:py-20 bg-gradient-to-b from-desa-bg via-white/50 to-desa-bg border-b border-desa-primary/10">
-        {/* Subtle decorative lurik lines on background borders */}
+        
         <div className="absolute top-0 left-0 right-0 h-1 bg-[repeating-linear-gradient(90deg,#3A3A38_0px,#3A3A38_2px,transparent_2px,transparent_8px)] opacity-30" />
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
-            {/* Left Content with Framer Motion Stagger */}
+            
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -151,11 +145,11 @@ export default function HomePage() {
                 transition={{ delay: 0.3, duration: 0.6 }}
                 className="text-base sm:text-lg text-desa-text/80 max-w-2xl font-light leading-relaxed"
               >
-                Jelajahi keindahan kain tenun lurik asli, kelezatan kuliner tradisional dusun, 
-                hasil bumi segar langs                                                   dari petani, dan ragam kerajinan tangan khas desa kami.
+                Jelajahi kain tenun lurik, kuliner tradisional, dan kerajinan UMKM Kabupaten Sumedang,
+                hasil bumi segar dari petani, dan kerajinan tangan buatan warga.
               </motion.p>
 
-              {/* Product Search Bar */}
+              
               <motion.form 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -185,10 +179,10 @@ export default function HomePage() {
                   </motion.button>
                 </div>
 
-                {/* Popular Keywords Tags */}
+                
                 <div className="flex flex-wrap items-center gap-2 mt-3 text-xs text-desa-text/60">
                   <span className="font-medium text-desa-primary">Pencarian populer:</span>
-                  {['Kain Lurik ATBM', 'Kripik Tempe Dusun', 'Madu Hutan Murni', 'Anyaman Bambu'].map((tag) => (
+                  {['Kain Lurik ATBM', 'Kripik Tempe Sumedang', 'Madu Hutan Murni', 'Anyaman Bambu'].map((tag) => (
                     <motion.button
                       key={tag}
                       whileHover={{ scale: 1.05 }}
@@ -207,12 +201,12 @@ export default function HomePage() {
                 </div>
               </motion.form>
 
-              {/* Trust Badges */}
+              
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
-                className="pt-4 grid grid-cols-3 gap-4 border-t border-desa-primary/10"
+                className="pt-4 grid grid-cols-1 gap-3 border-t border-desa-primary/10 sm:grid-cols-3 sm:gap-4"
               >
                 <div className="flex items-center gap-2 text-xs">
                   <CheckCircle2 className="w-4 h-4 text-desa-highlight shrink-0" />
@@ -230,7 +224,7 @@ export default function HomePage() {
 
             </motion.div>
 
-            {/* Right Hero Card Showcase with Floating Dynamics */}
+            
             <motion.div 
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -238,7 +232,7 @@ export default function HomePage() {
               className="lg:col-span-5 relative"
             >
               <div className="relative mx-auto max-w-md bg-white p-5 rounded-3xl shadow-2xl border border-desa-primary/20 animate-float">
-                {/* Decorative traditional lurik badge header */}
+                
                 <div className="flex items-center justify-between pb-3 mb-3 border-b border-desa-primary/15">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-desa-accent animate-ping" />
@@ -249,7 +243,7 @@ export default function HomePage() {
                   <span className="text-[11px] font-semibold text-desa-highlight">Terverifikasi Desa</span>
                 </div>
 
-                {/* Hero featured product image */}
+                
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-4 bg-desa-primary/5 group">
                   <img
                     src="kain-lurik.jpg"
@@ -267,7 +261,7 @@ export default function HomePage() {
                       <h4 className="font-heading font-bold text-lg text-desa-primary">
                         Tenun Tradisional ATBM
                       </h4>
-                      <p className="text-xs text-desa-text/70">Dusun Krajan RT 02 / RW 01</p>
+                      <p className="text-xs text-desa-text/70">Kecamatan Sumedang Utara RT 02 / RW 01</p>
                     </div>
                     <span className="font-heading text-lg font-bold text-desa-accent">
                       Rp 185.000
@@ -309,8 +303,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. SECTION KATEGORI POPULER WITH INTERACTIVE HOVER */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
@@ -363,8 +357,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. SECTION PRODUK UNGGULAN & TERLARIS (Dynamic Animated Carousel) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
@@ -427,9 +421,9 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* 4. SECTION UMKM BARU BERGABUNG */}
+      
       <section className="bg-white/70 border-y border-desa-primary/10 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
@@ -442,7 +436,7 @@ export default function HomePage() {
                 UMKM Baru Bergabung
               </h2>
               <p className="text-xs sm:text-sm text-desa-text/70 mt-1">
-                Dukung wirausaha mandiri di dusun-dusun binaan desa kami.
+                Dukung wirausaha mandiri di berbagai kecamatan Kabupaten Sumedang.
               </p>
             </div>
 
@@ -501,7 +495,7 @@ export default function HomePage() {
                     </h3>
                     <p className="text-xs text-desa-text/60 mb-2 flex items-center gap-1">
                       <MapPin className="w-3 h-3 text-desa-accent shrink-0" />
-                      <span className="truncate">{shop.dusun}</span>
+                      <span className="truncate">{shop.kecamatan}</span>
                     </p>
                     <p className="text-xs text-desa-text/75 line-clamp-2 font-light">
                       {shop.description}
@@ -521,10 +515,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. SECTION STATISTIK DESA (WITH DYNAMIC ANIMATED COUNTERS) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-desa-primary text-desa-light rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-2xl">
-          {/* Traditional Lurik background motif watermark with slow scan */}
+          
           <div className="absolute inset-0 bg-lurik-stripes-light opacity-15 pointer-events-none animate-lurik-scan" />
           
           <div className="relative z-10">
@@ -586,7 +580,7 @@ export default function HomePage() {
               >
                 <Award className="w-8 h-8 text-amber-400 mx-auto mb-3" />
                 <div className="font-heading text-3xl sm:text-4xl font-bold text-desa-light">
-                  5 Dusun
+                  5 Kecamatan
                 </div>
                 <p className="text-xs text-desa-light/70 mt-1 uppercase tracking-wider font-medium">
                   Sentra Pengrajin
@@ -597,12 +591,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 6. SECTION PASANG APLIKASI (Download PWA & Mockup HP dengan Animasi Floating) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-gradient-to-r from-desa-primary to-[#2F2F2D] text-desa-light rounded-3xl p-8 sm:p-14 overflow-hidden relative shadow-2xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             
-            {/* Left Content */}
+            
             <div className="lg:col-span-7 space-y-6">
               <span className="text-xs uppercase font-bold tracking-wider text-desa-highlight px-3 py-1 rounded-full bg-white/10 inline-block">
                 Aplikasi Mobile PWA
@@ -645,7 +639,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Action Buttons with Spring Hover */}
+              
               <div className="pt-4 flex flex-wrap items-center gap-4">
                 <motion.button
                   whileHover={{ scale: 1.04 }}
@@ -659,15 +653,15 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right Phone Mockup with Gentle Floating Animation */}
+            
             <div className="lg:col-span-5 flex justify-center">
               <div className="w-64 sm:w-72 rounded-[40px] bg-black p-3.5 shadow-2xl border-4 border-white/20 relative animate-float">
-                {/* Speaker pill notch */}
+                
                 <div className="w-24 h-4 bg-black rounded-full mx-auto mb-2" />
 
-                {/* Inner Screen */}
+                
                 <div className="rounded-[26px] bg-desa-bg text-desa-text overflow-hidden aspect-[9/18] p-3 flex flex-col justify-between border border-desa-primary/20">
-                  {/* Top bar inside mockup */}
+                  
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-[10px] text-desa-text/60">
                       <span className="font-bold text-desa-primary">Pasar Desa PWA</span>
@@ -677,13 +671,13 @@ export default function HomePage() {
                       <Search className="w-3.5 h-3.5 text-desa-accent" />
                       <span>Cari produk lurik...</span>
                     </div>
-                    {/* Mockup banner */}
+                    
                     <div className="h-16 rounded-xl bg-desa-primary text-desa-light p-2 text-[10px] flex flex-col justify-between relative overflow-hidden">
                       <div className="absolute inset-0 bg-lurik-stripes-light opacity-20" />
-                      <span className="font-bold z-10">Bazar UMKM Dusun</span>
+                  <span className="font-bold z-10">Bazar UMKM Sumedang</span>
                       <span className="text-[9px] text-desa-highlight font-medium z-10">Diskon Produk Lokal</span>
                     </div>
-                    {/* 2 mock products */}
+                    
                     <div className="grid grid-cols-2 gap-1.5 pt-1">
                       <div className="bg-white rounded-lg p-1.5 border border-desa-primary/10">
                         <div className="aspect-square rounded bg-gray-100 overflow-hidden mb-1">
@@ -702,7 +696,7 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  {/* Mock bottom navigation inside mockup */}
+                  
                   <div className="pt-2 border-t border-desa-primary/10 flex justify-around text-[9px] text-desa-text/60">
                     <span className="text-desa-accent font-bold">Beranda</span>
                     <span>Katalog</span>

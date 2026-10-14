@@ -1,13 +1,10 @@
 import React from 'react';
 
-/**
- * LurikDivider - Elemen dekoratif garis tipis ala lurik tradisional kontemporer
- * Digunakan pada header, footer, atau border kartu sesuai spesifikasi desain.
- */
+
 export default function LurikDivider({ 
   className = '', 
-  variant = 'dark', // 'dark', 'light', 'accent', 'double'
-  orientation = 'horizontal', // 'horizontal', 'vertical'
+  variant = 'dark',
+  orientation = 'horizontal',
   height = '3px'
 }) {
   if (orientation === 'vertical') {
@@ -52,8 +49,6 @@ export default function LurikDivider({
       </div>
     );
   }
-
-  // Default 'dark'
   return (
     <div 
       style={{ height }}
