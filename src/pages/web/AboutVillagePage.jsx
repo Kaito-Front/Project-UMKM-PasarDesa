@@ -94,7 +94,7 @@ export default function AboutVillagePage() {
 
         <div className="h-64 sm:h-80 rounded-2xl overflow-hidden border border-desa-primary/20 relative">
           <img
-            src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80"
+            src="kain-lurik.jpg"
             alt="Kain Tenun Lurik"
             className="w-full h-full object-cover"
           />

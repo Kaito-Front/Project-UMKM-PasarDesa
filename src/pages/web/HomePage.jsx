@@ -152,7 +152,7 @@ export default function HomePage() {
                 className="text-base sm:text-lg text-desa-text/80 max-w-2xl font-light leading-relaxed"
               >
                 Jelajahi keindahan kain tenun lurik asli, kelezatan kuliner tradisional dusun, 
-                hasil bumi segar langsung dari petani, dan ragam kerajinan tangan khas desa kami.
+                hasil bumi segar langs                                                   dari petani, dan ragam kerajinan tangan khas desa kami.
               </motion.p>
 
               {/* Product Search Bar */}
@@ -407,7 +407,21 @@ export default function HomePage() {
         >
           <AnimatePresence mode="popLayout">
             {featuredProducts.slice(carouselIndex, carouselIndex + 4).map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <motion.div
+                key={product.id}
+                layout
+                initial={{ opacity: 0, x: 50, scale: 0.95 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: -50, scale: 0.95 }}
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 250, 
+                  damping: 25, 
+                  mass: 0.5 
+                }}
+              >
+                <ProductCard product={product} />
+              </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>

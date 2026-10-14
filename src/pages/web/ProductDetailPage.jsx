@@ -408,7 +408,7 @@ export default function ProductDetailPage() {
                   key={star}
                   onClick={() => setReviewRating(star)}
                   className="p-1 text-amber-500 hover:scale-110 transition-transform"
-                >
+                > 
                   <Star className={`w-4 h-4 ${star <= reviewRating ? 'fill-amber-400 text-amber-400' : 'text-gray-300'}`} />
                 </button>
               ))}

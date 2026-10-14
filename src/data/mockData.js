@@ -34,8 +34,8 @@ export const SHOPS = [
     joinDate: 'Januari 2024',
     operatingHours: '08.00 - 17.00 WIB (Senin - Sabtu)',
     description: 'Menjaga tradisi tenun lurik khas desa dengan alat tenun bukan mesin (ATBM). Pewarna alami dedaunan dan serat katun 100% berkualitas tinggi untuk kenyamanan harian.',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80',
-    banner: 'https://images.unsplash.com/photo-1606744888344-498238f01769?auto=format&fit=crop&w=1200&q=80',
+    avatar: 'kain-lurik.jpg',
+    banner: 'kain-lurik.jpg',
     status: 'aktif',
     verified: true,
   },
@@ -139,9 +139,9 @@ export const PRODUCTS = [
     isPopular: true,
     isNew: false,
     images: [
-      'https://images.unsplash.com/photo-1606744888344-498238f01769?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=800&q=80'
+      'kain-lurik.jpg',
+      'kain-lurik1.jpg',
+      'kain-lurik-2.jpg'
     ],
     description: 'Kain tenun lurik asli dengan motif telupat hitam abu kontemporer. Ditenun secara telaten menggunakan ATBM (Alat Tenun Bukan Mesin) tradisional. Lembut, adem di kulit, tidak mudah pudar, dan sangat cocok untuk kemeja resmi, rompi etnik, maupun busana kasual.',
     specifications: [
