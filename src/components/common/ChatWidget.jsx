@@ -95,7 +95,7 @@ export default function ChatWidget() {
           className="fixed bottom-6 right-6 z-40 flex items-center gap-2"
         >
           <div className="hidden md:flex items-center gap-2 bg-desa-primary text-desa-light px-3.5 py-1.5 rounded-full shadow-lg border border-white/20 text-xs animate-bounce">
-            <span className="w-2 h-2 rounded-full bg-desa-highlight animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-[#C1CCB3]" />
             <span>Chat Asisten Desa & Toko</span>
           </div>
 

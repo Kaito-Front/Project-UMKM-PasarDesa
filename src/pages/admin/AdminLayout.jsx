@@ -849,7 +849,7 @@ export default function AdminLayout() {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={handleExportReport}
-                className="px-4 py-2.5 rounded-xl bg-desa-highlight hover:bg-desa-highlight/90 text-white font-bold text-xs shadow-md flex items-center gap-2 self-start sm:self-auto shimmer-shine"
+                className="px-4 py-2.5 rounded-xl bg-desa-highlight hover:bg-desa-highlight/90 text-white font-bold text-xs shadow-md flex items-center gap-2 self-start sm:self-auto"
               >
                 <Download className="w-4 h-4" />
                 <span>Ekspor Laporan CSV</span>

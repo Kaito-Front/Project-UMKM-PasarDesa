@@ -381,8 +381,8 @@ export default function ProductDetailPage() {
             <h3 className="font-heading font-bold text-xl text-desa-primary">
               Ulasan Pembeli ({reviewsList.length})
             </h3>
-            <p className="text-xs text-desa-text/60">
-              Pengalaman nyata dari warga dan pembeli yang telah memesan produk ini.
+            <p className="text-xs text-desa-text/70">
+              Ulasan dan rating ini adalah data simulasi untuk pratinjau.
             </p>
           </div>
           <div className="flex items-center gap-2">

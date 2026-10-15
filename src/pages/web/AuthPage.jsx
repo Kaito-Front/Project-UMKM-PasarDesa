@@ -457,15 +457,15 @@ export default function AuthPage() {
 
               <div className="space-y-2 pt-1 text-xs text-desa-light/90">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-desa-highlight shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-[#C1CCB3] shrink-0" />
                   <span>Ukuran sangat ringan (&lt; 2 MB)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-desa-highlight shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-[#C1CCB3] shrink-0" />
                   <span>Mode ganda: Pembeli & Penjual</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-desa-highlight shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-[#C1CCB3] shrink-0" />
                   <span>Langsung terhubung dengan WhatsApp UMKM</span>
                 </div>
               </div>

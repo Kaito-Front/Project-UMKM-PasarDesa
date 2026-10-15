@@ -174,7 +174,7 @@ export default function Footer() {
             </button>
 
             <div className="pt-2 text-[11px] text-desa-light/60 flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-desa-highlight" />
+              <ShieldCheck className="w-4 h-4 text-[#C1CCB3]" />
               <span>Dikelola resmi oleh Pemerintah Desa & BUMDes</span>
             </div>
           </div>

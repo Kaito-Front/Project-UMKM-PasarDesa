@@ -45,7 +45,7 @@ export default function Navbar() {
 
         <div className="max-w-screen-2xl mx-auto flex flex-wrap items-center justify-between gap-2 relative z-10">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-desa-highlight animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-[#C1CCB3]" />
             <span className="font-medium tracking-wide">
               Pasar Desa Mandiri - Platform Digital Produk Unggulan dan UMKM Warga
             </span>
@@ -130,7 +130,7 @@ export default function Navbar() {
             <div className="w-12 h-12 rounded-2xl bg-desa-primary text-desa-light flex items-center justify-center shadow-lg relative overflow-hidden group-hover:bg-[#2B2B2A] transition-colors">
               <Store className="w-6 h-6 text-desa-light relative z-10" />
               
-              <div className="absolute inset-0 bg-lurik-stripes-light opacity-30 animate-pulse" />
+              <div className="absolute inset-0 bg-lurik-stripes-light opacity-30" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -249,7 +249,7 @@ export default function Navbar() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setCurrentView('mobile')}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-desa-highlight text-white hover:bg-desa-highlight/90 shadow-md transition-all shimmer-shine"
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-desa-highlight text-white hover:bg-desa-highlight/90 shadow-md transition-all"
             >
               <Smartphone className="w-4 h-4" />
               <span>Aplikasi PWA</span>

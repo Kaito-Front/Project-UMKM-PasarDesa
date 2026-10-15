@@ -125,7 +125,7 @@ export default function HomePage() {
                 transition={{ delay: 0.1, duration: 0.5 }}
                 className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-desa-primary/5 border border-desa-primary/15 text-xs font-semibold text-desa-primary"
               >
-                <Sparkles className="w-3.5 h-3.5 text-desa-accent animate-spin" style={{ animationDuration: '6s' }} />
+                <Sparkles className="w-3.5 h-3.5 text-desa-accent" />
                 <span>Pemberdayaan Ekonomi Desa Berbasis Digital</span>
               </motion.div>
 
@@ -172,7 +172,7 @@ export default function HomePage() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     type="submit"
-                    className="px-6 py-3 rounded-xl bg-desa-highlight hover:bg-desa-highlight/90 text-white font-semibold text-sm shadow transition-all flex items-center justify-center gap-2 shimmer-shine"
+                    className="px-6 py-3 rounded-xl bg-desa-highlight hover:bg-desa-highlight/90 text-white font-semibold text-sm shadow transition-all flex items-center justify-center gap-2"
                   >
                     <span>Cari Produk</span>
                     <ArrowRight className="w-4 h-4" />
@@ -231,7 +231,7 @@ export default function HomePage() {
               transition={{ duration: 0.7, ease: 'easeOut' }}
               className="lg:col-span-5 relative"
             >
-              <div className="relative mx-auto max-w-md bg-white p-5 rounded-3xl shadow-2xl border border-desa-primary/20 animate-float">
+              <div className="relative mx-auto max-w-md bg-white p-5 rounded-3xl shadow-2xl border border-desa-primary/20">
                 
                 <div className="flex items-center justify-between pb-3 mb-3 border-b border-desa-primary/15">
                   <div className="flex items-center gap-2">
@@ -288,7 +288,7 @@ export default function HomePage() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setCurrentView('mobile')}
-                      className="py-2.5 px-4 rounded-xl bg-desa-highlight text-white text-xs font-semibold hover:bg-desa-highlight/90 transition-all flex items-center gap-1.5 shadow-md shimmer-shine"
+                      className="py-2.5 px-4 rounded-xl bg-desa-highlight text-white text-xs font-semibold hover:bg-desa-highlight/90 transition-all flex items-center gap-1.5 shadow-md"
                       title="Buka versi PWA"
                     >
                       <Smartphone className="w-3.5 h-3.5" />
@@ -523,8 +523,8 @@ export default function HomePage() {
           
           <div className="relative z-10">
             <div className="text-center max-w-2xl mx-auto mb-10">
-              <span className="text-xs uppercase font-bold tracking-widest text-desa-highlight bg-white/10 px-3 py-1 rounded-full">
-                Transparansi & Dampak Ekonomi
+              <span className="text-xs uppercase font-bold tracking-widest text-[#C1CCB3] bg-white/10 px-3 py-1 rounded-full">
+                Data simulasi
               </span>
               <h2 className="font-heading text-3xl sm:text-4xl font-bold text-desa-light mt-3">
                 Statistik Ekosistem Pasar Desa
@@ -539,7 +539,7 @@ export default function HomePage() {
                 whileHover={{ y: -4, scale: 1.02 }}
                 className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm shadow-md"
               >
-                <Users className="w-8 h-8 text-desa-highlight mx-auto mb-3" />
+                <Users className="w-8 h-8 text-[#C1CCB3] mx-auto mb-3" />
                 <div className="font-heading text-3xl sm:text-4xl font-bold text-desa-light">
                   <Counter value={stats.totalUmkm} suffix="+" />
                 </div>
@@ -565,7 +565,7 @@ export default function HomePage() {
                 whileHover={{ y: -4, scale: 1.02 }}
                 className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm shadow-md"
               >
-                <TrendingUp className="w-8 h-8 text-desa-highlight mx-auto mb-3" />
+                <TrendingUp className="w-8 h-8 text-[#C1CCB3] mx-auto mb-3" />
                 <div className="font-heading text-3xl sm:text-4xl font-bold text-desa-light">
                   <Counter value={stats.totalTransactions} />
                 </div>
@@ -598,7 +598,7 @@ export default function HomePage() {
             
             
             <div className="lg:col-span-7 space-y-6">
-              <span className="text-xs uppercase font-bold tracking-wider text-desa-highlight px-3 py-1 rounded-full bg-white/10 inline-block">
+              <span className="text-xs uppercase font-bold tracking-wider text-[#C1CCB3] px-3 py-1 rounded-full bg-white/10 inline-block">
                 Aplikasi Mobile PWA
               </span>
               
@@ -614,7 +614,7 @@ export default function HomePage() {
 
               <div className="space-y-3 pt-2">
                 <div className="flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-desa-highlight/30 text-desa-highlight flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                  <span className="w-6 h-6 rounded-full bg-[#C1CCB3]/20 text-[#C1CCB3] flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                     1
                   </span>
                   <p className="text-xs sm:text-sm text-desa-light/90">
@@ -622,7 +622,7 @@ export default function HomePage() {
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-desa-highlight/30 text-desa-highlight flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                  <span className="w-6 h-6 rounded-full bg-[#C1CCB3]/20 text-[#C1CCB3] flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                     2
                   </span>
                   <p className="text-xs sm:text-sm text-desa-light/90">
@@ -630,7 +630,7 @@ export default function HomePage() {
                   </p>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-desa-highlight/30 text-desa-highlight flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                  <span className="w-6 h-6 rounded-full bg-[#C1CCB3]/20 text-[#C1CCB3] flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                     3
                   </span>
                   <p className="text-xs sm:text-sm text-desa-light/90">
@@ -645,7 +645,7 @@ export default function HomePage() {
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => setCurrentView('mobile')}
-                  className="px-6 py-3.5 rounded-xl bg-desa-highlight hover:bg-desa-highlight/90 text-white font-bold text-sm shadow-xl transition-all flex items-center gap-2 group shimmer-shine"
+                  className="px-6 py-3.5 rounded-xl bg-desa-highlight hover:bg-desa-highlight/90 text-white font-bold text-sm shadow-xl transition-all flex items-center gap-2 group"
                 >
                   <Smartphone className="w-5 h-5 group-hover:scale-110 transition-transform" />
                   <span>Uji Coba Versi Mobile PWA Sekarang</span>
@@ -655,7 +655,7 @@ export default function HomePage() {
 
             
             <div className="lg:col-span-5 flex justify-center">
-              <div className="w-64 sm:w-72 rounded-[40px] bg-black p-3.5 shadow-2xl border-4 border-white/20 relative animate-float">
+              <div className="w-64 sm:w-72 rounded-[40px] bg-black p-3.5 shadow-2xl border-4 border-white/20 relative">
                 
                 <div className="w-24 h-4 bg-black rounded-full mx-auto mb-2" />
 

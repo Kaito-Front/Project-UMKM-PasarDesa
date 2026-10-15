@@ -10,7 +10,7 @@ export default {
         'desa-bg': '#EFEDE6',
         'desa-primary': '#3A3A38',
         'desa-accent': '#A85C3C',
-        'desa-highlight': '#7C8C6B',
+        'desa-highlight': '#526341',
         'desa-text': '#232220',
         'desa-light': '#EFEDE6',
       },

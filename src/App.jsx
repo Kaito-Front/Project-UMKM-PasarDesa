@@ -1,4 +1,5 @@
 import React from 'react';
+import { MotionConfig } from 'framer-motion';
 import { AppProvider, useApp } from './context/AppContext';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
@@ -58,7 +59,9 @@ function MainApp() {
 export default function App() {
   return (
     <AppProvider>
-      <MainApp />
+      <MotionConfig reducedMotion="user">
+        <MainApp />
+      </MotionConfig>
     </AppProvider>
   );
 }

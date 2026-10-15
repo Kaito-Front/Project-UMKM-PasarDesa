@@ -37,23 +37,24 @@ import {
 } from 'lucide-react';
 
 export default function MobileAppView() {
-  const { 
-    products, 
-    categories, 
-    orders, 
-    shops, 
-    announcements, 
-    currentUser, 
+  const {
+    products,
+    categories,
+    orders,
+    shops,
+    announcements,
+    currentUser,
     isLoggedIn,
-    savedFavorites, 
+    savedFavorites,
     toggleFavorite,
-    orderViaWhatsApp,
+    addToCart,
+    openDirectCheckout,
     addProduct,
     toggleProductStatus,
     updateOrderStatus,
     pushNotification,
     triggerNotification,
-    setCurrentView 
+    setCurrentView
   } = useApp();
   const [deviceFrameMode, setDeviceFrameMode] = useState(true); // phone frame vs full screen
   const [splashActive, setSplashActive] = useState(true);
@@ -84,6 +85,14 @@ export default function MobileAppView() {
     }
     return true;
   });
+
+  const statusColors = {
+    selesai: { bg: 'bg-desa-highlight/15', text: 'text-desa-highlight' },
+    dikirim: { bg: 'bg-desa-primary/10', text: 'text-desa-primary' },
+    diproses: { bg: 'bg-desa-accent/10', text: 'text-desa-accent' },
+  };
+  const getStatusColor = (status) =>
+    statusColors[status] || { bg: 'bg-desa-bg', text: 'text-desa-text/60' };
   const sellerProducts = products.filter(p => p.shopId === (currentUser?.shopId || 'toko-1'));
   const sellerOrders = orders.filter(o => o.shopName === (currentUser?.shopName || 'Griya Tenun Lurik Lestari'));
   const handleAddProductSubmit = (e) => {
@@ -201,8 +210,8 @@ export default function MobileAppView() {
                 Palet Lurik Kontemporer
               </motion.p>
 
-              <div className="mt-8 flex items-center gap-1.5 relative z-10 text-[11px] text-desa-highlight font-semibold">
-                <span className="w-2 h-2 rounded-full bg-desa-highlight animate-ping" />
+              <div className="mt-8 flex items-center gap-1.5 relative z-10 text-[11px] text-[#C1CCB3] font-semibold">
+                <span className="w-2 h-2 rounded-full bg-[#C1CCB3] animate-ping" />
                 <span>Memuat Aplikasi Desa...</span>
               </div>
               <span className="text-[10px] text-desa-light/40 mt-4">Ketuk di mana saja untuk melanjutkan</span>
@@ -302,7 +311,7 @@ export default function MobileAppView() {
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               className="absolute top-14 left-4 right-4 z-30 bg-desa-primary text-desa-light p-3 rounded-2xl shadow-xl border border-desa-light/20 flex items-start gap-3 pointer-events-none"
             >
-              <Bell className="w-5 h-5 text-desa-highlight shrink-0 mt-0.5 animate-bounce" />
+              <Bell className="w-5 h-5 text-[#C1CCB3] shrink-0 mt-0.5 animate-pulse" />
               <div className="flex-1 text-left">
                 <span className="font-bold text-xs block text-white">{pushNotification.title}</span>
                 <span className="text-[11px] text-desa-light/80 leading-tight block">{pushNotification.message}</span>
@@ -417,52 +426,66 @@ export default function MobileAppView() {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-bold text-desa-primary">Rekomendasi Warga</span>
-                      <span className="text-[10px] text-desa-text/50">{displayedProducts.length} Produk</span>
+                      <span className="text-[10px] text-desa-text/50">{displayedProducts.length} produk</span>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
-                      {displayedProducts.map((p) => (
+                      {displayedProducts.map((p, i) => (
                         <motion.div
                           key={p.id}
+                          initial={{ opacity: 0, y: 16 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.07, duration: 0.28, ease: 'easeOut' }}
                           whileTap={{ scale: 0.97 }}
                           onClick={() => setMobileSelectedProduct(p)}
-                          className="bg-white rounded-2xl overflow-hidden border border-desa-primary/15 shadow-sm flex flex-col justify-between"
+                          className="bg-white rounded-2xl overflow-hidden flex flex-col justify-between"
+                          style={{ boxShadow: '0 2px 12px rgba(58,58,56,0.09)' }}
                         >
                           <div>
                             <div className="aspect-square relative overflow-hidden bg-desa-bg">
-                              <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover" />
+                              <img src={p.images[0]} alt={`Foto produk ${p.name}`} className="w-full h-full object-cover" />
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   toggleFavorite(p.id);
                                 }}
-                                className="absolute top-2 right-2 p-1.5 rounded-full bg-white/90 text-desa-primary"
+                                className="absolute top-2 right-2 p-2 rounded-full bg-white/90 text-desa-primary transition-transform active:scale-90"
                               >
                                 <Heart className={`w-3.5 h-3.5 ${savedFavorites.includes(p.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
                               </button>
                             </div>
-                            <div className="p-2.5">
-                              <span className="text-[10px] text-desa-accent block truncate">{p.shopName}</span>
+                            <div className="p-3">
+                              <span className="text-[10px] text-desa-accent block truncate font-medium">{p.shopName}</span>
                               <h4 className="font-medium text-xs text-desa-primary line-clamp-2 leading-snug mt-0.5">
                                 {p.name}
                               </h4>
-                              <div className="font-heading font-bold text-xs text-desa-primary mt-1.5">
+                              <div className="font-heading font-bold text-sm text-desa-primary mt-1.5" style={{ fontVariantNumeric: 'tabular-nums' }}>
                                 Rp {p.price.toLocaleString('id-ID')}
                               </div>
                             </div>
                           </div>
-                          
-                          <div className="p-2.5 pt-0">
+
+                          <div className="p-3 pt-0 flex gap-2">
                             <motion.button
-                              whileTap={{ scale: 0.92 }}
+                              whileTap={{ scale: 0.93 }}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                orderViaWhatsApp(p, 1);
+                                addToCart(p, 1);
                               }}
-                              className="w-full py-1.5 px-2 rounded-lg bg-desa-highlight text-white text-[10px] font-bold flex items-center justify-center gap-1 shadow-sm"
+                              className="flex-1 py-2.5 rounded-xl border border-desa-primary/20 text-desa-primary text-[11px] font-bold flex items-center justify-center gap-1 transition-colors hover:bg-desa-bg"
                             >
-                              <MessageCircle className="w-3 h-3" />
-                              <span>Pesan WA</span>
+                              <ShoppingBag className="w-3.5 h-3.5" />
+                              <span>Keranjang</span>
+                            </motion.button>
+                            <motion.button
+                              whileTap={{ scale: 0.93 }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openDirectCheckout(p, 1);
+                              }}
+                              className="flex-1 py-2.5 rounded-xl bg-desa-accent text-white text-[11px] font-bold flex items-center justify-center transition-opacity hover:opacity-90"
+                            >
+                              <span>Beli</span>
                             </motion.button>
                           </div>
                         </motion.div>
@@ -1049,17 +1072,27 @@ export default function MobileAppView() {
                   </p>
                 </div>
 
-                <div className="pt-2">
+                <div className="pt-2 flex gap-2">
                   <motion.button
                     whileTap={{ scale: 0.95 }}
                     onClick={() => {
-                      orderViaWhatsApp(mobileSelectedProduct, 1);
+                      addToCart(mobileSelectedProduct, 1);
                       setMobileSelectedProduct(null);
                     }}
-                    className="w-full py-3.5 px-4 rounded-xl bg-desa-highlight text-white font-bold text-sm shadow-md flex items-center justify-center gap-2"
+                    className="flex-1 py-3.5 px-4 rounded-xl border border-desa-primary/30 text-desa-primary font-bold text-sm flex items-center justify-center gap-2"
                   >
-                    <MessageCircle className="w-5 h-5" />
-                    <span>Pesan Langsung via WhatsApp</span>
+                    <ShoppingBag className="w-5 h-5" />
+                    <span>+ Keranjang</span>
+                  </motion.button>
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      openDirectCheckout(mobileSelectedProduct, 1);
+                      setMobileSelectedProduct(null);
+                    }}
+                    className="flex-1 py-3.5 px-4 rounded-xl bg-desa-accent text-white font-bold text-sm shadow-md flex items-center justify-center gap-2"
+                  >
+                    <span>Beli Sekarang</span>
                   </motion.button>
                 </div>
               </motion.div>
