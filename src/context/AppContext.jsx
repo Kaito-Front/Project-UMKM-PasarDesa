@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
+import { createOrder as createOrderRequest, createProduct as createProductRequest, fetchCategories, fetchCurrentUser, fetchOrders, fetchProducts, fetchShops, fetchStats, loginRequest, logoutRequest, registerRequest, updateOrderStatus as updateOrderStatusRequest, updateProductNumbers as updateProductNumbersRequest, updateProductVisibility } from '../services/api';
 import { 
   PRODUCTS as INITIAL_PRODUCTS, 
   SHOPS as INITIAL_SHOPS, 
@@ -31,17 +32,8 @@ export function AppProvider({ children }) {
   const [selectedKecamatan, setSelectedKecamatan] = useState('Semua Kecamatan');
   const [priceRange, setPriceRange] = useState([0, 300000]);
   const [sortBy, setSortBy] = useState('terbaru');
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [currentUser, setCurrentUser] = useState({
-    id: 'usr-1',
-    name: 'Ibu Sumarsih',
-    phone: '081234567890',
-    email: 'sumarsih@pasardesa.id',
-    role: 'keduanya',
-    shopId: 'toko-1',
-    shopName: 'Griya Tenun Lurik Lestari',
-    kecamatan: 'Kecamatan Sumedang Utara'
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const [mobileRole, setMobileRole] = useState('pembeli');
   const [mobileTab, setMobileTab] = useState('beranda');
   const [showMobileSplash, setShowMobileSplash] = useState(false);
@@ -60,6 +52,64 @@ export function AppProvider({ children }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [checkoutDirectItem, setCheckoutDirectItem] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+
+    if (localStorage.getItem('pasardesa_token')) {
+      fetchCurrentUser().then(user => {
+        if (active) {
+          setCurrentUser(user);
+          setIsLoggedIn(true);
+          if (user.role === 'admin') {
+            fetchOrders().then(setOrders).catch(() => {});
+            fetchProducts().then(setProducts).catch(() => {});
+          }
+        }
+      }).catch(() => localStorage.removeItem('pasardesa_token'));
+    }
+
+    Promise.all([fetchProducts(), fetchShops(), fetchCategories(), fetchStats()])
+      .then(([apiProducts, apiShops, apiCategories, apiStats]) => {
+        if (!active) return;
+
+        setProducts(apiProducts);
+        setShops(apiShops);
+        setCategories(apiCategories);
+        setStats(apiStats);
+      })
+      .catch(error => {
+        console.info(`Backend belum tersambung; data demo tetap digunakan. ${error.message}`);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const login = async (identifier, password) => {
+    const user = await loginRequest(identifier, password);
+    setCurrentUser(user);
+    setIsLoggedIn(true);
+    if (user.role === 'admin') {
+      fetchOrders().then(setOrders).catch(() => {});
+      fetchProducts().then(setProducts).catch(() => {});
+    }
+    return user;
+  };
+  const register = async (data) => {
+    const user = await registerRequest(data);
+    setCurrentUser(user);
+    setIsLoggedIn(true);
+    fetchShops().then(setShops).catch(() => {});
+    return user;
+  };
+  const logout = async () => {
+    try { await logoutRequest(); } catch (error) { console.info('Sesi API sudah berakhir.', error.message); }
+    localStorage.removeItem('pasardesa_token');
+    setCurrentUser(null);
+    setIsLoggedIn(false);
+  };
 
   const addToCart = (product, qty = 1, note = '') => {
     setCart(prev => {
@@ -126,7 +176,13 @@ export function AppProvider({ children }) {
     setIsCartOpen(false);
     setIsCheckoutOpen(true);
   };
-  const processCheckout = ({ items, address, shippingMethod, paymentMethod, notes = '' }) => {
+  const processCheckout = async ({ items, address, shippingMethod, paymentMethod, notes = '' }) => {
+    if (!isLoggedIn) {
+      triggerNotification('Masuk diperlukan', 'Silakan masuk atau daftar sebelum menyimpan pesanan.');
+      setWebPage('auth');
+      setIsCheckoutOpen(false);
+      return { persisted: false };
+    }
     const totalItems = items.reduce((sum, item) => sum + item.qty, 0);
     const subtotal = items.reduce((sum, item) => sum + (item.product.price * item.qty), 0);
     const shippingCost = shippingMethod?.price || 0;
@@ -151,17 +207,39 @@ export function AppProvider({ children }) {
       notes
     };
 
-    setOrders(prev => [newOrder, ...prev]);
-    if (!checkoutDirectItem) {
-      clearCart();
+    try {
+      const savedOrder = await createOrderRequest({
+        buyerName: newOrder.buyerName,
+        phone: newOrder.phone,
+        kecamatan: newOrder.kecamatan,
+        address: newOrder.address,
+        items: items.map(item => ({
+          productId: item.productId || item.product.id,
+          qty: item.qty,
+          note: item.note || '',
+        })),
+        shippingMethod,
+        paymentMethod,
+        notes,
+      });
+
+      setOrders(prev => [savedOrder, ...prev]);
+      fetchProducts().then(setProducts).catch(() => {});
+      fetchStats().then(setStats).catch(() => {});
+      triggerNotification('Pesanan Tersimpan', `Pesanan #${savedOrder.id} tersimpan di database.`);
+      if (!checkoutDirectItem) clearCart();
+      shootConfetti();
+      setCheckoutDirectItem(null);
+
+      return { orderId: savedOrder.id, persisted: true };
+    } catch (error) {
+      setOrders(prev => [newOrder, ...prev]);
+      triggerNotification('Backend Belum Tersambung', `Pesanan hanya tersimpan sementara. ${error.message}`);
+      if (!checkoutDirectItem) clearCart();
+      setCheckoutDirectItem(null);
+
+      return { orderId, persisted: false };
     }
-
-    shootConfetti();
-    triggerNotification('Pesanan Berhasil Dibuat', `Pesanan #${orderId} telah masuk ke sistem dan diteruskan ke penjual.`);
-    setIsCheckoutOpen(false);
-    setCheckoutDirectItem(null);
-
-    return orderId;
   };
   const [addresses, setAddresses] = useState(INITIAL_USER_ADDRESSES);
   const [selectedAddressId, setSelectedAddressId] = useState(INITIAL_USER_ADDRESSES[0]?.id || null);
@@ -367,7 +445,11 @@ export function AppProvider({ children }) {
     setWebPage('shop-detail');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-  const addProduct = (newProd) => {
+  const addProduct = async (newProd) => {
+    if (!currentUser?.shopId && currentUser?.role !== 'admin') {
+      triggerNotification('Toko belum tersedia', 'Daftarkan akun sebagai penjual sebelum menambahkan produk.');
+      return;
+    }
     const id = `prod-${Date.now()}`;
     const product = {
       ...newProd,
@@ -382,22 +464,54 @@ export function AppProvider({ children }) {
       isNew: true,
       reviews: []
     };
-    setProducts(prev => [product, ...prev]);
-    shootConfetti();
-    triggerNotification('Produk Ditambahkan', `"${newProd.name}" berhasil dipublikasikan ke katalog desa.`);
+    try {
+      const savedProduct = await createProductRequest(product);
+      setProducts(prev => [savedProduct, ...prev]);
+      fetchStats().then(setStats).catch(() => {});
+      shootConfetti();
+      triggerNotification('Produk Ditambahkan', `"${newProd.name}" berhasil disimpan ke database.`);
+    } catch (error) {
+      setProducts(prev => [product, ...prev]);
+      triggerNotification('Backend Belum Tersambung', `Produk tampil sementara. ${error.message}`);
+    }
   };
-  const toggleProductStatus = (productId) => {
-    setProducts(prev => prev.map(p => {
-      if (p.id === productId) {
-        const isHidden = !p.isHidden;
-        return { ...p, isHidden };
-      }
-      return p;
-    }));
+  const toggleProductStatus = async (productId) => {
+    const product = products.find(item => item.id === productId);
+    if (!product) return;
+
+    const isHidden = !product.isHidden;
+    setProducts(prev => prev.map(item => item.id === productId ? { ...item, isHidden } : item));
+
+    try {
+      const savedProduct = await updateProductVisibility(productId, isHidden);
+      setProducts(prev => prev.map(item => item.id === productId ? savedProduct : item));
+    } catch (error) {
+      triggerNotification('Backend Belum Tersambung', `Perubahan status hanya tersimpan sementara. ${error.message}`);
+    }
   };
-  const updateOrderStatus = (orderId, newStatus) => {
+  const updateProductNumbers = async (productId, numbers) => {
+    try {
+      const saved = await updateProductNumbersRequest(productId, numbers);
+      setProducts(prev => prev.map(item => item.id === productId ? saved : item));
+      triggerNotification('Produk diperbarui', 'Harga dan stok baru sudah tersimpan.');
+      fetchStats().then(setStats).catch(() => {});
+      return true;
+    } catch (error) {
+      triggerNotification('Perubahan gagal disimpan', error.message);
+      return false;
+    }
+  };
+  const updateOrderStatus = async (orderId, newStatus) => {
     setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
-    triggerNotification('Status Pesanan Diperbarui', `Pesanan #${orderId} kini berstatus "${newStatus}".`);
+
+    try {
+      const savedOrder = await updateOrderStatusRequest(orderId, newStatus);
+      setOrders(prev => prev.map(order => order.id === orderId ? savedOrder : order));
+      fetchStats().then(setStats).catch(() => {});
+      triggerNotification('Status Pesanan Diperbarui', `Pesanan #${orderId} kini berstatus "${newStatus}".`);
+    } catch (error) {
+      triggerNotification('Backend Belum Tersambung', `Perubahan status hanya tersimpan sementara. ${error.message}`);
+    }
   };
   const verifyShop = (shopId, newStatus) => {
     setShops(prev => prev.map(s => s.id === shopId ? { ...s, status: newStatus, verified: newStatus === 'aktif' } : s));
@@ -443,6 +557,7 @@ export function AppProvider({ children }) {
       sortBy, setSortBy,
       isLoggedIn, setIsLoggedIn,
       currentUser, setCurrentUser,
+      login, register, logout,
       mobileRole, setMobileRole,
       mobileTab, setMobileTab,
       showMobileSplash, setShowMobileSplash,
@@ -489,6 +604,7 @@ export function AppProvider({ children }) {
       isConnectingSeller,
       addProduct,
       toggleProductStatus,
+      updateProductNumbers,
       updateOrderStatus,
       verifyShop,
       broadcastAnnouncement,

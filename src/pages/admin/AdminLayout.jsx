@@ -44,36 +44,50 @@ export default function AdminLayout() {
     stats,
     verifyShop,
     toggleProductStatus,
+    updateProductNumbers,
     broadcastAnnouncement,
     triggerNotification,
     setProducts,
     setCategories,
     setUsers,
     setCurrentView,
+    currentUser,
+    login,
+    logout,
     chatThreads,
     sendChatMessage
   } = useApp();
 
   const [selectedAdminThread, setSelectedAdminThread] = useState('general-bot');
   const [adminReplyText, setAdminReplyText] = useState('');
-  const [isAdminAuth, setIsAdminAuth] = useState(true);
-  const [adminUsername, setAdminUsername] = useState('admin@pasardesa.go.id');
-  const [adminPassword, setAdminPassword] = useState('admin123');
+  const [adminUsername, setAdminUsername] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
+  const [adminError, setAdminError] = useState('');
+  const isAdminAuth = currentUser?.role === 'admin';
   const [adminTab, setAdminTab] = useState('dashboard');
   const [umkmFilter, setUmkmFilter] = useState('semua');
   const [userRoleFilter, setUserRoleFilter] = useState('semua');
   const [userSearch, setUserSearch] = useState('');
   const [selectedUmkmDetail, setSelectedUmkmDetail] = useState(null);
+  const [editingProduct, setEditingProduct] = useState(null);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [broadcastTitle, setBroadcastTitle] = useState('');
   const [broadcastMessage, setBroadcastMessage] = useState('');
   const [broadcastTarget, setBroadcastTarget] = useState('Semua Pengguna');
   const [isUrgent, setIsUrgent] = useState(false);
-  const handleAdminLogin = (e) => {
+  const handleAdminLogin = async (e) => {
     e.preventDefault();
-    if (adminUsername && adminPassword) {
-      setIsAdminAuth(true);
+    setAdminError('');
+    try {
+      const user = await login(adminUsername, adminPassword);
+      if (user.role !== 'admin') {
+        await logout();
+        setAdminError('Akun ini tidak memiliki akses admin.');
+        return;
+      }
       triggerNotification('Login Admin Berhasil', 'Selamat datang di Panel Pengelola Balai Desa.');
+    } catch (error) {
+      setAdminError(error.message);
     }
   };
   const handleSendBroadcast = (e) => {
@@ -136,6 +150,7 @@ export default function AdminLayout() {
           </div>
 
           <form onSubmit={handleAdminLogin} className="space-y-4">
+            {adminError && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{adminError}</p>}
             <div>
               <label className="block text-xs font-semibold text-desa-primary mb-1">
                 Username / Email Petugas
@@ -314,7 +329,7 @@ export default function AdminLayout() {
           </motion.button>
           <motion.button
             whileTap={{ scale: 0.97 }}
-            onClick={() => setIsAdminAuth(false)}
+            onClick={() => logout()}
             className="w-full py-2 px-3 rounded-xl text-rose-300 hover:bg-rose-900/30 text-xs font-semibold flex items-center justify-center gap-2 transition-all"
           >
             <LogOut className="w-3.5 h-3.5" />
@@ -697,6 +712,7 @@ export default function AdminLayout() {
                       <th className="p-3.5">Produk</th>
                       <th className="p-3.5">Toko / UMKM</th>
                       <th className="p-3.5">Harga</th>
+                      <th className="p-3.5">Stok</th>
                       <th className="p-3.5">Status Moderasi</th>
                       <th className="p-3.5 text-right">Aksi</th>
                     </tr>
@@ -712,7 +728,14 @@ export default function AdminLayout() {
                         </td>
                         <td className="p-3.5 text-desa-text/75">{prod.shopName}</td>
                         <td className="p-3.5 font-bold text-desa-primary">
-                          Rp {prod.price.toLocaleString('id-ID')}
+                          {editingProduct?.id === prod.id ? (
+                            <input aria-label={`Harga ${prod.name}`} type="number" min="0" value={editingProduct.price} onChange={e => setEditingProduct(prev => ({ ...prev, price: e.target.value }))} className="w-28 rounded border px-2 py-1 text-xs" />
+                          ) : `Rp ${Number(prod.price).toLocaleString('id-ID')}`}
+                        </td>
+                        <td className="p-3.5">
+                          {editingProduct?.id === prod.id ? (
+                            <input aria-label={`Stok ${prod.name}`} type="number" min="0" value={editingProduct.stock} onChange={e => setEditingProduct(prev => ({ ...prev, stock: e.target.value }))} className="w-20 rounded border px-2 py-1 text-xs" />
+                          ) : prod.stock}
                         </td>
                         <td className="p-3.5">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
@@ -722,6 +745,12 @@ export default function AdminLayout() {
                           </span>
                         </td>
                         <td className="p-3.5 text-right">
+                          {editingProduct?.id === prod.id ? (
+                            <div className="flex justify-end gap-2">
+                              <button onClick={async () => { if (await updateProductNumbers(prod.id, { price: Number(editingProduct.price), stock: Number(editingProduct.stock) })) setEditingProduct(null); }} className="rounded-lg bg-desa-primary px-3 py-1 text-xs font-semibold text-white">Simpan</button>
+                              <button onClick={() => setEditingProduct(null)} className="rounded-lg px-3 py-1 text-xs font-semibold text-desa-text">Batal</button>
+                            </div>
+                          ) : <button onClick={() => setEditingProduct({ id: prod.id, price: prod.price, stock: prod.stock })} className="mr-2 rounded-lg border border-desa-primary/20 px-3 py-1 text-xs font-semibold text-desa-primary">Ubah angka</button>}
                           <motion.button
                             whileTap={{ scale: 0.95 }}
                             onClick={() => toggleProductStatus(prod.id)}

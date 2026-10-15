@@ -21,8 +21,8 @@ import {
 
 export default function AuthPage() {
   const { 
-    setIsLoggedIn, 
-    setCurrentUser, 
+    login,
+    register,
     setWebPage, 
     setCurrentView,
     triggerNotification 
@@ -30,8 +30,10 @@ export default function AuthPage() {
 
   const [activeTab, setActiveTab] = useState('masuk');
   const [showPassword, setShowPassword] = useState(false);
-  const [loginIdentifier, setLoginIdentifier] = useState('081234567890');
-  const [loginPassword, setLoginPassword] = useState('password123');
+  const [loginIdentifier, setLoginIdentifier] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [formError, setFormError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [regName, setRegName] = useState('');
   const [regPhone, setRegPhone] = useState('');
   const [regPassword, setRegPassword] = useState('');
@@ -41,59 +43,44 @@ export default function AuthPage() {
   const [regShopCategory, setRegShopCategory] = useState('Kerajinan Tangan');
   const [regKecamatan, setRegKecamatan] = useState('Kecamatan Sumedang Utara');
   const [agreedTerms, setAgreedTerms] = useState(true);
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    if (!loginIdentifier || !loginPassword) {
-      alert('Mohon isi nomor HP / Email dan Kata Sandi.');
-      return;
+    setFormError('');
+    setIsSubmitting(true);
+    try {
+      const user = await login(loginIdentifier, loginPassword);
+      triggerNotification('Berhasil Masuk', `Selamat datang kembali, ${user.name}!`);
+      setWebPage('home');
+    } catch (error) {
+      setFormError(error.message);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    const dummyUser = {
-      id: 'usr-' + Date.now(),
-      name: loginIdentifier.includes('@') ? loginIdentifier.split('@')[0] : 'Ibu Sumarsih',
-      phone: loginIdentifier,
-      email: loginIdentifier.includes('@') ? loginIdentifier : 'user@pasardesa.id',
-      role: 'keduanya',
-      shopId: 'toko-1',
-      shopName: 'Griya Tenun Lurik Lestari',
-      kecamatan: 'Kecamatan Sumedang Utara'
-    };
-
-    setIsLoggedIn(true);
-    setCurrentUser(dummyUser);
-    triggerNotification('Berhasil Masuk', `Selamat datang kembali, ${dummyUser.name}!`);
-    setWebPage('home');
   };
-  const handleRegisterSubmit = (e) => {
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
-    if (!regName || !regPhone || !regPassword) {
-      alert('Mohon lengkapi formulir pendaftaran.');
-      return;
-    }
     if (regPassword !== regConfirmPassword) {
-      alert('Konfirmasi kata sandi tidak cocok.');
+      setFormError('Konfirmasi kata sandi tidak cocok.');
       return;
     }
     if ((regRole === 'jualan' || regRole === 'keduanya') && !regShopName) {
-      alert('Mohon isi nama usaha/toko Anda.');
+      setFormError('Mohon isi nama usaha/toko Anda.');
       return;
     }
-
-    const newUser = {
-      id: 'usr-' + Date.now(),
-      name: regName,
-      phone: regPhone,
-      email: `${regPhone}@pasardesa.id`,
-      role: regRole,
-      shopId: (regRole === 'jualan' || regRole === 'keduanya') ? `toko-${Date.now()}` : null,
-      shopName: regShopName || null,
-      kecamatan: regKecamatan
-    };
-
-    setIsLoggedIn(true);
-    setCurrentUser(newUser);
-    triggerNotification('Akun Berhasil Dibuat', `Selamat datang di Pasar Desa, ${regName}!`);
-    setWebPage('home');
+    setFormError('');
+    setIsSubmitting(true);
+    try {
+      const user = await register({
+        name: regName, phone: regPhone, password: regPassword, role: regRole,
+        shopName: regShopName, shopCategory: regShopCategory, kecamatan: regKecamatan,
+      });
+      triggerNotification('Akun Berhasil Dibuat', `Selamat datang di Pasar Desa, ${user.name}!`);
+      setWebPage('home');
+    } catch (error) {
+      setFormError(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -133,7 +120,7 @@ export default function AuthPage() {
           <div className="flex border-b border-desa-primary/15 mb-6">
             <button
               type="button"
-              onClick={() => setActiveTab('masuk')}
+              onClick={() => { setActiveTab('masuk'); setFormError(''); }}
               className={`flex-1 py-3 text-center text-sm font-bold transition-all relative ${
                 activeTab === 'masuk'
                   ? 'text-desa-primary'
@@ -148,7 +135,7 @@ export default function AuthPage() {
 
             <button
               type="button"
-              onClick={() => setActiveTab('daftar')}
+              onClick={() => { setActiveTab('daftar'); setFormError(''); }}
               className={`flex-1 py-3 text-center text-sm font-bold transition-all relative ${
                 activeTab === 'daftar'
                   ? 'text-desa-primary'
@@ -163,6 +150,7 @@ export default function AuthPage() {
           </div>
 
           
+          {formError && <p role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{formError}</p>}
           {activeTab === 'masuk' && (
             <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div>
@@ -189,7 +177,7 @@ export default function AuthPage() {
                   </label>
                   <button
                     type="button"
-                    onClick={() => alert('Fitur reset kata sandi: Silakan hubungi admin Balai Desa via WhatsApp di 0812-3456-7890.')}
+                    onClick={() => setFormError('Fitur pemulihan kata sandi belum tersedia. Silakan hubungi admin Balai Desa.')}
                     className="text-xs text-desa-accent hover:underline font-medium"
                   >
                     Lupa kata sandi?
@@ -218,18 +206,15 @@ export default function AuthPage() {
               <div className="pt-2">
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   className="w-full py-3 rounded-xl bg-desa-primary hover:bg-desa-primary/90 text-desa-light font-bold text-sm shadow transition-all flex items-center justify-center gap-2"
                 >
-                  <span>Masuk ke Pasar Desa</span>
+                  <span>{isSubmitting ? 'Memeriksa akun...' : 'Masuk ke Pasar Desa'}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
 
               
-              <div className="mt-4 p-3 bg-desa-bg/70 rounded-xl border border-desa-primary/10 text-xs text-desa-text/70">
-                <span className="font-bold text-desa-primary block mb-0.5">Akun Demo Pengujian Ujikom:</span>
-                <span>Klik langsung tombol Masuk di atas (data default akun penjual Ibu Sumarsih sudah terisi).</span>
-              </div>
             </form>
           )}
 
@@ -424,6 +409,7 @@ export default function AuthPage() {
               <div className="pt-2">
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   className="w-full py-3 rounded-xl bg-desa-highlight hover:bg-desa-highlight/90 text-white font-bold text-sm shadow transition-all flex items-center justify-center gap-2"
                 >
                   <span>Daftar Akun Sekarang</span>

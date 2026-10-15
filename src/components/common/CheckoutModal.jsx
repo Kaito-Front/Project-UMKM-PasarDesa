@@ -36,6 +36,8 @@ export default function CheckoutModal() {
   const [selectedPaymentId, setSelectedPaymentId] = useState(PAYMENT_METHODS[0].id);
   const [orderNotes, setOrderNotes] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isPersisted, setIsPersisted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [createdOrderId, setCreatedOrderId] = useState(null);
 
   if (!isCheckoutOpen) return null;
@@ -46,27 +48,38 @@ export default function CheckoutModal() {
   const selectedPayment = PAYMENT_METHODS.find(p => p.id === selectedPaymentId) || PAYMENT_METHODS[0];
   const grandTotal = subtotal + selectedShipping.price;
 
-  const handleConfirmOrder = () => {
+  const handleConfirmOrder = async () => {
+    if (isSubmitting) return;
     if (!selectedAddress) {
       alert('Mohon pilih atau tambahkan alamat pengiriman terlebih dahulu.');
       return;
     }
 
-    const orderId = processCheckout({
-      items: checkoutItems,
-      address: selectedAddress,
-      shippingMethod: selectedShipping,
-      paymentMethod: selectedPayment,
-      notes: orderNotes
-    });
+    setIsSubmitting(true);
+    try {
+      const result = await processCheckout({
+        items: checkoutItems,
+        address: selectedAddress,
+        shippingMethod: selectedShipping,
+        paymentMethod: selectedPayment,
+        notes: orderNotes
+      });
 
-    setCreatedOrderId(orderId);
-    setIsSuccess(true);
+      if (!result.orderId) return;
+
+      setCreatedOrderId(result.orderId);
+      setIsPersisted(result.persisted);
+      setIsSuccess(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleClose = () => {
     setIsCheckoutOpen(false);
     setIsSuccess(false);
+    setIsPersisted(false);
+    setIsSubmitting(false);
     setCreatedOrderId(null);
   };
 
@@ -98,10 +111,10 @@ export default function CheckoutModal() {
               </div>
               <div>
                 <h3 className="font-heading text-lg font-bold">
-                  {isSuccess ? 'Pesanan Berhasil Diajukan' : 'Checkout & Pembayaran'}
+                  {isSuccess ? (isPersisted ? 'Pesanan Berhasil Diajukan' : 'Pesanan Disimpan Sementara') : 'Checkout & Pembayaran'}
                 </h3>
                 <p className="text-xs text-desa-light/70">
-                  {isSuccess ? 'Transaksi Anda telah tercatat di BUMDes' : 'Periksa alamat, kurir kecamatan, dan metode pembayaran'}
+                  {isSuccess ? (isPersisted ? 'Transaksi tercatat di database Pasar Desa' : 'Nyalakan backend untuk menyimpan transaksi ke database') : 'Periksa alamat, kurir kecamatan, dan metode pembayaran'}
                 </p>
               </div>
             </div>
@@ -118,7 +131,7 @@ export default function CheckoutModal() {
 
           
           {isSuccess ? (
-            <div className="p-8 text-center space-y-6 overflow-y-auto">
+            <div className="p-8 text-center space-y-6 overflow-y-auto" aria-live="polite">
               <div className="w-20 h-20 rounded-full bg-desa-highlight/20 text-desa-highlight flex items-center justify-center mx-auto border-2 border-desa-highlight/30">
                 <CheckCircle2 className="w-10 h-10" />
               </div>
@@ -131,7 +144,7 @@ export default function CheckoutModal() {
                   Matur Nuwun! Pesanan Diterima
                 </h2>
                 <p className="text-xs text-desa-text/70 max-w-md mx-auto mt-1">
-                  Pesanan Anda telah diteruskan ke pihak pengrajin dan kurir desa. Anda dapat memantau status pesanan kapan saja.
+                  {isPersisted ? 'Pesanan Anda telah diteruskan ke pihak pengrajin dan tersimpan untuk dipantau.' : 'Pesanan ini hanya ada di sesi demo dan akan hilang saat halaman dimuat ulang.'}
                 </p>
               </div>
 
@@ -432,10 +445,12 @@ export default function CheckoutModal() {
                 <button
                   type="button"
                   onClick={handleConfirmOrder}
+                  disabled={isSubmitting}
+                  aria-busy={isSubmitting}
                   className="flex-2 sm:flex-initial px-7 py-3 rounded-xl bg-desa-accent text-white text-xs font-bold hover:bg-desa-accent/90 transition-all shadow-md flex items-center justify-center gap-2"
                 >
                   <ShieldCheck className="w-4 h-4" />
-                  <span>Konfirmasi & Bayar Sekarang</span>
+                  <span>{isSubmitting ? 'Menyimpan Pesanan…' : 'Konfirmasi & Bayar Sekarang'}</span>
                 </button>
               </div>
             </div>

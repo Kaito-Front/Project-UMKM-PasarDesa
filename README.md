@@ -150,6 +150,27 @@ frontend/
 
 ## 💻 Cara Menjalankan Proyek
 
+### Backend Laravel dengan Laragon
+
+Jalankan perintah PHP dan Composer dari Laragon Terminal agar keduanya tersedia di `PATH`.
+
+1. Buat database MySQL bernama `pasar_desa` dari Laragon atau phpMyAdmin.
+2. Masuk ke folder `backend`, salin `.env.example` menjadi `.env`, lalu sesuaikan kredensial MySQL Laragon.
+3. Jalankan migrasi dan isi katalog awal:
+   ```bash
+   composer install
+   php artisan key:generate
+   php artisan migrate --seed
+   ```
+4. Nyalakan API:
+   ```bash
+   php artisan serve
+   ```
+   API tersedia di `http://127.0.0.1:8000/api`.
+5. Frontend memakai proxy `/api` yang meneruskan request ke Laravel di komputer yang sama. URL bisa diubah melalui `VITE_API_URL` di `frontend/.env` jika API ditempatkan di host lain.
+
+Frontend mengambil kategori, toko, produk, dan pesanan dari API. Produk dapat dibuat dengan `POST /api/products`, status tayangnya diubah melalui `PATCH /api/products/{id}/visibility`, dan checkout menyimpan pesanan lewat `POST /api/orders`.
+
 1. **Buka terminal di dalam folder `frontend`:**
    ```bash
    cd frontend
@@ -159,7 +180,11 @@ frontend/
    ```bash
    npm run dev
    ```
-   Aplikasi akan berjalan di `http://localhost:5173/`.
+   Untuk membuka aplikasi dari HP/perangkat lain di Wi-Fi yang sama, jalankan:
+   ```bash
+   npm run dev -- --host 0.0.0.0
+   ```
+   Dari HP buka `http://IP-KOMPUTER:5173` (cek alamat IPv4 komputer dengan `ipconfig`). Vite meneruskan request `/api` ke Laravel di komputer yang sama, jadi alamat API tidak perlu diubah. Kedua perangkat harus tersambung ke jaringan yang sama dan firewall Windows perlu mengizinkan Node.js pada jaringan Private.
 
 3. **Membangun versi produksi (Build Production):**
    ```bash

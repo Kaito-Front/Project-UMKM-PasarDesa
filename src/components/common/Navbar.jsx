@@ -22,7 +22,7 @@ export default function Navbar() {
   const { 
     currentView, setCurrentView, 
     webPage, setWebPage, 
-    currentUser, isLoggedIn,
+    currentUser, isLoggedIn, logout,
     searchQuery, setSearchQuery,
     cartCount, setIsCartOpen,
     setIsChatOpen
@@ -260,17 +260,20 @@ export default function Navbar() {
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => handleNavClick('auth')}
+                onClick={() => logout()}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl border border-desa-primary/30 text-desa-primary text-xs font-semibold hover:bg-desa-primary hover:text-desa-light transition-all shadow-xs"
               >
                 <User className="w-4 h-4 text-desa-accent" />
-                <span>{currentUser ? currentUser.name.split(' ')[0] : 'Akun Saya'}</span>
+                <span>Keluar {currentUser ? currentUser.name.split(' ')[0] : ''}</span>
               </motion.button>
             ) : (
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={() => handleNavClick('auth')}
+                onClick={() => {
+                  if (isLoggedIn) logout();
+                  else handleNavClick('auth');
+                }}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-desa-primary text-desa-light text-xs font-semibold hover:bg-desa-primary/90 transition-all shadow-sm"
               >
                 <User className="w-4 h-4" />
@@ -369,7 +372,7 @@ export default function Navbar() {
                 className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold bg-desa-primary text-desa-light"
               >
                 <User className="w-4 h-4" />
-                <span>{isLoggedIn ? 'Kelola Akun' : 'Masuk / Daftar'}</span>
+                <span>{isLoggedIn ? 'Keluar dari Akun' : 'Masuk / Daftar'}</span>
               </button>
             </div>
           </motion.div>
