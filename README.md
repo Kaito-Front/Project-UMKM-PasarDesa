@@ -1,4 +1,4 @@
-# 🌾 Pasar Desa — Frontend (React.js + Tailwind CSS)
+# 🌾 Pasar Desa 
 
 Aplikasi Web & Mobile PWA Pasar Desa dengan konsep **Palet: Lurik Kontemporer** untuk digitalisasi UMKM, petani, pengrajin dusun, dan pengelola desa. Dibuat khusus untuk kebutuhan **Project Ujikom (Uji Kompetensi Keahlian)**.
 
