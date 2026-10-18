@@ -50,3 +50,32 @@ php artisan migrate --seed
 
 # Jalankan local server backend
 php artisan serve
+
+Backend API akan berjalan di http://127.0.0.1:8000/api.
+
+2. Setup Frontend (React / Vite)
+Buka terminal baru dan arahkan ke folder frontend.
+
+Bash
+# Install dependensi NPM
+npm install
+
+# Jalankan development server
+npm run dev
+Akses dari Smartphone (Testing PWA)
+Jika ingin menguji tampilan mobile atau PWA dari HP, pastikan HP dan komputer berada di satu jaringan Wi-Fi, lalu jalankan frontend dengan perintah:
+
+Bash
+npm run dev -- --host 0.0.0.0
+Buka browser di HP dan akses IP lokal komputer Anda (contoh: http://192.168.1.5:5173). Request API akan otomatis di-proxy oleh Vite ke Laravel.
+
+Struktur Direktori Utama
+/frontend/src/components - Reusable UI component (Navbar, ProductCard, dll)
+
+/frontend/src/pages/web - Tampilan desktop publik
+
+/frontend/src/pages/mobile - View untuk PWA / Mobile app
+
+/frontend/src/pages/admin - View Dashboard BUMDes
+
+/backend/app/Http/Controllers - Logic API (Product, Order, Auth)
