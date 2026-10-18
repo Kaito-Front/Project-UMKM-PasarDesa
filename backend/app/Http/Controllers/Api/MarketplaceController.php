@@ -38,9 +38,22 @@ class MarketplaceController extends Controller
 
     public function orders(Request $request): JsonResponse
     {
-        abort_unless($request->user()->role === 'admin', 403, 'Hanya admin yang dapat melihat seluruh pesanan.');
+        $user = $request->user();
+        $query = Order::query()->latest();
 
-        return response()->json(Order::query()->latest()->get()->map(fn (Order $order) => $this->serializeOrder($order)));
+        if ($user->role === 'admin') {
+            // Admin can see all orders
+        } elseif (in_array($user->role, ['penjual', 'keduanya'], true) && $user->shop_name) {
+            // Seller can see orders for their shop
+            $query->where('shop_name', $user->shop_name);
+        } else {
+            // Buyer can see their own orders based on phone number or name
+            $query->where(function ($q) use ($user) {
+                $q->where('phone', $user->phone)->orWhere('buyer_name', $user->name);
+            });
+        }
+
+        return response()->json($query->get()->map(fn (Order $order) => $this->serializeOrder($order)));
     }
 
     public function storeOrder(Request $request): JsonResponse
@@ -112,7 +125,12 @@ class MarketplaceController extends Controller
 
     public function updateOrderStatus(Request $request, Order $order): JsonResponse
     {
-        abort_unless($request->user()->role === 'admin', 403, 'Hanya admin yang dapat mengubah status pesanan.');
+        $user = $request->user();
+        abort_unless(
+            $user->role === 'admin' || ($user->shop_name && $order->shop_name === $user->shop_name),
+            403,
+            'Hanya admin atau pemilik toko yang dapat mengubah status pesanan ini.'
+        );
         $validated = $request->validate(['status' => ['required', Rule::in(['diproses', 'dikirim', 'selesai', 'ditolak'])]]);
         $order->update(['status' => $validated['status']]);
 

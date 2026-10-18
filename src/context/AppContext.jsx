@@ -61,25 +61,33 @@ export function AppProvider({ children }) {
         if (active) {
           setCurrentUser(user);
           setIsLoggedIn(true);
+          fetchOrders().then(setOrders).catch(() => {});
           if (user.role === 'admin') {
-            fetchOrders().then(setOrders).catch(() => {});
             fetchProducts().then(setProducts).catch(() => {});
           }
         }
       }).catch(() => localStorage.removeItem('pasardesa_token'));
     }
 
-    Promise.all([fetchProducts(), fetchShops(), fetchCategories(), fetchStats()])
-      .then(([apiProducts, apiShops, apiCategories, apiStats]) => {
+    Promise.allSettled([fetchProducts(), fetchShops(), fetchCategories(), fetchStats()])
+      .then(([resProducts, resShops, resCategories, resStats]) => {
         if (!active) return;
 
-        setProducts(apiProducts);
-        setShops(apiShops);
-        setCategories(apiCategories);
-        setStats(apiStats);
+        if (resProducts.status === 'fulfilled' && Array.isArray(resProducts.value) && resProducts.value.length > 0) {
+          setProducts(resProducts.value);
+        }
+        if (resShops.status === 'fulfilled' && Array.isArray(resShops.value) && resShops.value.length > 0) {
+          setShops(resShops.value);
+        }
+        if (resCategories.status === 'fulfilled' && Array.isArray(resCategories.value) && resCategories.value.length > 0) {
+          setCategories(resCategories.value);
+        }
+        if (resStats.status === 'fulfilled' && resStats.value) {
+          setStats(resStats.value);
+        }
       })
       .catch(error => {
-        console.info(`Backend belum tersambung; data demo tetap digunakan. ${error.message}`);
+        console.info(`Data demo tetap digunakan sebagai cadangan: ${error.message}`);
       });
 
     return () => {
@@ -177,20 +185,14 @@ export function AppProvider({ children }) {
     setIsCheckoutOpen(true);
   };
   const processCheckout = async ({ items, address, shippingMethod, paymentMethod, notes = '' }) => {
-    if (!isLoggedIn) {
-      triggerNotification('Masuk diperlukan', 'Silakan masuk atau daftar sebelum menyimpan pesanan.');
-      setWebPage('auth');
-      setIsCheckoutOpen(false);
-      return { persisted: false };
-    }
     const totalItems = items.reduce((sum, item) => sum + item.qty, 0);
     const subtotal = items.reduce((sum, item) => sum + (item.product.price * item.qty), 0);
     const shippingCost = shippingMethod?.price || 0;
     const grandTotal = subtotal + shippingCost;
 
-    const orderId = `ORD-2026-${Math.floor(100 + Math.random() * 900)}`;
+    const fallbackOrderId = `ORD-2026-${Math.floor(100 + Math.random() * 900)}`;
     const newOrder = {
-      id: orderId,
+      id: fallbackOrderId,
       productName: items.length === 1 ? items[0].product.name : `${items[0].product.name} (+${items.length - 1} produk lainnya)`,
       buyerName: address?.receiverName || currentUser?.name || 'Warga Desa',
       phone: address?.phone || currentUser?.phone || '08123456789',
@@ -200,7 +202,7 @@ export function AppProvider({ children }) {
       status: 'diproses',
       shopName: items[0].product.shopName,
       kecamatan: address?.kecamatan || items[0].product.kecamatan,
-      address: `${address?.fullAddress || 'Alamat Kecamatan'} (${address?.notes || 'Patokan Rumah'})`,
+      address: `${address?.fullAddress || 'Alamat Pengiriman'} ${address?.notes ? `(${address.notes})` : ''}`,
       items,
       shippingMethod: shippingMethod?.name || 'Kurir Kilat Desa',
       paymentMethod: paymentMethod?.name || 'Bayar di Tempat (COD)',
@@ -226,19 +228,19 @@ export function AppProvider({ children }) {
       setOrders(prev => [savedOrder, ...prev]);
       fetchProducts().then(setProducts).catch(() => {});
       fetchStats().then(setStats).catch(() => {});
-      triggerNotification('Pesanan Tersimpan', `Pesanan #${savedOrder.id} tersimpan di database.`);
+      triggerNotification('Pesanan Tersimpan', `Pesanan #${savedOrder.id} berhasil tersimpan di database.`);
       if (!checkoutDirectItem) clearCart();
       shootConfetti();
       setCheckoutDirectItem(null);
 
-      return { orderId: savedOrder.id, persisted: true };
+      return { orderId: savedOrder.id, persisted: true, order: savedOrder };
     } catch (error) {
       setOrders(prev => [newOrder, ...prev]);
-      triggerNotification('Backend Belum Tersambung', `Pesanan hanya tersimpan sementara. ${error.message}`);
+      triggerNotification('Tersimpan Lokal', `Pesanan disimpan dalam mode demo: ${error.message}`);
       if (!checkoutDirectItem) clearCart();
       setCheckoutDirectItem(null);
 
-      return { orderId, persisted: false };
+      return { orderId: fallbackOrderId, persisted: false, order: newOrder };
     }
   };
   const [addresses, setAddresses] = useState(INITIAL_USER_ADDRESSES);

@@ -88,3 +88,7 @@ export const updateOrderStatus = (orderId, status) => request(`/orders/${orderId
   method: 'PATCH',
   body: JSON.stringify({ status }),
 });
+
+export const deleteProduct = productId => request(`/products/${productId}`, {
+  method: 'DELETE',
+});
