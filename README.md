@@ -194,9 +194,3 @@ Frontend mengambil kategori, toko, produk, dan pesanan dari API. Produk dapat di
 
 ---
 
-## 🎯 Panduan Demonstrasi saat Ujikom
-
-Di bagian bilah paling atas aplikasi, terdapat **Mode Pratinjau**:
-1. Klik **Web Publik** untuk menampilkan pengalaman belanja di layar laptop/komputer.
-2. Klik **Mobile PWA** untuk melihat tampilan aplikasi ponsel dengan simulasi bingkai HP, splash screen, onboarding, serta peralihan peran Pembeli vs Penjual.
-3. Klik **Admin Desa** untuk menampilkan panel pengelola BUMDes (grafik transaksi, persetujuan toko, moderasi, dan ekspor laporan).
