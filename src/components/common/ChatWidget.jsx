@@ -94,7 +94,7 @@ export default function ChatWidget() {
           animate={{ scale: 1, opacity: 1 }}
           className="fixed bottom-6 right-6 z-40 flex items-center gap-2"
         >
-          <div className="hidden md:flex items-center gap-2 bg-desa-primary text-desa-light px-3.5 py-1.5 rounded-full shadow-lg border border-white/20 text-xs animate-bounce">
+          <div className="hidden md:flex items-center gap-2 bg-desa-primary text-desa-light px-3.5 py-1.5 rounded-full border border-white/20 text-xs">
             <span className="w-2 h-2 rounded-full bg-[#C1CCB3]" />
             <span>Chat Asisten Desa & Toko</span>
           </div>
@@ -270,7 +270,7 @@ export default function ChatWidget() {
               
               {isConnectingSeller && (
                 <div className="text-center py-2">
-                  <span className="text-[11px] bg-desa-primary/10 text-desa-primary font-medium px-3 py-1 rounded-full animate-pulse">
+                  <span className="text-[11px] bg-desa-primary/10 text-desa-primary font-medium px-3 py-1 rounded-full">
                     Menghubungkan ke Admin Toko...
                   </span>
                 </div>

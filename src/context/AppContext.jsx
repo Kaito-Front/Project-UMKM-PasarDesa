@@ -27,6 +27,7 @@ export function AppProvider({ children }) {
   const [announcements, setAnnouncements] = useState(INITIAL_ANNOUNCEMENTS);
   const [users, setUsers] = useState(INITIAL_USERS);
   const [stats, setStats] = useState(VILLAGE_STATS);
+  const [dataSource, setDataSource] = useState('demo');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('semua');
   const [selectedKecamatan, setSelectedKecamatan] = useState('Semua Kecamatan');
@@ -38,17 +39,9 @@ export function AppProvider({ children }) {
   const [mobileTab, setMobileTab] = useState('beranda');
   const [showMobileSplash, setShowMobileSplash] = useState(false);
   const [showMobileOnboarding, setShowMobileOnboarding] = useState(false);
-  const [savedFavorites, setSavedFavorites] = useState(['prod-1', 'prod-2']);
+  const [savedFavorites, setSavedFavorites] = useState([]);
   const [pushNotification, setPushNotification] = useState(null);
-  const [cart, setCart] = useState([
-    {
-      id: 'cart-1',
-      productId: 'prod-1',
-      product: INITIAL_PRODUCTS[0],
-      qty: 1,
-      note: 'Ukuran standar kemeja pria'
-    }
-  ]);
+  const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [checkoutDirectItem, setCheckoutDirectItem] = useState(null);
@@ -73,27 +66,38 @@ export function AppProvider({ children }) {
       .then(([resProducts, resShops, resCategories, resStats]) => {
         if (!active) return;
 
-        if (resProducts.status === 'fulfilled' && Array.isArray(resProducts.value) && resProducts.value.length > 0) {
-          setProducts(resProducts.value);
-        }
-        if (resShops.status === 'fulfilled' && Array.isArray(resShops.value) && resShops.value.length > 0) {
-          setShops(resShops.value);
-        }
-        if (resCategories.status === 'fulfilled' && Array.isArray(resCategories.value) && resCategories.value.length > 0) {
-          setCategories(resCategories.value);
-        }
-        if (resStats.status === 'fulfilled' && resStats.value) {
-          setStats(resStats.value);
-        }
-      })
-      .catch(error => {
-        console.info(`Data demo tetap digunakan sebagai cadangan: ${error.message}`);
+        const hasLiveData = resProducts.status === 'fulfilled' && Array.isArray(resProducts.value)
+          && resShops.status === 'fulfilled' && Array.isArray(resShops.value)
+          && resCategories.status === 'fulfilled' && Array.isArray(resCategories.value)
+          && resStats.status === 'fulfilled' && Boolean(resStats.value);
+
+        if (!hasLiveData) return;
+
+        setProducts(resProducts.value);
+        setShops(resShops.value);
+        setCategories(resCategories.value);
+        setStats(resStats.value);
+        setDataSource('live');
       });
 
     return () => {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (!isLoggedIn || !currentUser) return undefined;
+
+    const refreshOrders = () => {
+      if (document.visibilityState === 'visible') {
+        fetchOrders().then(setOrders).catch(() => {});
+        fetchStats().then(setStats).catch(() => {});
+      }
+    };
+    const interval = window.setInterval(refreshOrders, 15000);
+
+    return () => window.clearInterval(interval);
+  }, [isLoggedIn, currentUser?.id]);
 
   const login = async (identifier, password) => {
     const user = await loginRequest(identifier, password);
@@ -504,15 +508,15 @@ export function AppProvider({ children }) {
     }
   };
   const updateOrderStatus = async (orderId, newStatus) => {
-    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
-
     try {
       const savedOrder = await updateOrderStatusRequest(orderId, newStatus);
       setOrders(prev => prev.map(order => order.id === orderId ? savedOrder : order));
       fetchStats().then(setStats).catch(() => {});
       triggerNotification('Status Pesanan Diperbarui', `Pesanan #${orderId} kini berstatus "${newStatus}".`);
+      return true;
     } catch (error) {
-      triggerNotification('Backend Belum Tersambung', `Perubahan status hanya tersimpan sementara. ${error.message}`);
+      triggerNotification('Status Pesanan Gagal Diubah', error.message);
+      return false;
     }
   };
   const verifyShop = (shopId, newStatus) => {
@@ -552,6 +556,7 @@ export function AppProvider({ children }) {
       announcements, setAnnouncements,
       users, setUsers,
       stats, setStats,
+      dataSource,
       searchQuery, setSearchQuery,
       selectedCategory, setSelectedCategory,
       selectedKecamatan, setSelectedKecamatan,

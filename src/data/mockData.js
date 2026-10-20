@@ -325,6 +325,7 @@ export const MOCK_ORDERS = [
     buyerName: 'Rudi Hartono',
     phone: '081399887766',
     date: '14 Okt 2026',
+    createdAt: '2026-10-14T09:00:00+07:00',
     total: 185000,
     qty: 1,
     status: 'diproses', // diproses, dikirim, selesai, ditolak
@@ -338,6 +339,7 @@ export const MOCK_ORDERS = [
     buyerName: 'Dewi Lestari',
     phone: '082211445566',
     date: '13 Okt 2026',
+    createdAt: '2026-10-13T10:30:00+07:00',
     total: 36000,
     qty: 2,
     status: 'dikirim',
@@ -351,6 +353,7 @@ export const MOCK_ORDERS = [
     buyerName: 'Ahmad Fauzi',
     phone: '085733221100',
     date: '12 Okt 2026',
+    createdAt: '2026-10-12T11:15:00+07:00',
     total: 95000,
     qty: 1,
     status: 'selesai',

@@ -17,12 +17,18 @@ import MobileAppView from './pages/mobile/MobileAppView';
 import AdminLayout from './pages/admin/AdminLayout';
 
 function MainApp() {
-  const { currentView, webPage } = useApp();
+  const { currentView, webPage, dataSource } = useApp();
 
   return (
     <div className="min-h-screen bg-desa-bg text-desa-text font-sans flex flex-col justify-between selection:bg-desa-accent selection:text-white">
       
-      {currentView !== 'admin' && <Navbar />}
+      {currentView === 'web' && <Navbar />}
+
+      {dataSource === 'demo' && currentView !== 'admin' && (
+        <div role="status" className="border-b border-desa-primary/15 bg-white px-4 py-2 text-center text-xs text-desa-primary">
+          Mode pratinjau: produk, ulasan, dan angka yang tampil adalah data contoh.
+        </div>
+      )}
 
       <main className="flex-1">
         

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
-import { Star, MapPin, Store, ShoppingCart, MessageSquare, ArrowRight, Zap } from 'lucide-react';
+import { Star, MapPin, Store, ShoppingCart, MessageSquare, ArrowRight, ShoppingBag } from 'lucide-react';
 import LurikDivider from './LurikDivider';
 
 export default function ProductCard({ product, showQuickOrder = true, isCompact = false }) {
@@ -12,11 +12,9 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
       initial={{ opacity: 0, y: 15 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
-      whileHover={{ y: -6, transition: { duration: 0.2, ease: 'easeOut' } }}
-      className="group bg-white rounded-2xl overflow-hidden border border-desa-primary/15 hover:border-desa-primary/40 hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative"
+      whileHover={{ y: -3, transition: { duration: 0.2, ease: 'easeOut' } }}
+      className="group bg-white rounded-2xl overflow-hidden border border-desa-primary/15 hover:border-desa-primary/40 hover:shadow-md transition-all duration-300 flex flex-col justify-between relative"
     >
-      
-      <div className="absolute top-0 left-0 right-0 h-1.5 bg-[repeating-linear-gradient(90deg,#3A3A38_0px,#3A3A38_2px,transparent_2px,transparent_7px)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
 
       <div>
         
@@ -154,7 +152,7 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
             className="py-2 px-3.5 rounded-xl bg-desa-accent hover:bg-desa-accent/90 text-white text-xs font-bold transition-all flex items-center justify-center gap-1 shadow-md shrink-0"
             title="Beli Langsung / Checkout Cepat"
           >
-            <Zap className="w-3.5 h-3.5 fill-current" />
+            <ShoppingBag className="w-3.5 h-3.5" />
             <span>Beli</span>
           </motion.button>
         )}

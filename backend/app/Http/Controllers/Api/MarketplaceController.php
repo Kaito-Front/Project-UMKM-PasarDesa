@@ -22,12 +22,28 @@ class MarketplaceController extends Controller
 
     public function stats(): JsonResponse
     {
+        $months = collect(range(5, 0))->map(fn (int $monthsAgo) => now()->startOfMonth()->subMonths($monthsAgo));
+        $completedOrders = Order::query()
+            ->whereIn('status', ['diambil', 'selesai'])
+            ->where('created_at', '>=', $months->first())
+            ->get(['total', 'created_at']);
+        $monthlyPerformance = $months->map(function ($month) use ($completedOrders) {
+            $orders = $completedOrders->filter(fn (Order $order) => $order->created_at?->format('Y-m') === $month->format('Y-m'));
+
+            return [
+                'period' => $month->format('Y-m'),
+                'transactions' => $orders->count(),
+                'turnover' => (float) $orders->sum('total'),
+            ];
+        })->values();
+
         return response()->json([
             'totalUmkm' => Shop::query()->where('status', 'aktif')->count(),
             'totalProducts' => Product::query()->where('is_hidden', false)->count(),
             'totalTransactions' => Order::query()->count(),
-            'turnoverThisMonth' => (float) Order::query()->where('status', 'selesai')->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->sum('total'),
+            'turnoverThisMonth' => (float) Order::query()->whereIn('status', ['diambil', 'selesai'])->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->sum('total'),
             'activeKecamatan' => Shop::query()->where('status', 'aktif')->distinct()->count('kecamatan'),
+            'monthlyPerformance' => $monthlyPerformance,
         ]);
     }
 
@@ -259,6 +275,7 @@ class MarketplaceController extends Controller
             'buyerName' => $order->buyer_name,
             'phone' => $order->phone,
             'date' => $order->created_at?->format('d M Y'),
+            'createdAt' => $order->created_at?->toIso8601String(),
             'total' => $order->total,
             'qty' => $order->qty,
             'status' => $order->status,

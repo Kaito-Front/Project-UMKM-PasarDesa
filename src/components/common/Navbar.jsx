@@ -7,20 +7,17 @@ import {
   Search, 
   User, 
   Smartphone, 
-  ShieldCheck, 
-  Globe, 
   Menu, 
   X,
   ShoppingBag,
   ShoppingCart,
   MessageSquare,
-  Bell,
-  Sparkles
+  Bell
 } from 'lucide-react';
 
 export default function Navbar() {
   const { 
-    currentView, setCurrentView, 
+    setCurrentView,
     webPage, setWebPage, 
     currentUser, isLoggedIn, logout,
     searchQuery, setSearchQuery,
@@ -38,84 +35,6 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-desa-bg/95 backdrop-blur-md shadow-sm border-b border-desa-primary/10 transition-all">
-      
-      <div className="bg-desa-primary text-desa-light text-xs py-1.5 px-4 relative overflow-hidden">
-        
-        <div className="absolute inset-0 bg-lurik-stripes-light opacity-10" />
-
-        <div className="max-w-screen-2xl mx-auto flex flex-wrap items-center justify-between gap-2 relative z-10">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#C1CCB3]" />
-            <span className="font-medium tracking-wide">
-              Pasar Desa Mandiri - Platform Digital Produk Unggulan dan UMKM Warga
-            </span>
-          </div>
-
-          
-          <div className="flex items-center gap-1 bg-black/40 p-1 rounded-full border border-white/20 text-xs">
-            <span className="text-[10px] uppercase font-bold tracking-wider px-2 text-desa-light/60 hidden sm:inline">
-              Mode Pratinjau:
-            </span>
-            <button
-              onClick={() => setCurrentView('web')}
-              className={`relative flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-colors ${
-                currentView === 'web'
-                  ? 'text-desa-primary font-bold'
-                  : 'text-desa-light/80 hover:text-white'
-              }`}
-            >
-              {currentView === 'web' && (
-                <motion.div
-                  layoutId="activeModePill"
-                  className="absolute inset-0 bg-desa-light rounded-full shadow-md z-0"
-                  transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                />
-              )}
-              <Globe className="w-3.5 h-3.5 relative z-10" />
-              <span className="relative z-10">Web Publik</span>
-            </button>
-
-            <button
-              onClick={() => setCurrentView('mobile')}
-              className={`relative flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-colors ${
-                currentView === 'mobile'
-                  ? 'text-white font-bold'
-                  : 'text-desa-light/80 hover:text-white'
-              }`}
-            >
-              {currentView === 'mobile' && (
-                <motion.div
-                  layoutId="activeModePill"
-                  className="absolute inset-0 bg-desa-accent rounded-full shadow-md z-0"
-                  transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                />
-              )}
-              <Smartphone className="w-3.5 h-3.5 relative z-10" />
-              <span className="relative z-10">Mobile PWA</span>
-            </button>
-
-            <button
-              onClick={() => setCurrentView('admin')}
-              className={`relative flex items-center gap-1.5 px-3 py-1 rounded-full font-medium transition-colors ${
-                currentView === 'admin'
-                  ? 'text-white font-bold'
-                  : 'text-desa-light/80 hover:text-white'
-              }`}
-            >
-              {currentView === 'admin' && (
-                <motion.div
-                  layoutId="activeModePill"
-                  className="absolute inset-0 bg-desa-highlight rounded-full shadow-md z-0"
-                  transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                />
-              )}
-              <ShieldCheck className="w-3.5 h-3.5 relative z-10" />
-              <span className="relative z-10">Admin Desa</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
       
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">

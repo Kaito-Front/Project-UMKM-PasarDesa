@@ -353,7 +353,7 @@ export default function AddressModal() {
 
                 
                 <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-xs px-2.5 py-1 rounded-lg border border-desa-primary/10 text-[10px] text-desa-primary font-semibold shadow-xs flex items-center gap-1.5 pointer-events-none">
-                  <span className="w-2 h-2 rounded-full bg-desa-accent animate-ping" />
+                  <span className="w-2 h-2 rounded-full bg-desa-accent" />
                   <span>Google Maps: {formData.lat}, {formData.lng}</span>
                 </div>
               </div>

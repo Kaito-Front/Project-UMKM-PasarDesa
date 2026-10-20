@@ -20,8 +20,6 @@ import {
   Users,
   Package,
   Award,
-  Sparkles,
-  CheckCircle2,
   MapPin,
   ExternalLink
 } from 'lucide-react';
@@ -57,6 +55,7 @@ export default function HomePage() {
     categories, 
     shops, 
     stats, 
+    dataSource,
     setWebPage, 
     setSelectedCategory, 
     setSearchQuery,
@@ -71,8 +70,8 @@ export default function HomePage() {
       case 'Utensils': return <Utensils className="w-6 h-6 text-desa-accent" />;
       case 'Sprout': return <Sprout className="w-6 h-6 text-desa-highlight" />;
       case 'Palette': return <Palette className="w-6 h-6 text-desa-accent" />;
-      case 'HeartPulse': return <HeartPulse className="w-6 h-6 text-rose-600" />;
-      case 'Shirt': return <Shirt className="w-6 h-6 text-amber-700" />;
+      case 'HeartPulse': return <HeartPulse className="w-6 h-6 text-desa-accent" />;
+      case 'Shirt': return <Shirt className="w-6 h-6 text-desa-highlight" />;
       default: return <LayoutGrid className="w-6 h-6 text-desa-primary" />;
     }
   };
@@ -91,6 +90,7 @@ export default function HomePage() {
   };
   const featuredProducts = products.filter(p => p.isFeatured || p.isPopular);
   const newUmkmShops = shops.slice(0, 4);
+  const spotlightProduct = products.find((product) => product.isFeatured) || products[0];
 
   const nextCarousel = () => {
     setCarouselIndex((prev) => (prev + 1) % Math.max(1, featuredProducts.length - 2));
@@ -106,7 +106,6 @@ export default function HomePage() {
       
       <section className="relative overflow-hidden pt-8 pb-16 lg:py-20 bg-gradient-to-b from-desa-bg via-white/50 to-desa-bg border-b border-desa-primary/10">
         
-        <div className="absolute top-0 left-0 right-0 h-1 bg-[repeating-linear-gradient(90deg,#3A3A38_0px,#3A3A38_2px,transparent_2px,transparent_8px)] opacity-30" />
         
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -119,24 +118,14 @@ export default function HomePage() {
               className="lg:col-span-7 space-y-6"
             >
               
-              <motion.div 
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-desa-primary/5 border border-desa-primary/15 text-xs font-semibold text-desa-primary"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-desa-accent" />
-                <span>Pemberdayaan Ekonomi Desa Berbasis Digital</span>
-              </motion.div>
-
               <motion.h1 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
                 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-desa-primary leading-[1.15]"
               >
-                Karya Autentik Warga, <br />
-                <span className="text-desa-accent italic font-serif">Kualitas Luhur</span> Pasar Desa.
+                Produk lokal Sumedang, <br />
+                <span className="text-desa-accent italic font-serif">langsung dari UMKM.</span>
               </motion.h1>
 
               <motion.p 
@@ -145,8 +134,7 @@ export default function HomePage() {
                 transition={{ delay: 0.3, duration: 0.6 }}
                 className="text-base sm:text-lg text-desa-text/80 max-w-2xl font-light leading-relaxed"
               >
-                Jelajahi kain tenun lurik, kuliner tradisional, dan kerajinan UMKM Kabupaten Sumedang,
-                hasil bumi segar dari petani, dan kerajinan tangan buatan warga.
+                Pilih kain ATBM, olahan pangan, madu, dan kerajinan langsung dari katalog UMKM lokal.
               </motion.p>
 
               
@@ -202,26 +190,6 @@ export default function HomePage() {
               </motion.form>
 
               
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.6 }}
-                className="pt-4 grid grid-cols-1 gap-3 border-t border-desa-primary/10 sm:grid-cols-3 sm:gap-4"
-              >
-                <div className="flex items-center gap-2 text-xs">
-                  <CheckCircle2 className="w-4 h-4 text-desa-highlight shrink-0" />
-                  <span className="text-desa-text/80 font-medium">100% Produk Warga</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <CheckCircle2 className="w-4 h-4 text-desa-highlight shrink-0" />
-                  <span className="text-desa-text/80 font-medium">Beli Langsung ke UMKM</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <CheckCircle2 className="w-4 h-4 text-desa-highlight shrink-0" />
-                  <span className="text-desa-text/80 font-medium">Order Cepat WhatsApp</span>
-                </div>
-              </motion.div>
-
             </motion.div>
 
             
@@ -231,27 +199,35 @@ export default function HomePage() {
               transition={{ duration: 0.7, ease: 'easeOut' }}
               className="lg:col-span-5 relative"
             >
-              <div className="relative mx-auto max-w-md bg-white p-5 rounded-3xl shadow-2xl border border-desa-primary/20">
+              {spotlightProduct ? (
+              <div className="relative mx-auto max-w-md bg-white p-5 rounded-3xl shadow-xl border border-desa-primary/20">
                 
                 <div className="flex items-center justify-between pb-3 mb-3 border-b border-desa-primary/15">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-desa-accent animate-ping" />
                     <span className="font-heading font-semibold text-xs tracking-wider text-desa-primary uppercase">
-                      Produk Sorotan Hari Ini
+                      Produk UMKM Sumedang
                     </span>
                   </div>
-                  <span className="text-[11px] font-semibold text-desa-highlight">Terverifikasi Desa</span>
+                  <span className="text-[11px] font-semibold text-desa-highlight">
+                    {spotlightProduct.categoryName || 'Produk lokal'}
+                  </span>
                 </div>
 
                 
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-4 bg-desa-primary/5 group">
-                  <img
-                    src="kain-lurik.jpg"
-                    alt="Kain Tenun Lurik"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-4 bg-desa-bg group">
+                  {spotlightProduct.images?.[0] ? (
+                    <img
+                      src={spotlightProduct.images[0]}
+                      alt={spotlightProduct.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center px-6 text-center text-sm text-desa-text/75">
+                      Foto produk belum tersedia
+                    </div>
+                  )}
                   <div className="absolute bottom-2 left-2 px-2.5 py-1 rounded-lg bg-desa-primary/85 backdrop-blur-md text-desa-light text-xs font-medium">
-                    Kain Lurik Telupat - Ibu Sumarsih
+                    {spotlightProduct.shopName}
                   </div>
                 </div>
 
@@ -259,17 +235,17 @@ export default function HomePage() {
                   <div className="flex items-baseline justify-between">
                     <div>
                       <h4 className="font-heading font-bold text-lg text-desa-primary">
-                        Tenun Tradisional ATBM
+                        {spotlightProduct.name}
                       </h4>
-                      <p className="text-xs text-desa-text/70">Kecamatan Sumedang Utara RT 02 / RW 01</p>
+                      <p className="text-xs text-desa-text/70">{spotlightProduct.kecamatan}</p>
                     </div>
                     <span className="font-heading text-lg font-bold text-desa-accent">
-                      Rp 185.000
+                      Rp {Number(spotlightProduct.price || 0).toLocaleString('id-ID')}
                     </span>
                   </div>
 
                   <p className="text-xs text-desa-text/70 line-clamp-2">
-                    Ditenun secara telaten dengan benang katun 100% adem dan motif lurik bersejarah.
+                    {spotlightProduct.description}
                   </p>
 
                   <div className="pt-2 flex items-center gap-2">
@@ -297,6 +273,11 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
+              ) : (
+                <div className="mx-auto flex min-h-72 max-w-md items-center justify-center rounded-3xl border border-desa-primary/15 bg-white p-8 text-center text-sm text-desa-text/75">
+                  Belum ada produk yang bisa ditampilkan.
+                </div>
+              )}
             </motion.div>
 
           </div>
@@ -308,7 +289,6 @@ export default function HomePage() {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="w-1.5 h-5 bg-desa-accent rounded-full" />
               <span className="text-xs font-bold uppercase tracking-wider text-desa-accent">
                 Eksplorasi Desa
               </span>
@@ -338,10 +318,10 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.06 }}
-              whileHover={{ y: -8, scale: 1.04, transition: { duration: 0.2 } }}
+              whileHover={{ y: -3, scale: 1.01, transition: { duration: 0.2 } }}
               whileTap={{ scale: 0.96 }}
               onClick={() => handleCategorySelect(cat.id)}
-              className="group bg-white p-5 rounded-2xl border border-desa-primary/15 hover:border-desa-primary/50 hover:shadow-xl cursor-pointer transition-all text-center flex flex-col items-center justify-between relative overflow-hidden"
+              className="group bg-white p-5 rounded-2xl border border-desa-primary/15 hover:border-desa-primary/50 hover:shadow-md cursor-pointer transition-all text-center flex flex-col items-center justify-between relative overflow-hidden"
             >
               <div className="w-14 h-14 rounded-2xl bg-desa-bg flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-desa-accent/15 transition-all duration-300">
                 {getCategoryIcon(cat.icon)}
@@ -362,7 +342,6 @@ export default function HomePage() {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="w-1.5 h-5 bg-desa-highlight rounded-full" />
               <span className="text-xs font-bold uppercase tracking-wider text-desa-highlight">
                 Pilihan Terbaik
               </span>
@@ -427,7 +406,6 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="w-1.5 h-5 bg-desa-accent rounded-full" />
                 <span className="text-xs font-bold uppercase tracking-wider text-desa-accent">
                   Komunitas Usaha
                 </span>
@@ -519,13 +497,13 @@ export default function HomePage() {
       <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-desa-primary text-desa-light rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-2xl">
           
-          <div className="absolute inset-0 bg-lurik-stripes-light opacity-15 pointer-events-none animate-lurik-scan" />
+          <div className="absolute inset-0 bg-lurik-stripes-light opacity-10 pointer-events-none" />
           
           <div className="relative z-10">
             <div className="text-center max-w-2xl mx-auto mb-10">
-              <span className="text-xs uppercase font-bold tracking-widest text-[#C1CCB3] bg-white/10 px-3 py-1 rounded-full">
-                Data simulasi
-              </span>
+              {dataSource === 'demo' && (
+                <span className="text-xs font-semibold text-[#C1CCB3]">Data simulasi</span>
+              )}
               <h2 className="font-heading text-3xl sm:text-4xl font-bold text-desa-light mt-3">
                 Statistik Ekosistem Pasar Desa
               </h2>
@@ -688,7 +666,7 @@ export default function HomePage() {
                       </div>
                       <div className="bg-white rounded-lg p-1.5 border border-desa-primary/10">
                         <div className="aspect-square rounded bg-gray-100 overflow-hidden mb-1">
-                          <img src="https://images.unsplash.com/photo-1599490659213-e2b9527bd087?auto=format&fit=crop&w=200&q=80" alt="mock" className="w-full h-full object-cover" />
+                          <img src="https://images.unsplash.com/photo-1599490659213-e2b9527bd087?auto=format&fit=crop&w=200&q=80" alt="Contoh foto produk pada pratinjau aplikasi Pasar Desa" className="w-full h-full object-cover" />
                         </div>
                         <div className="text-[9px] font-bold truncate">Kripik Tempe Gurih</div>
                         <div className="text-[9px] text-desa-accent font-semibold">Rp 18.000</div>

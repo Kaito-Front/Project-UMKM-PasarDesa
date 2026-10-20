@@ -120,11 +120,19 @@ export default function MobileAppView() {
       
       <div className="max-w-md mx-auto mb-4 bg-white p-3 rounded-2xl border border-desa-primary/20 shadow-sm flex flex-wrap items-center justify-between gap-2 text-xs">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-desa-highlight animate-ping" />
+          <span className="w-2 h-2 rounded-full bg-desa-highlight" />
           <span className="font-bold text-desa-primary">PWA Simulasi Mobile</span>
         </div>
 
         <div className="flex flex-wrap items-center justify-end gap-2">
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setCurrentView('web')}
+            className="flex items-center gap-1 rounded-lg bg-desa-bg px-2 py-1 font-medium text-desa-primary hover:bg-black/5"
+          >
+            <ChevronLeft className="h-3.5 w-3.5" />
+            <span>Website</span>
+          </motion.button>
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => setSplashActive(true)}
@@ -182,7 +190,7 @@ export default function MobileAppView() {
               onClick={() => setSplashActive(false)}
               className="absolute inset-0 z-50 bg-desa-primary text-desa-light flex flex-col items-center justify-center p-6 text-center cursor-pointer select-none"
             >
-              <div className="absolute inset-0 bg-lurik-stripes-light opacity-15 pointer-events-none animate-lurik-scan" />
+              <div className="absolute inset-0 bg-lurik-stripes-light opacity-10 pointer-events-none" />
 
               <motion.div 
                 initial={{ scale: 0.5, rotate: -10 }}
@@ -211,7 +219,7 @@ export default function MobileAppView() {
               </motion.p>
 
               <div className="mt-8 flex items-center gap-1.5 relative z-10 text-[11px] text-[#C1CCB3] font-semibold">
-                <span className="w-2 h-2 rounded-full bg-[#C1CCB3] animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-[#C1CCB3]" />
                 <span>Memuat Aplikasi Desa...</span>
               </div>
               <span className="text-[10px] text-desa-light/40 mt-4">Ketuk di mana saja untuk melanjutkan</span>
@@ -311,7 +319,7 @@ export default function MobileAppView() {
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               className="absolute top-14 left-4 right-4 z-30 bg-desa-primary text-desa-light p-3 rounded-2xl shadow-xl border border-desa-light/20 flex items-start gap-3 pointer-events-none"
             >
-              <Bell className="w-5 h-5 text-[#C1CCB3] shrink-0 mt-0.5 animate-pulse" />
+              <Bell className="w-5 h-5 text-[#C1CCB3] shrink-0 mt-0.5" />
               <div className="flex-1 text-left">
                 <span className="font-bold text-xs block text-white">{pushNotification.title}</span>
                 <span className="text-[11px] text-desa-light/80 leading-tight block">{pushNotification.message}</span>
@@ -566,11 +574,11 @@ export default function MobileAppView() {
                           <div className="flex items-center justify-between text-xs">
                             <span className="font-mono font-bold text-desa-primary">#{ord.id}</span>
                             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${
-                              ord.status === 'selesai' ? 'bg-emerald-100 text-emerald-800' :
+                              ['selesai', 'diambil'].includes(ord.status) ? 'bg-emerald-100 text-emerald-800' :
                               ord.status === 'dikirim' ? 'bg-blue-100 text-blue-800' :
-                              'bg-amber-100 text-amber-800'
+                              ord.status === 'ditolak' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'
                             }`}>
-                              {ord.status}
+                              {{ diproses: 'Diproses', diambil: 'Sudah diambil', dikirim: 'Sedang dikirim', selesai: 'Selesai', ditolak: 'Ditolak' }[ord.status] || ord.status}
                             </span>
                           </div>
 
@@ -796,11 +804,11 @@ export default function MobileAppView() {
                       <div className="flex items-center justify-between text-xs">
                         <span className="font-mono font-bold text-desa-primary">#{ord.id}</span>
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${
-                          ord.status === 'selesai' ? 'bg-emerald-100 text-emerald-800' :
+                          ['selesai', 'diambil'].includes(ord.status) ? 'bg-emerald-100 text-emerald-800' :
                           ord.status === 'dikirim' ? 'bg-blue-100 text-blue-800' :
-                          'bg-amber-100 text-amber-800'
+                          ord.status === 'ditolak' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'
                         }`}>
-                          {ord.status}
+                          {{ diproses: 'Diproses', diambil: 'Sudah diambil', dikirim: 'Sedang dikirim', selesai: 'Selesai', ditolak: 'Ditolak' }[ord.status] || ord.status}
                         </span>
                       </div>
 

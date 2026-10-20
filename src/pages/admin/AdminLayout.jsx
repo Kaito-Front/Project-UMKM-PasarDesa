@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
+import MonthlyPerformanceChart from './MonthlyPerformanceChart';
 import LurikDivider from '../../components/common/LurikDivider';
 import { 
   LayoutDashboard, 
@@ -22,12 +23,6 @@ import {
   Plus, 
   Trash2, 
   AlertTriangle,
-  TrendingUp,
-  MapPin,
-  Calendar,
-  DollarSign,
-  ChevronRight,
-  Filter,
   Globe,
   Smartphone,
   MessageSquare
@@ -42,6 +37,7 @@ export default function AdminLayout() {
     announcements, 
     categories, 
     stats,
+    dataSource,
     verifyShop,
     toggleProductStatus,
     updateProductNumbers,
@@ -55,7 +51,8 @@ export default function AdminLayout() {
     login,
     logout,
     chatThreads,
-    sendChatMessage
+    sendChatMessage,
+    updateOrderStatus
   } = useApp();
 
   const [selectedAdminThread, setSelectedAdminThread] = useState('general-bot');
@@ -75,6 +72,37 @@ export default function AdminLayout() {
   const [broadcastMessage, setBroadcastMessage] = useState('');
   const [broadcastTarget, setBroadcastTarget] = useState('Semua Pengguna');
   const [isUrgent, setIsUrgent] = useState(false);
+  const [orderFilter, setOrderFilter] = useState('aktif');
+  const [updatingOrderId, setUpdatingOrderId] = useState(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const pendingOrders = orders.filter((order) => order.status === 'diproses').slice(0, 5);
+  const handleOrderStatus = async (order, status) => {
+    setUpdatingOrderId(order.id);
+    try {
+      await updateOrderStatus(order.id, status);
+    } finally {
+      setUpdatingOrderId(null);
+    }
+  };
+  const orderStatusLabel = {
+    diproses: 'Perlu diproses',
+    diambil: 'Sudah diambil',
+    dikirim: 'Sedang dikirim',
+    selesai: 'Selesai',
+    ditolak: 'Ditolak',
+  };
+  const adminNavItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'umkm', label: 'Manajemen UMKM', icon: Store, count: shops.filter(shop => ['menunggu', 'menunggu_verifikasi'].includes(shop.status)).length },
+    { id: 'produk', label: 'Produk & Kategori', icon: Package },
+    { id: 'pesanan', label: 'Pesanan Warga', icon: ShoppingBag, count: orders.filter(order => order.status === 'diproses').length },
+    { id: 'pengguna', label: 'Manajemen Pengguna', icon: Users },
+    { id: 'laporan', label: 'Laporan & Siaran', icon: FileText },
+    { id: 'pesan', label: 'Pusat Pesan & Komplain', icon: MessageSquare },
+  ];
+  const pendingShops = shops
+    .filter((shop) => ['menunggu', 'menunggu_verifikasi'].includes(shop.status))
+    .slice(0, 5);
   const handleAdminLogin = async (e) => {
     e.preventDefault();
     setAdminError('');
@@ -131,209 +159,133 @@ export default function AdminLayout() {
   };
   if (!isAdminAuth) {
     return (
-      <div className="min-h-screen bg-desa-bg flex items-center justify-center p-4">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full bg-white rounded-3xl p-8 border border-desa-primary/20 shadow-2xl space-y-6"
-        >
-          <div className="text-center space-y-2">
-            <div className="w-14 h-14 rounded-2xl bg-desa-primary text-desa-light flex items-center justify-center mx-auto shadow-md">
-              <ShieldCheck className="w-8 h-8 text-desa-highlight" />
+      <div className="font-ui flex min-h-screen items-center justify-center bg-[#F4F4F2] p-4">
+        <div className="w-full max-w-md space-y-6 rounded-lg border border-[#deddd8] bg-white p-6 sm:p-8">
+          <div className="space-y-2">
+            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[#e6e5e1] text-[#343431]">
+              <Store className="h-4 w-4" aria-hidden="true" />
             </div>
-            <h2 className="font-heading text-2xl font-bold text-desa-primary">
-              Portal Admin Pengelola
-            </h2>
-            <p className="text-xs text-desa-text/60">
-              Pemerintah Balai Desa & BUMDes Mandiri
-            </p>
+            <h2 className="text-2xl font-semibold text-[#232220]">Masuk ke Pasar Desa</h2>
+            <p className="text-sm text-[#5c5b57]">Gunakan akun admin untuk mengelola pesanan dan UMKM.</p>
           </div>
 
           <form onSubmit={handleAdminLogin} className="space-y-4">
             {adminError && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{adminError}</p>}
             <div>
-              <label className="block text-xs font-semibold text-desa-primary mb-1">
-                Username / Email Petugas
+              <label className="mb-2 block text-sm font-medium text-[#343431]">
+                Email petugas
               </label>
               <input
                 type="text"
                 required
+                autoComplete="username"
                 value={adminUsername}
                 onChange={(e) => setAdminUsername(e.target.value)}
-                className="w-full p-2.5 bg-desa-bg/40 border border-desa-primary/20 rounded-xl text-xs text-desa-primary focus:outline-none focus:border-desa-primary"
+                className="min-h-10 w-full rounded-md border border-[#7c7b76] bg-white px-3 text-sm text-[#232220] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-desa-primary mb-1">
-                Kata Sandi Admin
+              <label className="mb-2 block text-sm font-medium text-[#343431]">
+                Kata sandi
               </label>
               <input
                 type="password"
                 required
+                autoComplete="current-password"
                 value={adminPassword}
                 onChange={(e) => setAdminPassword(e.target.value)}
-                className="w-full p-2.5 bg-desa-bg/40 border border-desa-primary/20 rounded-xl text-xs text-desa-primary focus:outline-none focus:border-desa-primary"
+                className="min-h-10 w-full rounded-md border border-[#7c7b76] bg-white px-3 text-sm text-[#232220] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C]"
               />
             </div>
 
             <div className="pt-2">
-              <motion.button
-                whileTap={{ scale: 0.97 }}
+              <button
                 type="submit"
-                className="w-full py-3 rounded-xl bg-desa-primary text-desa-light font-bold text-xs shadow-md hover:bg-desa-primary/90 transition-all"
+                className="min-h-10 w-full rounded-md bg-[#343431] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#232220] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C]"
               >
                 Masuk ke Dashboard Admin
-              </motion.button>
+              </button>
             </div>
           </form>
 
-          <div className="text-center pt-2 border-t border-desa-primary/10">
+          <div className="border-t border-[#e6e5e1] pt-4">
             <button
               onClick={() => setCurrentView('web')}
-              className="text-xs text-desa-accent font-semibold hover:underline"
+              className="text-sm font-medium text-[#343431] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C]"
             >
               ← Kembali ke Website Publik
             </button>
           </div>
-        </motion.div>
+        </div>
       </div>
     );
   }
   return (
-    <div className="min-h-screen bg-desa-bg flex flex-col xl:flex-row">
-      
-      
-      <aside className="w-full xl:w-64 bg-desa-primary text-desa-light flex flex-col justify-between shrink-0 border-r border-black/20">
-        <div>
-          
-          <div className="p-6 pb-4 border-b border-white/10">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-desa-light text-desa-primary flex items-center justify-center font-bold shadow">
-                <ShieldCheck className="w-6 h-6 text-desa-highlight" />
-              </div>
-              <div>
-                <h3 className="font-heading font-bold text-base text-desa-light">
-                  Admin Desa
-                </h3>
-                <span className="text-[10px] text-desa-highlight font-semibold uppercase tracking-wider block">
-                  Panel BUMDes
-                </span>
-              </div>
+    <div className="admin-shell font-ui min-h-screen bg-[#F4F4F2] text-[#232220] flex flex-col xl:flex-row">
+      <aside className="relative z-30 w-full shrink-0 border-b border-[#deddd8] bg-[#F4F4F2] xl:sticky xl:top-0 xl:h-screen xl:w-60 xl:border-b-0 xl:border-r">
+        <div className="flex items-center justify-between px-4 py-3 xl:px-5 xl:py-5">
+          <div className="flex items-center gap-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[#e6e5e1] text-[#343431]">
+              <Store className="h-4 w-4" aria-hidden="true" />
+            </span>
+            <div>
+              <h3 className="text-sm font-semibold leading-5 text-[#232220]">Pasar Desa</h3>
+              <span className="text-xs text-[#5c5b57]">Panel pengelola BUMDes</span>
             </div>
           </div>
-
-          
-          <nav className="grid grid-cols-2 gap-1.5 p-3 text-xs font-medium sm:grid-cols-3 xl:grid-cols-1 xl:p-4">
-            <button
-              onClick={() => setAdminTab('dashboard')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
-                adminTab === 'dashboard'
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-desa-light/70 hover:bg-white/5 hover:text-white'
-              }`}
-            >
-              <LayoutDashboard className="w-4 h-4 text-desa-highlight" />
-              <span>Dashboard Utama</span>
-            </button>
-
-            <button
-              onClick={() => setAdminTab('umkm')}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all ${
-                adminTab === 'umkm'
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-desa-light/70 hover:bg-white/5 hover:text-white'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Store className="w-4 h-4 text-desa-accent" />
-                <span>Manajemen UMKM</span>
-              </div>
-              {shops.filter(s => s.status === 'menunggu').length > 0 && (
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500 text-black font-bold animate-pulse">
-                  {shops.filter(s => s.status === 'menunggu').length}
-                </span>
-              )}
-            </button>
-
-            <button
-              onClick={() => setAdminTab('produk')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
-                adminTab === 'produk'
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-desa-light/70 hover:bg-white/5 hover:text-white'
-              }`}
-            >
-              <Package className="w-4 h-4 text-desa-highlight" />
-              <span>Produk & Kategori</span>
-            </button>
-
-            <button
-              onClick={() => setAdminTab('pesanan')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
-                adminTab === 'pesanan'
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-desa-light/70 hover:bg-white/5 hover:text-white'
-              }`}
-            >
-              <ShoppingBag className="w-4 h-4 text-desa-accent" />
-              <span>Pesanan Warga</span>
-            </button>
-
-            <button
-              onClick={() => setAdminTab('pengguna')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
-                adminTab === 'pengguna'
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-desa-light/70 hover:bg-white/5 hover:text-white'
-              }`}
-            >
-              <Users className="w-4 h-4 text-desa-highlight" />
-              <span>Manajemen Pengguna</span>
-            </button>
-
-            <button
-              onClick={() => setAdminTab('laporan')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
-                adminTab === 'laporan'
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-desa-light/70 hover:bg-white/5 hover:text-white'
-              }`}
-            >
-              <FileText className="w-4 h-4 text-desa-accent" />
-              <span>Laporan & Siaran</span>
-            </button>
-
-            <button
-              onClick={() => setAdminTab('pesan')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
-                adminTab === 'pesan'
-                  ? 'bg-white/15 text-white font-bold shadow-sm'
-                  : 'text-desa-light/70 hover:bg-white/5 hover:text-white'
-              }`}
-            >
-              <MessageSquare className="w-4 h-4 text-desa-highlight" />
-              <span>Pusat Pesan & Komplain</span>
-            </button>
-          </nav>
+          <button
+            type="button"
+            aria-expanded={mobileNavOpen}
+            aria-controls="admin-navigation"
+            onClick={() => setMobileNavOpen(value => !value)}
+            className="rounded-md border border-[#d3d2cd] bg-white px-3 py-2 text-sm font-medium text-[#343431] hover:bg-[#e9e8e4] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C] xl:hidden"
+          >
+            {mobileNavOpen ? 'Tutup menu' : 'Menu'}
+          </button>
         </div>
 
-        
-        <div className="grid grid-cols-2 gap-2 border-t border-white/10 p-3 xl:grid-cols-1 xl:p-4">
+        <nav
+          id="admin-navigation"
+          aria-label="Navigasi admin"
+          className={`${mobileNavOpen ? 'grid' : 'hidden'} absolute left-0 right-0 top-full gap-1 border-b border-[#deddd8] bg-[#F4F4F2] p-3 text-sm xl:static xl:grid xl:border-0 xl:p-3`}
+        >
+          {adminNavItems.map(({ id, label, icon: Icon, count }) => (
+            <button
+              key={id}
+              type="button"
+              aria-current={adminTab === id ? 'page' : undefined}
+              onClick={() => { setAdminTab(id); setMobileNavOpen(false); }}
+              className={`flex min-h-9 w-full items-center justify-between gap-3 rounded-md px-3 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C] ${adminTab === id ? 'bg-[#e6e5e1] font-semibold text-[#232220]' : 'text-[#4e4d49] hover:bg-[#ebeae7] hover:text-[#232220]'}`}
+            >
+              <span className="flex min-w-0 items-center gap-3">
+                <Icon className="h-4 w-4 shrink-0 text-[#686762]" aria-hidden="true" />
+                <span className="truncate">{label}</span>
+              </span>
+              {count > 0 && <span className="min-w-5 rounded-sm bg-white px-1.5 py-0.5 text-center text-xs tabular-nums text-[#343431]">{count}</span>}
+            </button>
+          ))}
+          <div className="grid grid-cols-2 gap-2 border-t border-[#deddd8] pt-3 xl:hidden">
+            <button onClick={() => { setCurrentView('web'); setMobileNavOpen(false); }} className="min-h-10 rounded-md border border-[#d3d2cd] bg-white px-3 text-sm font-medium text-[#343431]">Website</button>
+            <button onClick={() => { logout(); setMobileNavOpen(false); }} className="min-h-10 rounded-md px-3 text-sm font-medium text-[#8a3d2c]">Keluar admin</button>
+          </div>
+        </nav>
+
+        <div className="hidden border-t border-[#deddd8] p-3 xl:absolute xl:bottom-0 xl:left-0 xl:right-0 xl:grid xl:gap-1">
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={() => setCurrentView('web')}
-            className="w-full py-2 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-desa-light text-xs font-semibold flex items-center justify-center gap-2 transition-all"
+            className="flex min-h-9 w-full items-center rounded-md px-3 text-sm font-medium text-[#4e4d49] hover:bg-[#ebeae7] hover:text-[#232220]"
           >
-            <span>Buka Website Publik</span>
+            <span>Buka website publik</span>
           </motion.button>
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={() => logout()}
-            className="w-full py-2 px-3 rounded-xl text-rose-300 hover:bg-rose-900/30 text-xs font-semibold flex items-center justify-center gap-2 transition-all"
+            className="flex min-h-9 w-full items-center gap-2 rounded-md px-3 text-sm font-medium text-[#8a3d2c] hover:bg-[#ebeae7]"
           >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>Keluar Admin</span>
+            <LogOut className="h-4 w-4" />
+            <span>Keluar admin</span>
           </motion.button>
         </div>
       </aside>
@@ -342,20 +294,20 @@ export default function AdminLayout() {
       <div className="flex min-h-screen min-w-0 flex-1 flex-col xl:h-screen xl:overflow-hidden">
         
         
-        <header className="bg-white border-b border-desa-primary/15 px-4 sm:px-6 xl:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3 shadow-xs shrink-0 z-20">
+        <header className="z-20 flex min-h-12 shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#deddd8] bg-white px-4 py-2 sm:px-6 xl:px-8">
           <div className="flex min-w-0 flex-wrap items-center gap-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-desa-accent bg-desa-accent/10 px-2.5 py-1 rounded-md">
-              Panel Pengelola BUMDes
+            <span className="text-sm font-semibold text-[#232220]">
+              Pengelolaan pasar desa
             </span>
             <span className="text-desa-text/30 hidden sm:inline">•</span>
-            <span className="text-xs font-semibold text-desa-text/70 hidden sm:inline">
-              Pemerintah Balai Desa Mandiri
+            <span className="hidden text-sm text-[#5c5b57] sm:inline">
+              Sumedang
             </span>
           </div>
 
           <div className="flex max-w-full flex-wrap items-center justify-end gap-2 sm:gap-3">
             
-            <div className="flex items-center gap-1.5 bg-desa-bg p-1 rounded-xl border border-desa-primary/15 text-xs">
+            <div className="hidden items-center gap-1 sm:flex">
               <span className="text-[10px] uppercase font-bold text-desa-text/50 px-2 hidden lg:inline">
                 Lihat Pratinjau:
               </span>
@@ -363,186 +315,194 @@ export default function AdminLayout() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setCurrentView('web')}
-                className="px-3 py-1 rounded-lg bg-white text-desa-primary hover:text-desa-accent text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-all"
+                className="flex min-h-8 items-center gap-1.5 rounded-md px-2.5 text-sm font-medium text-[#4e4d49] transition-colors hover:bg-[#f0efec] hover:text-[#232220]"
                 title="Buka Website Publik Pembeli"
               >
-                <Globe className="w-3.5 h-3.5 text-desa-primary" />
+                <Globe className="h-4 w-4 text-[#686762]" />
                 <span>Web Publik</span>
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setCurrentView('mobile')}
-                className="px-3 py-1 rounded-lg bg-white text-desa-primary hover:text-desa-accent text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-all"
+                className="flex min-h-8 items-center gap-1.5 rounded-md px-2.5 text-sm font-medium text-[#4e4d49] transition-colors hover:bg-[#f0efec] hover:text-[#232220]"
                 title="Buka Versi Aplikasi Mobile PWA"
               >
-                <Smartphone className="w-3.5 h-3.5 text-desa-accent" />
+                <Smartphone className="h-4 w-4 text-[#686762]" />
                 <span>Mobile PWA</span>
               </motion.button>
             </div>
 
             
-            <div className="flex items-center gap-2.5 pl-2 border-l border-desa-primary/15">
-              <div className="w-8 h-8 rounded-full bg-desa-primary text-desa-light flex items-center justify-center font-bold text-xs shadow-xs">
-                AD
+            <div className="flex items-center gap-2 border-l border-[#deddd8] pl-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e6e5e1] text-xs font-semibold text-[#343431]" aria-hidden="true">
+                {(currentUser?.name || 'Admin Desa').split(' ').map(part => part[0]).slice(0, 2).join('')}
               </div>
-              <div className="hidden sm:block text-left text-xs leading-tight">
-                <span className="font-bold text-desa-primary block">Admin Desa</span>
-                <span className="text-[10px] text-desa-highlight font-semibold">● Terhubung</span>
+              <div className="hidden text-left text-xs leading-tight sm:block">
+                <span className="block font-semibold text-[#232220]">{currentUser?.name || 'Admin Desa'}</span>
+                <span className="text-[#5c5b57]">
+                  {dataSource === 'demo' ? 'Data contoh' : 'Backend tersambung'}
+                </span>
               </div>
             </div>
           </div>
         </header>
 
         
-        <main className="min-w-0 flex-1 space-y-8 overflow-y-auto bg-desa-bg/60 p-4 sm:p-6 xl:p-10">
+        <main className="min-w-0 flex-1 space-y-8 overflow-y-auto bg-[#F4F4F2] p-4 sm:p-6 xl:p-9">
 
         
         {adminTab === 'dashboard' && (
-          <div className="space-y-8 animate-fadeIn">
+          <div className="space-y-5">
             <div>
-              <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
-                Ringkasan Ekosistem Desa
-              </h2>
-              <p className="text-xs sm:text-sm text-desa-text/60 mt-1">
-                Data real-time aktivitas UMKM, transaksi warga, dan perkembangan pasar desa.
+              <h1 className="text-2xl font-semibold leading-tight text-[#232220]">
+                Ringkasan pasar desa
+              </h1>
+              <p className="mt-1 text-sm text-[#5c5b57]">
+                Transaksi, omzet, dan pekerjaan yang perlu ditindaklanjuti.
               </p>
-            </div>
-
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              <motion.div whileHover={{ y: -4 }} className="bg-white p-5 rounded-2xl border border-desa-primary/15 shadow-sm space-y-2">
-                <span className="text-xs text-desa-text/60 block font-medium">Total UMKM Aktif</span>
-                <div className="font-heading text-3xl font-bold text-desa-primary">
-                  {shops.filter(s => s.status === 'aktif').length}
-                </div>
-                <span className="text-[11px] text-desa-highlight font-semibold">
-                  +2 menunggu verifikasi
-                </span>
-              </motion.div>
-
-              <motion.div whileHover={{ y: -4 }} className="bg-white p-5 rounded-2xl border border-desa-primary/15 shadow-sm space-y-2">
-                <span className="text-xs text-desa-text/60 block font-medium">Total Produk Tayang</span>
-                <div className="font-heading text-3xl font-bold text-desa-primary">
-                  {products.filter(p => !p.isHidden).length}
-                </div>
-                <span className="text-[11px] text-desa-accent font-semibold">
-                  5 kategori unggulan
-                </span>
-              </motion.div>
-
-              <motion.div whileHover={{ y: -4 }} className="bg-white p-5 rounded-2xl border border-desa-primary/15 shadow-sm space-y-2">
-                <span className="text-xs text-desa-text/60 block font-medium">Total Transaksi</span>
-                <div className="font-heading text-3xl font-bold text-desa-primary">
-                  {orders.length}
-                </div>
-                <span className="text-[11px] text-emerald-600 font-semibold">
-                  100% diproses langsung
-                </span>
-              </motion.div>
-
-              <motion.div whileHover={{ y: -4 }} className="bg-white p-5 rounded-2xl border border-desa-primary/15 shadow-sm space-y-2">
-                <span className="text-xs text-desa-text/60 block font-medium">Omset Terfasilitasi</span>
-                <div className="font-heading text-2xl font-bold text-desa-highlight">
-                  Rp 84,5 Juta
-                </div>
-                <span className="text-[11px] text-desa-text/60 font-semibold">
-                  Bulan Oktober 2026
-                </span>
-              </motion.div>
-            </div>
-
-            
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
-              
-              <div className="lg:col-span-7 bg-white p-6 rounded-2xl border border-desa-primary/15 shadow-sm space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-heading font-bold text-base text-desa-primary">
-                    Tren Transaksi Mingguan
-                  </h3>
-                  <span className="text-xs font-semibold text-desa-highlight bg-desa-highlight/10 px-2 py-0.5 rounded-full">
-                    Oktober 2026
-                  </span>
-                </div>
-
-                <p className="text-xs text-desa-text/60">
-                  Volume transaksi produk lurik dan kuliner menunjukkan kenaikan stabil setiap akhir pekan.
+              {dataSource === 'demo' && (
+                <p className="mt-2 text-sm text-[#5c5b57]">
+                  Data contoh · data operasional tampil saat backend tersambung.
                 </p>
+              )}
+            </div>
 
-                
-                <div className="pt-6 pb-2 flex items-end justify-between gap-3 h-48 border-b border-desa-primary/10">
-                  {[
-                    { label: 'Sen', val: 35, count: '14 order' },
-                    { label: 'Sel', val: 42, count: '18 order' },
-                    { label: 'Rab', val: 50, count: '22 order' },
-                    { label: 'Kam', val: 65, count: '29 order' },
-                    { label: 'Jum', val: 80, count: '38 order' },
-                    { label: 'Sab', val: 95, count: '52 order' },
-                    { label: 'Min', val: 88, count: '46 order' },
-                  ].map((bar, i) => (
-                    <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
-                      <span className="text-[10px] font-bold text-desa-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                        {bar.count}
-                      </span>
-                      <motion.div 
-                        initial={{ height: 0 }}
-                        animate={{ height: `${bar.val}%` }}
-                        transition={{ duration: 0.8, delay: i * 0.08, ease: 'easeOut' }}
-                        className="w-full bg-desa-primary group-hover:bg-desa-highlight rounded-t-lg transition-colors relative overflow-hidden shadow-xs"
-                      >
-                        <div className="absolute inset-0 bg-lurik-stripes-light opacity-30" />
-                      </motion.div>
-                      <span className="text-[11px] font-semibold text-desa-text/70">{bar.label}</span>
-                    </div>
-                  ))}
+            <div className="grid grid-cols-3 overflow-hidden rounded-lg border border-[#deddd8] bg-white">
+              {[
+                ['UMKM aktif', shops.filter(shop => shop.status === 'aktif').length],
+                ['Produk tayang', products.filter(product => !product.isHidden).length],
+                ['Total pesanan', orders.length],
+              ].map(([label, value], index) => (
+                <div key={label} className={`min-w-0 px-3 py-3 sm:px-5 sm:py-4 ${index < 2 ? 'border-r border-[#e6e5e1]' : ''}`}>
+                  <p className="text-xs leading-4 text-[#5c5b57] sm:text-sm">{label}</p>
+                  <p className="mt-1 text-2xl font-medium tabular-nums text-[#232220]">{Number(value).toLocaleString('id-ID')}</p>
                 </div>
-              </div>
+              ))}
+            </div>
 
-              
-              <div className="lg:col-span-5 bg-white p-6 rounded-2xl border border-desa-primary/15 shadow-sm space-y-4">
-                <h3 className="font-heading font-bold text-base text-desa-primary">
-                  Aktivitas Terbaru
-                </h3>
+            <MonthlyPerformanceChart stats={stats} orders={orders} dataSource={dataSource} />
 
-                <div className="space-y-3 divide-y divide-desa-primary/10 text-xs">
-                  <div className="pt-3 first:pt-0 flex items-start gap-3">
-                    <span className="w-2 h-2 rounded-full bg-amber-500 mt-1.5 shrink-0 animate-ping" />
-                    <div>
-                      <p className="font-semibold text-desa-primary">
-                        Pendaftaran UMKM Baru: <strong>Kopi Robusta Jatinangor</strong>
-                      </p>
-                      <span className="text-[10px] text-desa-text/50">10 menit yang lalu</span>
-                    </div>
+
+            <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
+              <section className="space-y-4 rounded-lg border border-[#deddd8] bg-white p-4 sm:p-5">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <h3 className="text-base font-semibold text-[#232220]">Pesanan perlu diproses</h3>
+                    <p className="mt-1 text-sm text-[#5c5b57]">Pesanan yang menunggu tindakan.</p>
                   </div>
-
-                  <div className="pt-3 flex items-start gap-3">
-                    <span className="w-2 h-2 rounded-full bg-desa-highlight mt-1.5 shrink-0" />
-                    <div>
-                      <p className="font-semibold text-desa-primary">
-                        Pesanan baru: <strong>ORD-2026-081</strong> (Kain Tenun Lurik)
-                      </p>
-                      <span className="text-[10px] text-desa-text/50">25 menit yang lalu</span>
-                    </div>
-                  </div>
-
-                  <div className="pt-3 flex items-start gap-3">
-                    <span className="w-2 h-2 rounded-full bg-desa-accent mt-1.5 shrink-0" />
-                    <div>
-                      <p className="font-semibold text-desa-primary">
-                        Broadcast pengumuman pelatihan sertifikasi halal terkirim
-                      </p>
-                      <span className="text-[10px] text-desa-text/50">2 jam yang lalu</span>
-                    </div>
-                  </div>
+                  <button onClick={() => setAdminTab('pesanan')} className="shrink-0 rounded-md px-2 py-1.5 text-sm font-medium text-[#343431] hover:bg-[#f0efec] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C]">
+                    Lihat semua
+                  </button>
                 </div>
-              </div>
+                {pendingOrders.length ? (
+                  <ul className="divide-y divide-[#e6e5e1]">
+                    {pendingOrders.map((order) => (
+                      <li key={order.id} className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-[#232220]">{order.productName}</p>
+                          <p className="mt-1 text-sm text-[#5c5b57]">{order.id} · {order.buyerName}</p>
+                        </div>
+                        <div className="flex shrink-0 flex-col items-end gap-2">
+                          <span className="text-sm font-semibold tabular-nums text-[#232220]">Rp {Number(order.total || 0).toLocaleString('id-ID')}</span>
+                          <div className="flex gap-2">
+                            <button disabled={updatingOrderId === order.id} onClick={() => handleOrderStatus(order, 'diambil')} className="rounded-md border border-[#c9c8c3] px-2 py-1.5 text-xs font-medium text-[#343431] hover:bg-[#f0efec] disabled:opacity-50">Diambil</button>
+                            <button disabled={updatingOrderId === order.id} onClick={() => handleOrderStatus(order, 'dikirim')} className="rounded-md bg-[#343431] px-2 py-1.5 text-xs font-medium text-white hover:bg-[#232220] disabled:opacity-50">Dikirim</button>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="rounded-md bg-[#f4f4f2] px-4 py-5 text-sm text-[#5c5b57]">Tidak ada pesanan yang perlu diproses.</p>
+                )}
+              </section>
 
+              <section className="space-y-4 rounded-lg border border-[#deddd8] bg-white p-4 sm:p-5">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <h3 className="text-base font-semibold text-[#232220]">Pendaftaran UMKM</h3>
+                    <p className="mt-1 text-sm text-[#5c5b57]">Toko yang perlu diverifikasi.</p>
+                  </div>
+                  <button onClick={() => { setUmkmFilter('menunggu'); setAdminTab('umkm'); }} className="shrink-0 rounded-md px-2 py-1.5 text-sm font-medium text-[#343431] hover:bg-[#f0efec] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C]">
+                    Lihat semua
+                  </button>
+                </div>
+                {pendingShops.length ? (
+                  <ul className="divide-y divide-[#e6e5e1]">
+                    {pendingShops.map((shop) => (
+                      <li key={shop.id} className="py-3 first:pt-0 last:pb-0">
+                        <p className="text-sm font-semibold text-desa-primary">{shop.name}</p>
+                        <p className="mt-1 text-sm text-desa-text/75">{shop.owner} · {shop.kecamatan}</p>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="rounded-md bg-[#f4f4f2] px-4 py-5 text-sm text-[#5c5b57]">Tidak ada pendaftaran yang menunggu pemeriksaan.</p>
+                )}
+              </section>
             </div>
           </div>
         )}
 
-        
+        {adminTab === 'pesanan' && (
+          <div className="space-y-6 animate-fadeIn">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2 className="font-heading text-2xl font-bold text-desa-primary">Pesanan Warga</h2>
+                <p className="mt-1 text-sm text-desa-text/75">Perbarui status saat pesanan diambil atau mulai dikirim. Perubahan tersimpan ke database.</p>
+              </div>
+              <div className="flex flex-wrap gap-2" aria-label="Filter status pesanan">
+                {[
+                  ['aktif', 'Perlu tindakan'], ['semua', 'Semua'], ['diproses', 'Diproses'],
+                  ['diambil', 'Diambil'], ['dikirim', 'Dikirim'], ['selesai', 'Selesai'], ['ditolak', 'Ditolak'],
+                ].map(([value, label]) => (
+                  <button key={value} onClick={() => setOrderFilter(value)} className={`rounded-lg px-3 py-1.5 text-xs font-semibold ${orderFilter === value ? 'bg-desa-primary text-white' : 'border border-desa-primary/20 bg-white text-desa-text/75'}`}>
+                    {label}{value === 'diproses' ? ` (${orders.filter(order => order.status === 'diproses').length})` : ''}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {orders
+                .filter(order => orderFilter === 'semua' || (orderFilter === 'aktif' ? ['diproses', 'dikirim'].includes(order.status) : order.status === orderFilter))
+                .map(order => (
+                  <article key={order.id} className="rounded-2xl border border-desa-primary/15 bg-white p-4 sm:p-5">
+                    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                      <div className="min-w-0 space-y-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="font-semibold text-desa-primary">{order.productName}</h3>
+                          <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${order.status === 'diproses' ? 'bg-amber-100 text-amber-900' : order.status === 'dikirim' ? 'bg-sky-100 text-sky-900' : order.status === 'ditolak' ? 'bg-rose-100 text-rose-900' : 'bg-emerald-100 text-emerald-900'}`}>
+                            {orderStatusLabel[order.status] || order.status}
+                          </span>
+                        </div>
+                        <p className="text-sm text-desa-text/75">{order.id} · {order.date} · {order.qty || 1} barang</p>
+                        <p className="text-sm text-desa-text/75">{order.buyerName} · {order.phone}</p>
+                        <p className="text-sm text-desa-text/75">{order.shopName}{order.shippingMethod ? ` · ${order.shippingMethod}` : ''}</p>
+                        <p className="max-w-2xl text-sm text-desa-text/75">{order.address}</p>
+                        {order.notes && <p className="text-sm text-desa-text/75">Catatan: {order.notes}</p>}
+                      </div>
+                      <div className="flex shrink-0 flex-col items-start gap-3 lg:items-end">
+                        <strong className="text-base text-desa-primary">Rp {Number(order.total || 0).toLocaleString('id-ID')}</strong>
+                        <div className="flex flex-wrap gap-2">
+                          {order.status === 'diproses' && <>
+                            <button disabled={updatingOrderId === order.id} onClick={() => handleOrderStatus(order, 'diambil')} className="rounded-lg border border-desa-primary/20 px-3 py-2 text-xs font-semibold text-desa-primary disabled:opacity-50">Tandai diambil</button>
+                            <button disabled={updatingOrderId === order.id} onClick={() => handleOrderStatus(order, 'dikirim')} className="rounded-lg bg-desa-primary px-3 py-2 text-xs font-semibold text-white disabled:opacity-50">Tandai dikirim</button>
+                          </>}
+                          {order.status === 'dikirim' && <button disabled={updatingOrderId === order.id} onClick={() => handleOrderStatus(order, 'selesai')} className="rounded-lg bg-emerald-700 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50">Tandai selesai</button>}
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              {orders.filter(order => orderFilter === 'semua' || (orderFilter === 'aktif' ? ['diproses', 'dikirim'].includes(order.status) : order.status === orderFilter)).length === 0 && (
+                <p className="rounded-2xl border border-desa-primary/15 bg-white px-5 py-8 text-center text-sm text-desa-text/75">Belum ada pesanan pada status ini.</p>
+              )}
+            </div>
+          </div>
+        )}
+
         {adminTab === 'umkm' && (
           <div className="space-y-6 animate-fadeIn">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -588,7 +548,9 @@ export default function AdminLayout() {
                   </thead>
                   <tbody className="divide-y divide-desa-primary/10">
                     {shops
-                      .filter(s => umkmFilter === 'semua' || s.status === umkmFilter)
+                      .filter((shop) => umkmFilter === 'semua' || (umkmFilter === 'menunggu'
+                        ? ['menunggu', 'menunggu_verifikasi'].includes(shop.status)
+                        : shop.status === umkmFilter))
                       .map((shop) => (
                         <tr key={shop.id} className="hover:bg-desa-bg/30 transition-colors">
                           <td className="p-3.5 font-bold text-desa-primary">
@@ -605,7 +567,7 @@ export default function AdminLayout() {
                           <td className="p-3.5">
                             <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold capitalize ${
                               shop.status === 'aktif' ? 'bg-emerald-100 text-emerald-800' :
-                              shop.status === 'menunggu' ? 'bg-amber-100 text-amber-800 animate-pulse' :
+                              ['menunggu', 'menunggu_verifikasi'].includes(shop.status) ? 'bg-amber-100 text-amber-800' :
                               'bg-rose-100 text-rose-800'
                             }`}>
                               {shop.status}
@@ -1003,7 +965,7 @@ export default function AdminLayout() {
               
               <div className="lg:col-span-4 border-r border-desa-primary/10 flex flex-col h-full bg-desa-bg/30">
                 <div className="p-4 border-b border-desa-primary/10 bg-white">
-                  <h3 className="text-xs font-bold text-desa-primary uppercase tracking-wider">
+                  <h3 className="text-sm font-medium text-desa-primary">
                     Ruang Pesan Aktif ({Object.keys(chatThreads).length})
                   </h3>
                 </div>

@@ -15,6 +15,33 @@
   }
 }
 
+.font-ui h1,
+.font-ui h2,
+.font-ui h3,
+.font-ui h4,
+.font-ui .font-heading {
+  font-family: 'Work Sans', sans-serif;
+}
+
+.admin-shell .bg-white[class~="rounded-2xl"],
+.admin-shell .bg-white[class~="rounded-3xl"] {
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.admin-shell [class~="shadow-xs"],
+.admin-shell [class~="shadow-sm"] {
+  box-shadow: none !important;
+}
+
+[class~="text-desa-text/50"] {
+  color: #5b5952 !important;
+}
+
+[class~="text-desa-text/60"] {
+  color: #6b6860 !important;
+}
+
 
 .lurik-border-t {
   position: relative;
@@ -45,21 +72,6 @@
 }
 
 
-@keyframes lurikScan {
-  0% {
-    background-position: 0% 0%;
-  }
-  100% {
-    background-position: 100% 0%;
-  }
-}
-
-.animate-lurik-scan {
-  background-size: 200% 100%;
-  animation: lurikScan 8s linear infinite;
-}
-
-
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -69,8 +81,8 @@
 }
 
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
-  outline: 3px solid #A85C3C;
-  outline-offset: 3px;
+  outline: 3px solid #A85C3C !important;
+  outline-offset: 3px !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
