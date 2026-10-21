@@ -1,20 +1,19 @@
 import React from 'react';
 
-
 export default function LurikDivider({ 
   className = '', 
   variant = 'dark',
   orientation = 'horizontal',
-  height = '3px'
+  height = '1.5px'
 }) {
   if (orientation === 'vertical') {
     return (
       <div 
-        className={`w-[3px] h-full ${
+        className={`w-[1.5px] h-full ${
           variant === 'accent' 
-            ? 'bg-[repeating-linear-gradient(0deg,#A85C3C_0px,#A85C3C_2px,transparent_2px,transparent_7px)]' 
-            : 'bg-[repeating-linear-gradient(0deg,#3A3A38_0px,#3A3A38_2px,transparent_2px,transparent_7px)]'
-        } opacity-75 ${className}`} 
+            ? 'bg-[repeating-linear-gradient(0deg,#9E5335_0px,#9E5335_1.5px,transparent_1.5px,transparent_7px)]' 
+            : 'bg-[repeating-linear-gradient(0deg,#2F2F2D_0px,#2F2F2D_1.5px,transparent_1.5px,transparent_7px)]'
+        } opacity-35 ${className}`} 
         aria-hidden="true"
       />
     );
@@ -24,7 +23,7 @@ export default function LurikDivider({
     return (
       <div 
         style={{ height }}
-        className={`w-full bg-[repeating-linear-gradient(90deg,#A85C3C_0px,#A85C3C_2px,#EFEDE6_2px,#EFEDE6_7px)] opacity-90 ${className}`} 
+        className={`w-full bg-[repeating-linear-gradient(90deg,#9E5335_0px,#9E5335_1.5px,transparent_1.5px,transparent_7px)] opacity-40 ${className}`} 
         aria-hidden="true"
       />
     );
@@ -34,7 +33,7 @@ export default function LurikDivider({
     return (
       <div 
         style={{ height }}
-        className={`w-full bg-[repeating-linear-gradient(90deg,rgba(239,237,230,0.6)_0px,rgba(239,237,230,0.6)_2px,transparent_2px,transparent_8px)] ${className}`} 
+        className={`w-full bg-[repeating-linear-gradient(90deg,rgba(239,237,230,0.4)_0px,rgba(239,237,230,0.4)_1.5px,transparent_1.5px,transparent_8px)] ${className}`} 
         aria-hidden="true"
       />
     );
@@ -43,18 +42,18 @@ export default function LurikDivider({
   if (variant === 'double') {
     return (
       <div className={`w-full space-y-1 ${className}`} aria-hidden="true">
-        <div className="w-full h-[1px] bg-desa-primary/40" />
-        <div className="w-full h-[2px] bg-[repeating-linear-gradient(90deg,#3A3A38_0px,#3A3A38_2px,transparent_2px,transparent_8px)] opacity-80" />
-        <div className="w-full h-[1px] bg-desa-primary/40" />
+        <div className="w-full h-[1px] bg-desa-border" />
+        <div className="w-full h-[1.5px] bg-[repeating-linear-gradient(90deg,#2F2F2D_0px,#2F2F2D_1.5px,transparent_1.5px,transparent_8px)] opacity-35" />
+        <div className="w-full h-[1px] bg-desa-border" />
       </div>
     );
   }
+
   return (
     <div 
       style={{ height }}
-      className={`w-full bg-[repeating-linear-gradient(90deg,#3A3A38_0px,#3A3A38_2px,transparent_2px,transparent_8px)] opacity-70 ${className}`} 
+      className={`w-full bg-[repeating-linear-gradient(90deg,#2F2F2D_0px,#2F2F2D_1.5px,transparent_1.5px,transparent_8px)] opacity-30 ${className}`} 
       aria-hidden="true"
     />
   );
 }
-

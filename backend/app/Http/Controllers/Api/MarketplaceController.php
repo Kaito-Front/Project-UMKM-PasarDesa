@@ -147,7 +147,7 @@ class MarketplaceController extends Controller
             403,
             'Hanya admin atau pemilik toko yang dapat mengubah status pesanan ini.'
         );
-        $validated = $request->validate(['status' => ['required', Rule::in(['diproses', 'dikirim', 'selesai', 'ditolak'])]]);
+        $validated = $request->validate(['status' => ['required', Rule::in(['diproses', 'diambil', 'dikirim', 'selesai', 'ditolak'])]]);
         $order->update(['status' => $validated['status']]);
 
         return response()->json($this->serializeOrder($order));

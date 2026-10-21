@@ -163,13 +163,13 @@ export default function MobileAppView() {
       
       <div className={`mx-auto transition-all ${
         deviceFrameMode 
-          ? 'max-w-[390px] h-[810px] rounded-[48px] border-[8px] border-desa-primary shadow-2xl relative overflow-hidden bg-desa-bg flex flex-col' 
+          ? 'w-full max-w-[390px] h-[810px] sm:rounded-[40px] sm:border-[6px] sm:border-desa-primary sm:shadow-2xl relative overflow-hidden bg-desa-bg flex flex-col' 
           : 'max-w-md min-h-[700px] rounded-3xl border border-desa-primary/20 shadow-xl relative overflow-hidden bg-desa-bg flex flex-col'
       }`}>
 
         
         {deviceFrameMode && (
-          <div className="bg-desa-bg px-6 pt-3 pb-1 flex items-center justify-between text-[11px] font-semibold text-desa-primary shrink-0 select-none border-b border-black/5">
+          <div className="hidden sm:flex bg-desa-bg px-6 pt-3 pb-1 items-center justify-between text-[11px] font-semibold text-desa-primary shrink-0 select-none border-b border-black/5">
             <span>09:41</span>
             <div className="w-20 h-4 bg-black rounded-full" />
             <div className="flex items-center gap-1.5">

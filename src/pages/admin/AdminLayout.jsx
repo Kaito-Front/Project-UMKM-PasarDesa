@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import MonthlyPerformanceChart from './MonthlyPerformanceChart';
@@ -76,6 +76,16 @@ export default function AdminLayout() {
   const [updatingOrderId, setUpdatingOrderId] = useState(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const pendingOrders = orders.filter((order) => order.status === 'diproses').slice(0, 5);
+  const totalCompletedOmzet = useMemo(() => {
+    const fromOrders = orders
+      .filter((o) => ['diambil', 'selesai'].includes(o.status))
+      .reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+    if (stats?.turnoverThisMonth && stats.turnoverThisMonth > fromOrders) {
+      return stats.turnoverThisMonth;
+    }
+    return fromOrders;
+  }, [stats?.turnoverThisMonth, orders]);
+
   const handleOrderStatus = async (order, status) => {
     setUpdatingOrderId(order.id);
     try {
@@ -88,7 +98,7 @@ export default function AdminLayout() {
     diproses: 'Perlu diproses',
     diambil: 'Sudah diambil',
     dikirim: 'Sedang dikirim',
-    selesai: 'Selesai',
+    selesai: 'Selesai (Beres)',
     ditolak: 'Ditolak',
   };
   const adminNavItems = [
@@ -159,20 +169,20 @@ export default function AdminLayout() {
   };
   if (!isAdminAuth) {
     return (
-      <div className="font-ui flex min-h-screen items-center justify-center bg-[#F4F4F2] p-4">
-        <div className="w-full max-w-md space-y-6 rounded-lg border border-[#deddd8] bg-white p-6 sm:p-8">
+      <div className="font-ui flex min-h-screen items-center justify-center bg-[#F7F6F2] p-4">
+        <div className="w-full max-w-md space-y-6 rounded-lg border border-[#D8D5CC] bg-white p-6 sm:p-8">
           <div className="space-y-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[#e6e5e1] text-[#343431]">
+            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[#EAE8E1] text-[#2F2F2D]">
               <Store className="h-4 w-4" aria-hidden="true" />
             </div>
             <h2 className="text-2xl font-semibold text-[#232220]">Masuk ke Pasar Desa</h2>
-            <p className="text-sm text-[#5c5b57]">Gunakan akun admin untuk mengelola pesanan dan UMKM.</p>
+            <p className="text-sm text-[#65635D]">Gunakan akun admin untuk mengelola pesanan dan UMKM.</p>
           </div>
 
           <form onSubmit={handleAdminLogin} className="space-y-4">
             {adminError && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{adminError}</p>}
             <div>
-              <label className="mb-2 block text-sm font-medium text-[#343431]">
+              <label className="mb-2 block text-sm font-medium text-[#2F2F2D]">
                 Email petugas
               </label>
               <input
@@ -181,12 +191,12 @@ export default function AdminLayout() {
                 autoComplete="username"
                 value={adminUsername}
                 onChange={(e) => setAdminUsername(e.target.value)}
-                className="min-h-10 w-full rounded-md border border-[#7c7b76] bg-white px-3 text-sm text-[#232220] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C]"
+                className="min-h-10 w-full rounded-md border border-[#7c7b76] bg-white px-3 text-sm text-[#232220] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9E5335]"
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-[#343431]">
+              <label className="mb-2 block text-sm font-medium text-[#2F2F2D]">
                 Kata sandi
               </label>
               <input
@@ -195,24 +205,24 @@ export default function AdminLayout() {
                 autoComplete="current-password"
                 value={adminPassword}
                 onChange={(e) => setAdminPassword(e.target.value)}
-                className="min-h-10 w-full rounded-md border border-[#7c7b76] bg-white px-3 text-sm text-[#232220] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C]"
+                className="min-h-10 w-full rounded-md border border-[#7c7b76] bg-white px-3 text-sm text-[#232220] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9E5335]"
               />
             </div>
 
             <div className="pt-2">
               <button
                 type="submit"
-                className="min-h-10 w-full rounded-md bg-[#343431] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#232220] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C]"
+                className="min-h-10 w-full rounded-md bg-[#2F2F2D] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#232220] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9E5335]"
               >
                 Masuk ke Dashboard Admin
               </button>
             </div>
           </form>
 
-          <div className="border-t border-[#e6e5e1] pt-4">
+          <div className="border-t border-[#EAE8E1] pt-4">
             <button
               onClick={() => setCurrentView('web')}
-              className="text-sm font-medium text-[#343431] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C]"
+              className="text-sm font-medium text-[#2F2F2D] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9E5335]"
             >
               ← Kembali ke Website Publik
             </button>
@@ -222,16 +232,16 @@ export default function AdminLayout() {
     );
   }
   return (
-    <div className="admin-shell font-ui min-h-screen bg-[#F4F4F2] text-[#232220] flex flex-col xl:flex-row">
-      <aside className="relative z-30 w-full shrink-0 border-b border-[#deddd8] bg-[#F4F4F2] xl:sticky xl:top-0 xl:h-screen xl:w-60 xl:border-b-0 xl:border-r">
+    <div className="admin-shell font-ui min-h-screen bg-[#F7F6F2] text-[#232220] flex flex-col xl:flex-row">
+      <aside className="relative z-30 w-full shrink-0 border-b border-[#D8D5CC] bg-[#F7F6F2] xl:sticky xl:top-0 xl:h-screen xl:w-60 xl:border-b-0 xl:border-r">
         <div className="flex items-center justify-between px-4 py-3 xl:px-5 xl:py-5">
           <div className="flex items-center gap-3">
-            <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[#e6e5e1] text-[#343431]">
+            <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[#EAE8E1] text-[#2F2F2D]">
               <Store className="h-4 w-4" aria-hidden="true" />
             </span>
             <div>
               <h3 className="text-sm font-semibold leading-5 text-[#232220]">Pasar Desa</h3>
-              <span className="text-xs text-[#5c5b57]">Panel pengelola BUMDes</span>
+              <span className="text-xs text-[#65635D]">Panel pengelola BUMDes</span>
             </div>
           </div>
           <button
@@ -239,7 +249,7 @@ export default function AdminLayout() {
             aria-expanded={mobileNavOpen}
             aria-controls="admin-navigation"
             onClick={() => setMobileNavOpen(value => !value)}
-            className="rounded-md border border-[#d3d2cd] bg-white px-3 py-2 text-sm font-medium text-[#343431] hover:bg-[#e9e8e4] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C] xl:hidden"
+            className="rounded-md border border-[#D8D5CC] bg-white px-3 py-2 text-sm font-medium text-[#2F2F2D] hover:bg-[#e9e8e4] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9E5335] xl:hidden"
           >
             {mobileNavOpen ? 'Tutup menu' : 'Menu'}
           </button>
@@ -248,7 +258,7 @@ export default function AdminLayout() {
         <nav
           id="admin-navigation"
           aria-label="Navigasi admin"
-          className={`${mobileNavOpen ? 'grid' : 'hidden'} absolute left-0 right-0 top-full gap-1 border-b border-[#deddd8] bg-[#F4F4F2] p-3 text-sm xl:static xl:grid xl:border-0 xl:p-3`}
+          className={`${mobileNavOpen ? 'grid' : 'hidden'} absolute left-0 right-0 top-full gap-1 border-b border-[#D8D5CC] bg-[#F7F6F2] p-3 text-sm xl:static xl:grid xl:border-0 xl:p-3`}
         >
           {adminNavItems.map(({ id, label, icon: Icon, count }) => (
             <button
@@ -256,33 +266,33 @@ export default function AdminLayout() {
               type="button"
               aria-current={adminTab === id ? 'page' : undefined}
               onClick={() => { setAdminTab(id); setMobileNavOpen(false); }}
-              className={`flex min-h-9 w-full items-center justify-between gap-3 rounded-md px-3 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C] ${adminTab === id ? 'bg-[#e6e5e1] font-semibold text-[#232220]' : 'text-[#4e4d49] hover:bg-[#ebeae7] hover:text-[#232220]'}`}
+              className={`flex min-h-9 w-full items-center justify-between gap-3 rounded-md px-3 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9E5335] ${adminTab === id ? 'bg-[#EAE8E1] font-semibold text-[#232220]' : 'text-[#52504A] hover:bg-[#EFECE5] hover:text-[#232220]'}`}
             >
               <span className="flex min-w-0 items-center gap-3">
-                <Icon className="h-4 w-4 shrink-0 text-[#686762]" aria-hidden="true" />
+                <Icon className="h-4 w-4 shrink-0 text-[#65635D]" aria-hidden="true" />
                 <span className="truncate">{label}</span>
               </span>
-              {count > 0 && <span className="min-w-5 rounded-sm bg-white px-1.5 py-0.5 text-center text-xs tabular-nums text-[#343431]">{count}</span>}
+              {count > 0 && <span className="min-w-5 rounded-sm bg-white px-1.5 py-0.5 text-center text-xs tabular-nums text-[#2F2F2D]">{count}</span>}
             </button>
           ))}
-          <div className="grid grid-cols-2 gap-2 border-t border-[#deddd8] pt-3 xl:hidden">
-            <button onClick={() => { setCurrentView('web'); setMobileNavOpen(false); }} className="min-h-10 rounded-md border border-[#d3d2cd] bg-white px-3 text-sm font-medium text-[#343431]">Website</button>
-            <button onClick={() => { logout(); setMobileNavOpen(false); }} className="min-h-10 rounded-md px-3 text-sm font-medium text-[#8a3d2c]">Keluar admin</button>
+          <div className="grid grid-cols-2 gap-2 border-t border-[#D8D5CC] pt-3 xl:hidden">
+            <button onClick={() => { setCurrentView('web'); setMobileNavOpen(false); }} className="min-h-10 rounded-md border border-[#D8D5CC] bg-white px-3 text-sm font-medium text-[#2F2F2D]">Website</button>
+            <button onClick={() => { logout(); setMobileNavOpen(false); }} className="min-h-10 rounded-md px-3 text-sm font-medium text-[#9E5335]">Keluar admin</button>
           </div>
         </nav>
 
-        <div className="hidden border-t border-[#deddd8] p-3 xl:absolute xl:bottom-0 xl:left-0 xl:right-0 xl:grid xl:gap-1">
+        <div className="hidden border-t border-[#D8D5CC] p-3 xl:absolute xl:bottom-0 xl:left-0 xl:right-0 xl:grid xl:gap-1">
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={() => setCurrentView('web')}
-            className="flex min-h-9 w-full items-center rounded-md px-3 text-sm font-medium text-[#4e4d49] hover:bg-[#ebeae7] hover:text-[#232220]"
+            className="flex min-h-9 w-full items-center rounded-md px-3 text-sm font-medium text-[#52504A] hover:bg-[#EFECE5] hover:text-[#232220]"
           >
             <span>Buka website publik</span>
           </motion.button>
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={() => logout()}
-            className="flex min-h-9 w-full items-center gap-2 rounded-md px-3 text-sm font-medium text-[#8a3d2c] hover:bg-[#ebeae7]"
+            className="flex min-h-9 w-full items-center gap-2 rounded-md px-3 text-sm font-medium text-[#9E5335] hover:bg-[#EFECE5]"
           >
             <LogOut className="h-4 w-4" />
             <span>Keluar admin</span>
@@ -294,13 +304,13 @@ export default function AdminLayout() {
       <div className="flex min-h-screen min-w-0 flex-1 flex-col xl:h-screen xl:overflow-hidden">
         
         
-        <header className="z-20 flex min-h-12 shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#deddd8] bg-white px-4 py-2 sm:px-6 xl:px-8">
+        <header className="z-20 flex min-h-12 shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#D8D5CC] bg-white px-4 py-2 sm:px-6 xl:px-8">
           <div className="flex min-w-0 flex-wrap items-center gap-3">
             <span className="text-sm font-semibold text-[#232220]">
               Pengelolaan pasar desa
             </span>
             <span className="text-desa-text/30 hidden sm:inline">•</span>
-            <span className="hidden text-sm text-[#5c5b57] sm:inline">
+            <span className="hidden text-sm text-[#65635D] sm:inline">
               Sumedang
             </span>
           </div>
@@ -315,32 +325,32 @@ export default function AdminLayout() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setCurrentView('web')}
-                className="flex min-h-8 items-center gap-1.5 rounded-md px-2.5 text-sm font-medium text-[#4e4d49] transition-colors hover:bg-[#f0efec] hover:text-[#232220]"
+                className="flex min-h-8 items-center gap-1.5 rounded-md px-2.5 text-sm font-medium text-[#52504A] transition-colors hover:bg-[#EFECE5] hover:text-[#232220]"
                 title="Buka Website Publik Pembeli"
               >
-                <Globe className="h-4 w-4 text-[#686762]" />
+                <Globe className="h-4 w-4 text-[#65635D]" />
                 <span>Web Publik</span>
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setCurrentView('mobile')}
-                className="flex min-h-8 items-center gap-1.5 rounded-md px-2.5 text-sm font-medium text-[#4e4d49] transition-colors hover:bg-[#f0efec] hover:text-[#232220]"
+                className="flex min-h-8 items-center gap-1.5 rounded-md px-2.5 text-sm font-medium text-[#52504A] transition-colors hover:bg-[#EFECE5] hover:text-[#232220]"
                 title="Buka Versi Aplikasi Mobile PWA"
               >
-                <Smartphone className="h-4 w-4 text-[#686762]" />
+                <Smartphone className="h-4 w-4 text-[#65635D]" />
                 <span>Mobile PWA</span>
               </motion.button>
             </div>
 
             
-            <div className="flex items-center gap-2 border-l border-[#deddd8] pl-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e6e5e1] text-xs font-semibold text-[#343431]" aria-hidden="true">
+            <div className="flex items-center gap-2 border-l border-[#D8D5CC] pl-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#EAE8E1] text-xs font-semibold text-[#2F2F2D]" aria-hidden="true">
                 {(currentUser?.name || 'Admin Desa').split(' ').map(part => part[0]).slice(0, 2).join('')}
               </div>
               <div className="hidden text-left text-xs leading-tight sm:block">
                 <span className="block font-semibold text-[#232220]">{currentUser?.name || 'Admin Desa'}</span>
-                <span className="text-[#5c5b57]">
+                <span className="text-[#65635D]">
                   {dataSource === 'demo' ? 'Data contoh' : 'Backend tersambung'}
                 </span>
               </div>
@@ -349,7 +359,7 @@ export default function AdminLayout() {
         </header>
 
         
-        <main className="min-w-0 flex-1 space-y-8 overflow-y-auto bg-[#F4F4F2] p-4 sm:p-6 xl:p-9">
+        <main className="min-w-0 flex-1 space-y-8 overflow-y-auto bg-[#F7F6F2] p-4 sm:p-6 xl:p-9">
 
         
         {adminTab === 'dashboard' && (
@@ -358,25 +368,44 @@ export default function AdminLayout() {
               <h1 className="text-2xl font-semibold leading-tight text-[#232220]">
                 Ringkasan pasar desa
               </h1>
-              <p className="mt-1 text-sm text-[#5c5b57]">
+              <p className="mt-1 text-sm text-[#65635D]">
                 Transaksi, omzet, dan pekerjaan yang perlu ditindaklanjuti.
               </p>
               {dataSource === 'demo' && (
-                <p className="mt-2 text-sm text-[#5c5b57]">
+                <p className="mt-2 text-sm text-[#65635D]">
                   Data contoh · data operasional tampil saat backend tersambung.
                 </p>
               )}
             </div>
 
-            <div className="grid grid-cols-3 overflow-hidden rounded-lg border border-[#deddd8] bg-white">
+            <div className="grid grid-cols-2 lg:grid-cols-4 overflow-hidden rounded-lg border border-[#D8D5CC] bg-white divide-y sm:divide-y-0 sm:divide-x divide-[#EAE8E1]">
               {[
-                ['UMKM aktif', shops.filter(shop => shop.status === 'aktif').length],
-                ['Produk tayang', products.filter(product => !product.isHidden).length],
-                ['Total pesanan', orders.length],
-              ].map(([label, value], index) => (
-                <div key={label} className={`min-w-0 px-3 py-3 sm:px-5 sm:py-4 ${index < 2 ? 'border-r border-[#e6e5e1]' : ''}`}>
-                  <p className="text-xs leading-4 text-[#5c5b57] sm:text-sm">{label}</p>
-                  <p className="mt-1 text-2xl font-medium tabular-nums text-[#232220]">{Number(value).toLocaleString('id-ID')}</p>
+                {
+                  label: 'Total omzet selesai',
+                  value: `Rp ${Number(totalCompletedOmzet).toLocaleString('id-ID')}`,
+                  subtext: 'Pesanan tuntas & diambil',
+                  highlight: true,
+                },
+                {
+                  label: 'Pesanan warga',
+                  value: `${orders.filter(o => ['diambil', 'selesai'].includes(o.status)).length} / ${orders.length}`,
+                  subtext: `${pendingOrders.length} perlu tindakan`,
+                },
+                {
+                  label: 'UMKM aktif',
+                  value: shops.filter(shop => shop.status === 'aktif').length,
+                  subtext: 'Toko terverifikasi',
+                },
+                {
+                  label: 'Produk tayang',
+                  value: products.filter(product => !product.isHidden).length,
+                  subtext: 'Katalog aktif desa',
+                },
+              ].map(({ label, value, subtext, highlight }) => (
+                <div key={label} className={`min-w-0 px-3 py-3 sm:px-5 sm:py-4 ${highlight ? 'bg-[#FAF8F5]' : ''}`}>
+                  <p className="text-xs leading-4 text-[#65635D] sm:text-sm font-medium">{label}</p>
+                  <p className={`mt-1 text-xl sm:text-2xl font-semibold tabular-nums truncate ${highlight ? 'text-emerald-800' : 'text-[#232220]'}`}>{value}</p>
+                  {subtext && <p className="mt-1 text-xs text-[#8A8780]">{subtext}</p>}
                 </div>
               ))}
             </div>
@@ -385,51 +414,64 @@ export default function AdminLayout() {
 
 
             <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
-              <section className="space-y-4 rounded-lg border border-[#deddd8] bg-white p-4 sm:p-5">
+              <section className="space-y-4 rounded-lg border border-[#D8D5CC] bg-white p-4 sm:p-5">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <h3 className="text-base font-semibold text-[#232220]">Pesanan perlu diproses</h3>
-                    <p className="mt-1 text-sm text-[#5c5b57]">Pesanan yang menunggu tindakan.</p>
+                    <p className="mt-1 text-sm text-[#65635D]">Pesanan yang menunggu tindakan.</p>
                   </div>
-                  <button onClick={() => setAdminTab('pesanan')} className="shrink-0 rounded-md px-2 py-1.5 text-sm font-medium text-[#343431] hover:bg-[#f0efec] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C]">
+                  <button onClick={() => setAdminTab('pesanan')} className="shrink-0 rounded-md px-2 py-1.5 text-sm font-medium text-[#2F2F2D] hover:bg-[#EFECE5] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9E5335]">
                     Lihat semua
                   </button>
                 </div>
                 {pendingOrders.length ? (
-                  <ul className="divide-y divide-[#e6e5e1]">
+                  <ul className="divide-y divide-[#EAE8E1]">
                     {pendingOrders.map((order) => (
                       <li key={order.id} className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
                         <div className="min-w-0">
                           <p className="truncate text-sm font-semibold text-[#232220]">{order.productName}</p>
-                          <p className="mt-1 text-sm text-[#5c5b57]">{order.id} · {order.buyerName}</p>
+                          <p className="mt-1 text-sm text-[#65635D]">{order.id} · {order.buyerName}</p>
                         </div>
                         <div className="flex shrink-0 flex-col items-end gap-2">
                           <span className="text-sm font-semibold tabular-nums text-[#232220]">Rp {Number(order.total || 0).toLocaleString('id-ID')}</span>
                           <div className="flex gap-2">
-                            <button disabled={updatingOrderId === order.id} onClick={() => handleOrderStatus(order, 'diambil')} className="rounded-md border border-[#c9c8c3] px-2 py-1.5 text-xs font-medium text-[#343431] hover:bg-[#f0efec] disabled:opacity-50">Diambil</button>
-                            <button disabled={updatingOrderId === order.id} onClick={() => handleOrderStatus(order, 'dikirim')} className="rounded-md bg-[#343431] px-2 py-1.5 text-xs font-medium text-white hover:bg-[#232220] disabled:opacity-50">Dikirim</button>
+                            <button
+                              disabled={updatingOrderId === order.id}
+                              onClick={() => handleOrderStatus(order, 'selesai')}
+                              className="rounded-md border border-emerald-600/40 bg-emerald-50 px-2.5 py-1.5 text-xs font-semibold text-emerald-800 hover:bg-emerald-100 disabled:opacity-50 transition-colors"
+                              title="Tandai diambil & langsung selesaikan pesanan agar masuk ke omzet"
+                            >
+                              {updatingOrderId === order.id ? 'Memproses...' : 'Tandai diambil'}
+                            </button>
+                            <button
+                              disabled={updatingOrderId === order.id}
+                              onClick={() => handleOrderStatus(order, 'dikirim')}
+                              className="rounded-md bg-[#2F2F2D] px-2.5 py-1.5 text-xs font-medium text-white hover:bg-[#232220] disabled:opacity-50 transition-colors"
+                            >
+                              Dikirim
+                            </button>
                           </div>
                         </div>
                       </li>
                     ))}
                   </ul>
                 ) : (
-                  <p className="rounded-md bg-[#f4f4f2] px-4 py-5 text-sm text-[#5c5b57]">Tidak ada pesanan yang perlu diproses.</p>
+                  <p className="rounded-md bg-[#F7F6F2] px-4 py-5 text-sm text-[#65635D]">Tidak ada pesanan yang perlu diproses.</p>
                 )}
               </section>
 
-              <section className="space-y-4 rounded-lg border border-[#deddd8] bg-white p-4 sm:p-5">
+              <section className="space-y-4 rounded-lg border border-[#D8D5CC] bg-white p-4 sm:p-5">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <h3 className="text-base font-semibold text-[#232220]">Pendaftaran UMKM</h3>
-                    <p className="mt-1 text-sm text-[#5c5b57]">Toko yang perlu diverifikasi.</p>
+                    <p className="mt-1 text-sm text-[#65635D]">Toko yang perlu diverifikasi.</p>
                   </div>
-                  <button onClick={() => { setUmkmFilter('menunggu'); setAdminTab('umkm'); }} className="shrink-0 rounded-md px-2 py-1.5 text-sm font-medium text-[#343431] hover:bg-[#f0efec] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A85C3C]">
+                  <button onClick={() => { setUmkmFilter('menunggu'); setAdminTab('umkm'); }} className="shrink-0 rounded-md px-2 py-1.5 text-sm font-medium text-[#2F2F2D] hover:bg-[#EFECE5] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9E5335]">
                     Lihat semua
                   </button>
                 </div>
                 {pendingShops.length ? (
-                  <ul className="divide-y divide-[#e6e5e1]">
+                  <ul className="divide-y divide-[#EAE8E1]">
                     {pendingShops.map((shop) => (
                       <li key={shop.id} className="py-3 first:pt-0 last:pb-0">
                         <p className="text-sm font-semibold text-desa-primary">{shop.name}</p>
@@ -438,7 +480,7 @@ export default function AdminLayout() {
                     ))}
                   </ul>
                 ) : (
-                  <p className="rounded-md bg-[#f4f4f2] px-4 py-5 text-sm text-[#5c5b57]">Tidak ada pendaftaran yang menunggu pemeriksaan.</p>
+                  <p className="rounded-md bg-[#F7F6F2] px-4 py-5 text-sm text-[#65635D]">Tidak ada pendaftaran yang menunggu pemeriksaan.</p>
                 )}
               </section>
             </div>
@@ -485,12 +527,47 @@ export default function AdminLayout() {
                       </div>
                       <div className="flex shrink-0 flex-col items-start gap-3 lg:items-end">
                         <strong className="text-base text-desa-primary">Rp {Number(order.total || 0).toLocaleString('id-ID')}</strong>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           {order.status === 'diproses' && <>
-                            <button disabled={updatingOrderId === order.id} onClick={() => handleOrderStatus(order, 'diambil')} className="rounded-lg border border-desa-primary/20 px-3 py-2 text-xs font-semibold text-desa-primary disabled:opacity-50">Tandai diambil</button>
-                            <button disabled={updatingOrderId === order.id} onClick={() => handleOrderStatus(order, 'dikirim')} className="rounded-lg bg-desa-primary px-3 py-2 text-xs font-semibold text-white disabled:opacity-50">Tandai dikirim</button>
+                            <button
+                              disabled={updatingOrderId === order.id}
+                              onClick={() => handleOrderStatus(order, 'selesai')}
+                              className="rounded-lg border border-emerald-600/40 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-800 hover:bg-emerald-100 disabled:opacity-50 transition-colors shadow-xs"
+                              title="Tandai pesanan sudah diambil dan langsung selesaikan (masuk omzet)"
+                            >
+                              {updatingOrderId === order.id ? 'Memproses...' : '✓ Tandai diambil'}
+                            </button>
+                            <button
+                              disabled={updatingOrderId === order.id}
+                              onClick={() => handleOrderStatus(order, 'dikirim')}
+                              className="rounded-lg bg-desa-primary px-3 py-2 text-xs font-semibold text-white hover:bg-desa-primary/90 disabled:opacity-50 transition-colors"
+                            >
+                              Tandai dikirim
+                            </button>
                           </>}
-                          {order.status === 'dikirim' && <button disabled={updatingOrderId === order.id} onClick={() => handleOrderStatus(order, 'selesai')} className="rounded-lg bg-emerald-700 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50">Tandai selesai</button>}
+                          {order.status === 'dikirim' && (
+                            <button
+                              disabled={updatingOrderId === order.id}
+                              onClick={() => handleOrderStatus(order, 'selesai')}
+                              className="rounded-lg bg-emerald-700 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-800 disabled:opacity-50 transition-colors"
+                            >
+                              {updatingOrderId === order.id ? 'Memproses...' : '✓ Tandai selesai'}
+                            </button>
+                          )}
+                          {order.status === 'diambil' && (
+                            <button
+                              disabled={updatingOrderId === order.id}
+                              onClick={() => handleOrderStatus(order, 'selesai')}
+                              className="rounded-lg bg-emerald-700 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-800 disabled:opacity-50 transition-colors"
+                            >
+                              {updatingOrderId === order.id ? 'Memproses...' : '✓ Selesaikan pesanan'}
+                            </button>
+                          )}
+                          {order.status === 'selesai' && (
+                            <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 border border-emerald-200">
+                              ✓ Selesai & Masuk Omzet
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>

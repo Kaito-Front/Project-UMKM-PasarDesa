@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import ProductCard from '../../components/common/ProductCard';
-import LurikDivider from '../../components/common/LurikDivider';
 import { 
   Search, 
   ArrowRight, 
@@ -15,20 +14,18 @@ import {
   ChevronLeft,
   ChevronRight,
   Smartphone,
-  ShieldCheck,
   TrendingUp,
   Users,
   Package,
-  Award,
-  MapPin,
-  ExternalLink
+  Award
 } from 'lucide-react';
+
 function Counter({ value, suffix = '' }) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     let start = 0;
-    const duration = 1600;
+    const duration = 1400;
     const stepTime = 20;
     const steps = duration / stepTime;
     const increment = value / steps;
@@ -55,29 +52,31 @@ export default function HomePage() {
     categories, 
     shops, 
     stats, 
-    dataSource,
     setWebPage, 
     setSelectedCategory, 
     setSearchQuery,
     viewShop,
+    viewProduct,
     setCurrentView 
   } = useApp();
 
   const [heroSearch, setHeroSearch] = useState('');
   const [carouselIndex, setCarouselIndex] = useState(0);
+
   const getCategoryIcon = (iconName) => {
     switch(iconName) {
-      case 'Utensils': return <Utensils className="w-6 h-6 text-desa-accent" />;
-      case 'Sprout': return <Sprout className="w-6 h-6 text-desa-highlight" />;
-      case 'Palette': return <Palette className="w-6 h-6 text-desa-accent" />;
-      case 'HeartPulse': return <HeartPulse className="w-6 h-6 text-desa-accent" />;
-      case 'Shirt': return <Shirt className="w-6 h-6 text-desa-highlight" />;
-      default: return <LayoutGrid className="w-6 h-6 text-desa-primary" />;
+      case 'Utensils': return <Utensils className="w-5 h-5 text-desa-accent" />;
+      case 'Sprout': return <Sprout className="w-5 h-5 text-desa-highlight" />;
+      case 'Palette': return <Palette className="w-5 h-5 text-desa-accent" />;
+      case 'HeartPulse': return <HeartPulse className="w-5 h-5 text-desa-accent" />;
+      case 'Shirt': return <Shirt className="w-5 h-5 text-desa-highlight" />;
+      default: return <LayoutGrid className="w-5 h-5 text-desa-primary" />;
     }
   };
 
   const handleHeroSearchSubmit = (e) => {
     e.preventDefault();
+    if (!heroSearch.trim()) return;
     setSearchQuery(heroSearch);
     setWebPage('catalog');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -88,214 +87,207 @@ export default function HomePage() {
     setWebPage('catalog');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
   const featuredProducts = products.filter(p => p.isFeatured || p.isPopular);
   const newUmkmShops = shops.slice(0, 4);
   const spotlightProduct = products.find((product) => product.isFeatured) || products[0];
 
   const nextCarousel = () => {
-    setCarouselIndex((prev) => (prev + 1) % Math.max(1, featuredProducts.length - 2));
+    setCarouselIndex((prev) => (prev + 1) % Math.max(1, featuredProducts.length - 3));
   };
 
   const prevCarousel = () => {
-    setCarouselIndex((prev) => (prev - 1 + Math.max(1, featuredProducts.length - 2)) % Math.max(1, featuredProducts.length - 2));
+    setCarouselIndex((prev) => (prev - 1 + Math.max(1, featuredProducts.length - 3)) % Math.max(1, featuredProducts.length - 3));
+  };
+
+  const heroContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.12, delayChildren: 0.05 }
+    }
+  };
+
+  const heroItem = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }
   };
 
   return (
-    <div className="space-y-20">
+    <div className="space-y-20 lg:space-y-28 overflow-hidden">
       
-      
-      <section className="relative overflow-hidden pt-8 pb-16 lg:py-20 bg-gradient-to-b from-desa-bg via-white/50 to-desa-bg border-b border-desa-primary/10">
-        
-        
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      {/* 1. Hero Section - Dynamic Staggered Reveal */}
+      <section className="relative pt-8 pb-12 lg:pt-16 lg:pb-20">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             
-            
+            {/* Left Content Column */}
             <motion.div 
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
+              variants={heroContainer}
+              initial="hidden"
+              animate="visible"
               className="lg:col-span-7 space-y-6"
             >
-              
+              <motion.div variants={heroItem} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-desa-border text-xs font-medium text-desa-muted shadow-2xs">
+                <span className="w-2 h-2 rounded-full bg-desa-highlight animate-pulse" />
+                <span>Katalog Resmi BUMDes & UMKM Mandiri</span>
+              </motion.div>
+
               <motion.h1 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-                className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-desa-primary leading-[1.15]"
+                variants={heroItem}
+                className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-desa-primary leading-[1.12]"
               >
-                Produk lokal Sumedang, <br />
-                <span className="text-desa-accent italic font-serif">langsung dari UMKM.</span>
+                Karya Asli Pengrajin & Hasil Bumi Sumedang
               </motion.h1>
 
               <motion.p 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-                className="text-base sm:text-lg text-desa-text/80 max-w-2xl font-light leading-relaxed"
+                variants={heroItem}
+                className="text-base sm:text-lg text-desa-muted max-w-xl font-normal leading-relaxed"
               >
-                Pilih kain ATBM, olahan pangan, madu, dan kerajinan langsung dari katalog UMKM lokal.
+                Belanja langsung dari sentra tenun lurik ATBM, perajin anyaman bambu, produsen madu liar, dan olahan pangan desa terpercaya.
               </motion.p>
 
-              
-              <motion.form 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
-                onSubmit={handleHeroSearchSubmit} 
-                className="pt-2"
-              >
-                <div className="flex flex-col sm:flex-row items-stretch gap-2 p-2 bg-white rounded-2xl shadow-lg border border-desa-primary/20 focus-within:border-desa-primary focus-within:ring-2 focus-within:ring-desa-accent/20 transition-all">
+              {/* Search Form */}
+              <motion.form variants={heroItem} onSubmit={handleHeroSearchSubmit} className="pt-2 max-w-xl">
+                <div className="flex flex-col sm:flex-row items-stretch gap-2 p-1.5 bg-white rounded-xl shadow-xs border border-desa-border focus-within:border-desa-primary focus-within:ring-2 focus-within:ring-desa-primary/10 transition-all">
                   <div className="flex items-center gap-3 px-3 py-2 flex-1">
                     <Search className="w-5 h-5 text-desa-accent shrink-0" />
                     <input
                       type="text"
-                      placeholder="Cari kain lurik, kripik tempe, gula aren, madu..."
+                      placeholder="Cari kain lurik, kripik tempe, madu hutan..."
                       value={heroSearch}
                       onChange={(e) => setHeroSearch(e.target.value)}
-                      className="w-full bg-transparent text-sm text-desa-text placeholder:text-desa-text/40 focus:outline-none"
+                      className="w-full bg-transparent text-sm text-desa-text placeholder:text-desa-subtle focus:outline-none"
                     />
                   </div>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileTap={{ scale: 0.97 }}
                     type="submit"
-                    className="px-6 py-3 rounded-xl bg-desa-highlight hover:bg-desa-highlight/90 text-white font-semibold text-sm shadow transition-all flex items-center justify-center gap-2"
+                    className="px-6 py-2.5 rounded-lg bg-desa-primary hover:bg-desa-primary/90 text-white font-semibold text-xs tracking-wide shadow-xs transition-colors flex items-center justify-center gap-2 shrink-0"
                   >
                     <span>Cari Produk</span>
                     <ArrowRight className="w-4 h-4" />
                   </motion.button>
                 </div>
 
-                
-                <div className="flex flex-wrap items-center gap-2 mt-3 text-xs text-desa-text/60">
+                {/* Popular Keywords */}
+                <div className="flex flex-wrap items-center gap-2 mt-3 text-xs text-desa-muted">
                   <span className="font-medium text-desa-primary">Pencarian populer:</span>
-                  {['Kain Lurik ATBM', 'Kripik Tempe Sumedang', 'Madu Hutan Murni', 'Anyaman Bambu'].map((tag) => (
+                  {['Kain Lurik ATBM', 'Kripik Tempe', 'Madu Hutan', 'Anyaman Bambu'].map((tag) => (
                     <motion.button
                       key={tag}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.96 }}
                       type="button"
                       onClick={() => {
                         setSearchQuery(tag);
                         setWebPage('catalog');
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
-                      className="px-2.5 py-1 rounded-md bg-white/80 border border-desa-primary/15 hover:border-desa-accent hover:text-desa-accent transition-colors"
+                      className="hover:text-desa-accent transition-colors underline decoration-desa-border hover:decoration-desa-accent"
                     >
                       {tag}
                     </motion.button>
                   ))}
                 </div>
               </motion.form>
-
-              
             </motion.div>
 
-            
+            {/* Right Showcase Column */}
             <motion.div 
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, ease: 'easeOut' }}
-              className="lg:col-span-5 relative"
+              initial={{ opacity: 0, x: 24, scale: 0.97 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              transition={{ duration: 0.65, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              className="lg:col-span-5"
             >
               {spotlightProduct ? (
-              <div className="relative mx-auto max-w-md bg-white p-5 rounded-3xl shadow-xl border border-desa-primary/20">
-                
-                <div className="flex items-center justify-between pb-3 mb-3 border-b border-desa-primary/15">
-                  <div className="flex items-center gap-2">
-                    <span className="font-heading font-semibold text-xs tracking-wider text-desa-primary uppercase">
-                      Produk UMKM Sumedang
-                    </span>
+                <div className="bg-white rounded-2xl p-5 border border-desa-border shadow-md space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-desa-border text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-desa-accent animate-ping" />
+                      <span className="font-semibold text-desa-primary tracking-wide">
+                        Karya Unggulan Hari Ini
+                      </span>
+                    </div>
+                    <span className="text-desa-muted">{spotlightProduct.categoryName}</span>
                   </div>
-                  <span className="text-[11px] font-semibold text-desa-highlight">
-                    {spotlightProduct.categoryName || 'Produk lokal'}
-                  </span>
-                </div>
 
-                
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-4 bg-desa-bg group">
-                  {spotlightProduct.images?.[0] ? (
+                  <motion.div 
+                    whileHover={{ scale: 1.01 }}
+                    onClick={() => viewProduct(spotlightProduct.id)}
+                    className="relative aspect-4/3 rounded-xl overflow-hidden bg-desa-bg cursor-pointer group"
+                  >
                     <img
-                      src={spotlightProduct.images[0]}
+                      src={spotlightProduct.images?.[0] || '/kain-lurik.jpg'}
                       alt={spotlightProduct.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                     />
-                  ) : (
-                    <div className="flex h-full items-center justify-center px-6 text-center text-sm text-desa-text/75">
-                      Foto produk belum tersedia
+                    <div className="absolute bottom-2.5 left-2.5 px-3 py-1 rounded bg-black/75 backdrop-blur-xs text-white text-xs font-medium">
+                      {spotlightProduct.shopName} • {spotlightProduct.kecamatan.replace('Kecamatan ', '')}
                     </div>
-                  )}
-                  <div className="absolute bottom-2 left-2 px-2.5 py-1 rounded-lg bg-desa-primary/85 backdrop-blur-md text-desa-light text-xs font-medium">
-                    {spotlightProduct.shopName}
-                  </div>
-                </div>
+                  </motion.div>
 
-                <div className="space-y-3">
-                  <div className="flex items-baseline justify-between">
-                    <div>
-                      <h4 className="font-heading font-bold text-lg text-desa-primary">
+                  <div className="space-y-2">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <h3 
+                        onClick={() => viewProduct(spotlightProduct.id)}
+                        className="font-heading font-bold text-lg text-desa-primary hover:text-desa-accent cursor-pointer transition-colors line-clamp-1"
+                      >
                         {spotlightProduct.name}
-                      </h4>
-                      <p className="text-xs text-desa-text/70">{spotlightProduct.kecamatan}</p>
+                      </h3>
+                      <span className="font-heading text-lg font-bold text-desa-accent shrink-0">
+                        Rp {Number(spotlightProduct.price || 0).toLocaleString('id-ID')}
+                      </span>
                     </div>
-                    <span className="font-heading text-lg font-bold text-desa-accent">
-                      Rp {Number(spotlightProduct.price || 0).toLocaleString('id-ID')}
-                    </span>
-                  </div>
 
-                  <p className="text-xs text-desa-text/70 line-clamp-2">
-                    {spotlightProduct.description}
-                  </p>
+                    <p className="text-xs text-desa-muted line-clamp-2 leading-relaxed">
+                      {spotlightProduct.description}
+                    </p>
 
-                  <div className="pt-2 flex items-center gap-2">
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => {
-                        setWebPage('catalog');
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className="flex-1 py-2.5 px-4 rounded-xl bg-desa-primary text-desa-light text-xs font-semibold hover:bg-desa-primary/90 transition-all text-center"
-                    >
-                      Lihat di Katalog
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setCurrentView('mobile')}
-                      className="py-2.5 px-4 rounded-xl bg-desa-highlight text-white text-xs font-semibold hover:bg-desa-highlight/90 transition-all flex items-center gap-1.5 shadow-md"
-                      title="Buka versi PWA"
-                    >
-                      <Smartphone className="w-3.5 h-3.5" />
-                      <span>Versi Mobile</span>
-                    </motion.button>
+                    <div className="pt-2 flex items-center gap-3">
+                      <motion.button
+                        whileTap={{ scale: 0.96 }}
+                        whileHover={{ scale: 1.01 }}
+                        onClick={() => {
+                          viewProduct(spotlightProduct.id);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="flex-1 py-2.5 px-4 rounded-lg bg-desa-primary text-white text-xs font-semibold hover:bg-desa-primary/90 transition-colors text-center"
+                      >
+                        Lihat Detail Produk
+                      </motion.button>
+                      <motion.button
+                        whileTap={{ scale: 0.96 }}
+                        whileHover={{ scale: 1.01 }}
+                        onClick={() => {
+                          setWebPage('catalog');
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="py-2.5 px-4 rounded-lg border border-desa-border text-desa-primary text-xs font-semibold hover:bg-desa-bg transition-colors"
+                      >
+                        Semua Katalog
+                      </motion.button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              ) : (
-                <div className="mx-auto flex min-h-72 max-w-md items-center justify-center rounded-3xl border border-desa-primary/15 bg-white p-8 text-center text-sm text-desa-text/75">
-                  Belum ada produk yang bisa ditampilkan.
-                </div>
-              )}
+              ) : null}
             </motion.div>
 
           </div>
         </div>
       </section>
 
-      
+      {/* 2. Categories Section - Interactive Lift */}
       <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+        <div className="flex items-end justify-between mb-6 pb-2 border-b border-desa-border">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-desa-accent">
-                Eksplorasi Desa
-              </span>
-            </div>
             <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
-              Kategori Produk Populer
+              Kategori Produk
             </h2>
+            <p className="text-xs sm:text-sm text-desa-muted mt-1">
+              Jelajahi komoditas unggulan menurut rumpun kerajinan dan pangan
+            </p>
           </div>
           <button
             onClick={() => {
@@ -303,54 +295,51 @@ export default function HomePage() {
               setWebPage('catalog');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="text-xs font-semibold text-desa-accent hover:text-desa-primary transition-colors flex items-center gap-1 self-start sm:self-auto group"
+            className="text-xs font-semibold text-desa-accent hover:text-desa-primary transition-colors flex items-center gap-1 group"
           >
-            <span>Semua Kategori ({categories.reduce((acc, c) => acc + c.count, 0)})</span>
+            <span>Semua Kategori</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
           {categories.map((cat, idx) => (
             <motion.div
               key={cat.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: idx * 0.06 }}
-              whileHover={{ y: -3, scale: 1.01, transition: { duration: 0.2 } }}
-              whileTap={{ scale: 0.96 }}
+              transition={{ delay: idx * 0.05, duration: 0.35 }}
+              whileHover={{ y: -3, scale: 1.02, transition: { duration: 0.18 } }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => handleCategorySelect(cat.id)}
-              className="group bg-white p-5 rounded-2xl border border-desa-primary/15 hover:border-desa-primary/50 hover:shadow-md cursor-pointer transition-all text-center flex flex-col items-center justify-between relative overflow-hidden"
+              className="bg-white p-3.5 rounded-xl border border-desa-border hover:border-desa-primary/40 cursor-pointer transition-colors shadow-2xs flex items-center gap-3 group"
             >
-              <div className="w-14 h-14 rounded-2xl bg-desa-bg flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-desa-accent/15 transition-all duration-300">
+              <div className="w-9 h-9 rounded-lg bg-desa-bg flex items-center justify-center shrink-0 group-hover:bg-desa-surface transition-colors">
                 {getCategoryIcon(cat.icon)}
               </div>
-              <h3 className="font-medium text-desa-primary text-sm mb-1 group-hover:text-desa-accent transition-colors">
-                {cat.name}
-              </h3>
-              <span className="text-[11px] text-desa-text/50">
-                {cat.count} Produk
-              </span>
+              <div className="overflow-hidden">
+                <h3 className="font-medium text-desa-primary text-xs truncate group-hover:text-desa-accent transition-colors">
+                  {cat.name}
+                </h3>
+                <span className="text-[11px] text-desa-subtle">
+                  {cat.count} produk
+                </span>
+              </div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      
+      {/* 3. Featured Products with Animated Spring Carousel */}
       <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 pb-2 border-b border-desa-border gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-desa-highlight">
-                Pilihan Terbaik
-              </span>
-            </div>
             <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
-              Produk Unggulan & Terlaris
+              Produk Pilihan & Terlaris
             </h2>
-            <p className="text-xs sm:text-sm text-desa-text/70 mt-1">
-              Produk paling diminati dengan ulasan tertinggi dari pembeli warga maupun luar kota.
+            <p className="text-xs sm:text-sm text-desa-muted mt-1">
+              Produk berkualitas tinggi yang terkurasi langsung dari sentra pengrajin
             </p>
           </div>
 
@@ -358,40 +347,32 @@ export default function HomePage() {
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={prevCarousel}
-              className="p-2 rounded-xl bg-white border border-desa-primary/20 hover:bg-desa-primary hover:text-desa-light transition-all text-desa-primary shadow-sm"
-              aria-label="Previous"
+              className="p-2 rounded-lg bg-white border border-desa-border hover:border-desa-primary text-desa-primary transition-colors shadow-2xs"
+              aria-label="Sebelumnya"
             >
               <ChevronLeft className="w-4 h-4" />
             </motion.button>
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={nextCarousel}
-              className="p-2 rounded-xl bg-white border border-desa-primary/20 hover:bg-desa-primary hover:text-desa-light transition-all text-desa-primary shadow-sm"
-              aria-label="Next"
+              className="p-2 rounded-lg bg-white border border-desa-border hover:border-desa-primary text-desa-primary transition-colors shadow-2xs"
+              aria-label="Selanjutnya"
             >
               <ChevronRight className="w-4 h-4" />
             </motion.button>
           </div>
         </div>
 
-        <motion.div 
-          layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-        >
+        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           <AnimatePresence mode="popLayout">
             {featuredProducts.slice(carouselIndex, carouselIndex + 4).map((product) => (
               <motion.div
                 key={product.id}
                 layout
-                initial={{ opacity: 0, x: 50, scale: 0.95 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: -50, scale: 0.95 }}
-                transition={{ 
-                  type: "spring", 
-                  stiffness: 250, 
-                  damping: 25, 
-                  mass: 0.5 
-                }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 28 }}
               >
                 <ProductCard product={product} />
               </motion.div>
@@ -400,91 +381,84 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      
-      <section className="bg-white/70 border-y border-desa-primary/10 py-16">
+      {/* 4. UMKM Baru Bergabung Section */}
+      <section className="bg-white/80 border-y border-desa-border py-14">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-desa-accent">
-                  Komunitas Usaha
-                </span>
-              </div>
               <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
-                UMKM Baru Bergabung
+                Wirausaha & Pengrajin Desa
               </h2>
-              <p className="text-xs sm:text-sm text-desa-text/70 mt-1">
-                Dukung wirausaha mandiri di berbagai kecamatan Kabupaten Sumedang.
+              <p className="text-xs sm:text-sm text-desa-muted mt-1">
+                Dukung kemandirian pelaku usaha mandiri dari berbagai kecamatan Kabupaten Sumedang
               </p>
             </div>
 
             <motion.button
-              whileHover={{ scale: 1.03 }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => {
                 setWebPage('auth');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="px-4 py-2 rounded-xl bg-desa-primary text-desa-light text-xs font-medium hover:bg-desa-primary/90 transition-all flex items-center gap-2 self-start sm:self-auto shadow-sm"
+              className="px-4 py-2 rounded-lg bg-desa-primary text-white text-xs font-semibold hover:bg-desa-primary/90 transition-colors flex items-center gap-2 self-start sm:self-auto shadow-2xs"
             >
               <span>Daftarkan Usaha Anda</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </motion.button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {newUmkmShops.map((shop, i) => (
               <motion.div
                 key={shop.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                transition={{ delay: i * 0.08, duration: 0.35 }}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 onClick={() => viewShop(shop.id)}
-                className="group bg-desa-bg/80 rounded-2xl overflow-hidden border border-desa-primary/15 hover:border-desa-primary/40 hover:shadow-xl cursor-pointer transition-all duration-300 flex flex-col justify-between"
+                className="group bg-desa-surface rounded-xl overflow-hidden border border-desa-border hover:border-desa-primary/40 cursor-pointer transition-all shadow-2xs flex flex-col justify-between"
               >
                 <div>
-                  <div className="h-28 overflow-hidden relative bg-desa-primary/10">
+                  <div className="h-32 overflow-hidden relative bg-desa-bg">
                     <img
                       src={shop.banner}
                       alt={shop.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                     />
-                    <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-white/90 text-desa-primary text-[10px] font-semibold shadow-xs">
+                    <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-white/95 text-desa-primary text-[10px] font-semibold shadow-xs">
                       {shop.category}
                     </div>
                   </div>
 
-                  <div className="p-4 pt-0 relative">
-                    <div className="-mt-7 mb-3 flex items-end justify-between">
+                  <div className="p-4 space-y-2">
+                    <div className="flex items-center gap-2.5">
                       <img
                         src={shop.avatar}
                         alt={shop.owner}
-                        className="w-14 h-14 rounded-2xl border-2 border-white object-cover shadow-md group-hover:scale-105 transition-transform"
+                        className="w-9 h-9 rounded-lg border border-desa-border object-cover"
                       />
-                      <span className="text-[11px] text-desa-text/60">
-                        {shop.joinDate}
-                      </span>
+                      <div className="overflow-hidden">
+                        <h3 className="font-heading font-semibold text-desa-primary text-sm truncate group-hover:text-desa-accent transition-colors">
+                          {shop.name}
+                        </h3>
+                        <p className="text-[11px] text-desa-muted truncate">
+                          {shop.kecamatan.replace('Kecamatan ', '')}
+                        </p>
+                      </div>
                     </div>
 
-                    <h3 className="font-heading font-semibold text-desa-primary text-base mb-1 group-hover:text-desa-accent transition-colors line-clamp-1">
-                      {shop.name}
-                    </h3>
-                    <p className="text-xs text-desa-text/60 mb-2 flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-desa-accent shrink-0" />
-                      <span className="truncate">{shop.kecamatan}</span>
-                    </p>
-                    <p className="text-xs text-desa-text/75 line-clamp-2 font-light">
+                    <p className="text-xs text-desa-muted line-clamp-2 font-normal leading-relaxed">
                       {shop.description}
                     </p>
                   </div>
                 </div>
 
-                <div className="p-4 pt-2 border-t border-desa-primary/10 flex items-center justify-between text-xs">
-                  <span className="text-desa-primary font-medium">Pemilik: {shop.owner}</span>
-                  <span className="text-desa-accent font-semibold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                    Kunjungi <ExternalLink className="w-3 h-3" />
+                <div className="p-4 pt-2 border-t border-desa-border/70 flex items-center justify-between text-xs">
+                  <span className="text-desa-muted text-[11px]">Pengelola: {shop.owner}</span>
+                  <span className="text-desa-accent font-semibold flex items-center gap-1 group-hover:underline">
+                    Kunjungi Toko
                   </span>
                 </div>
               </motion.div>
@@ -493,45 +467,44 @@ export default function HomePage() {
         </div>
       </section>
 
-      
+      {/* 5. Statistik Ekosistem Pasar Desa */}
       <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-desa-primary text-desa-light rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-2xl">
-          
-          <div className="absolute inset-0 bg-lurik-stripes-light opacity-10 pointer-events-none" />
+        <div className="bg-desa-primary text-desa-light rounded-2xl p-8 sm:p-12 relative overflow-hidden shadow-sm">
+          <div className="absolute inset-0 bg-lurik-stripes-light opacity-5 pointer-events-none" />
           
           <div className="relative z-10">
-            <div className="text-center max-w-2xl mx-auto mb-10">
-              {dataSource === 'demo' && (
-                <span className="text-xs font-semibold text-[#C1CCB3]">Data simulasi</span>
-              )}
-              <h2 className="font-heading text-3xl sm:text-4xl font-bold text-desa-light mt-3">
+            <div className="text-center max-w-xl mx-auto mb-10">
+              <span className="text-xs font-medium tracking-wider uppercase text-desa-accent">
+                Dampak Ekonomi Kerakyatan
+              </span>
+              <h2 className="font-heading text-2xl sm:text-3xl font-bold text-white mt-1.5">
                 Statistik Ekosistem Pasar Desa
               </h2>
               <p className="text-xs sm:text-sm text-desa-light/75 mt-2">
-                Kolaborasi warga desa dan pemerintah dalam memajukan kemandirian ekonomi lokal.
+                Kolaborasi warga desa dan pemerintah dalam memajukan kemandirian ekonomi lokal
               </p>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-center">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 text-center">
               <motion.div 
-                whileHover={{ y: -4, scale: 1.02 }}
-                className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm shadow-md"
+                whileHover={{ y: -3 }}
+                className="p-5 rounded-xl bg-white/5 border border-white/10"
               >
-                <Users className="w-8 h-8 text-[#C1CCB3] mx-auto mb-3" />
-                <div className="font-heading text-3xl sm:text-4xl font-bold text-desa-light">
+                <Users className="w-6 h-6 text-desa-highlight mx-auto mb-2" />
+                <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
                   <Counter value={stats.totalUmkm} suffix="+" />
                 </div>
                 <p className="text-xs text-desa-light/70 mt-1 uppercase tracking-wider font-medium">
-                  UMKM Aktif Terdaftar
+                  UMKM Binaan
                 </p>
               </motion.div>
 
               <motion.div 
-                whileHover={{ y: -4, scale: 1.02 }}
-                className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm shadow-md"
+                whileHover={{ y: -3 }}
+                className="p-5 rounded-xl bg-white/5 border border-white/10"
               >
-                <Package className="w-8 h-8 text-desa-accent mx-auto mb-3" />
-                <div className="font-heading text-3xl sm:text-4xl font-bold text-desa-light">
+                <Package className="w-6 h-6 text-desa-accent mx-auto mb-2" />
+                <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
                   <Counter value={stats.totalProducts} suffix="+" />
                 </div>
                 <p className="text-xs text-desa-light/70 mt-1 uppercase tracking-wider font-medium">
@@ -540,28 +513,28 @@ export default function HomePage() {
               </motion.div>
 
               <motion.div 
-                whileHover={{ y: -4, scale: 1.02 }}
-                className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm shadow-md"
+                whileHover={{ y: -3 }}
+                className="p-5 rounded-xl bg-white/5 border border-white/10"
               >
-                <TrendingUp className="w-8 h-8 text-[#C1CCB3] mx-auto mb-3" />
-                <div className="font-heading text-3xl sm:text-4xl font-bold text-desa-light">
+                <TrendingUp className="w-6 h-6 text-desa-highlight mx-auto mb-2" />
+                <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
                   <Counter value={stats.totalTransactions} />
                 </div>
                 <p className="text-xs text-desa-light/70 mt-1 uppercase tracking-wider font-medium">
-                  Transaksi Terlayani
+                  Pesanan Terlayani
                 </p>
               </motion.div>
 
               <motion.div 
-                whileHover={{ y: -4, scale: 1.02 }}
-                className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm shadow-md"
+                whileHover={{ y: -3 }}
+                className="p-5 rounded-xl bg-white/5 border border-white/10"
               >
-                <Award className="w-8 h-8 text-amber-400 mx-auto mb-3" />
-                <div className="font-heading text-3xl sm:text-4xl font-bold text-desa-light">
-                  5 Kecamatan
+                <Award className="w-6 h-6 text-amber-400 mx-auto mb-2" />
+                <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
+                  5 Sentra
                 </div>
                 <p className="text-xs text-desa-light/70 mt-1 uppercase tracking-wider font-medium">
-                  Sentra Pengrajin
+                  Kecamatan Pengrajin
                 </p>
               </motion.div>
             </div>
@@ -569,120 +542,57 @@ export default function HomePage() {
         </div>
       </section>
 
-      
-      <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-gradient-to-r from-desa-primary to-[#2F2F2D] text-desa-light rounded-3xl p-8 sm:p-14 overflow-hidden relative shadow-2xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      {/* 6. Clean PWA Feature Spotlight */}
+      <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+        <div className="bg-white rounded-2xl border border-desa-border p-8 sm:p-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
-            
-            <div className="lg:col-span-7 space-y-6">
-              <span className="text-xs uppercase font-bold tracking-wider text-[#C1CCB3] px-3 py-1 rounded-full bg-white/10 inline-block">
-                Aplikasi Mobile PWA
-              </span>
-              
-              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight text-desa-light">
-                Pasang Pasar Desa di HP, <br />
-                <span className="text-desa-accent">Ringan & Tanpa Install Play Store.</span>
-              </h2>
-
-              <p className="text-sm sm:text-base text-desa-light/80 leading-relaxed font-light">
-                Teknologi Progressive Web App (PWA) memungkinkan aplikasi dipasang langsung ke layar utama 
-                ponsel Anda. Hemat kuota, bisa dibuka cepat, dan mendukung notifikasi pesanan secara real-time.
-              </p>
-
-              <div className="space-y-3 pt-2">
-                <div className="flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-[#C1CCB3]/20 text-[#C1CCB3] flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
-                    1
-                  </span>
-                  <p className="text-xs sm:text-sm text-desa-light/90">
-                    Buka situs Pasar Desa di browser HP (Chrome / Safari).
-                  </p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-[#C1CCB3]/20 text-[#C1CCB3] flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
-                    2
-                  </span>
-                  <p className="text-xs sm:text-sm text-desa-light/90">
-                    Klik menu browser (titik tiga) lalu pilih <strong>"Tambahkan ke Layar Utama" (Add to Home Screen)</strong>.
-                  </p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="w-6 h-6 rounded-full bg-[#C1CCB3]/20 text-[#C1CCB3] flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
-                    3
-                  </span>
-                  <p className="text-xs sm:text-sm text-desa-light/90">
-                    Aplikasi langsung siap dipakai untuk belanja maupun mengelola toko Anda!
-                  </p>
-                </div>
+            <div className="lg:col-span-8 space-y-4">
+              <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-desa-highlight bg-desa-highlight/10 px-2.5 py-1 rounded">
+                <Smartphone className="w-3.5 h-3.5" />
+                <span>Teknologi Progressive Web App (PWA)</span>
               </div>
 
-              
-              <div className="pt-4 flex flex-wrap items-center gap-4">
-                <motion.button
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
-                  onClick={() => setCurrentView('mobile')}
-                  className="px-6 py-3.5 rounded-xl bg-desa-highlight hover:bg-desa-highlight/90 text-white font-bold text-sm shadow-xl transition-all flex items-center gap-2 group"
-                >
-                  <Smartphone className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                  <span>Uji Coba Versi Mobile PWA Sekarang</span>
-                </motion.button>
+              <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
+                Akses Cepat di Layar Utama HP Anda
+              </h2>
+
+              <p className="text-sm text-desa-muted leading-relaxed max-w-2xl">
+                Pasar Desa dirancang agar dapat diinstal langsung ke ponsel Anda tanpa perlu download dari Play Store atau App Store. Sangat hemat kuota, cepat dibuka, dan siap digunakan untuk belanja produk desa kapan saja.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                <div className="p-3.5 rounded-xl bg-desa-bg/70 border border-desa-border space-y-1">
+                  <span className="text-xs font-bold text-desa-primary">1. Buka di Browser</span>
+                  <p className="text-xs text-desa-muted">Buka website Pasar Desa melalui Chrome atau Safari di HP Anda.</p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-desa-bg/70 border border-desa-border space-y-1">
+                  <span className="text-xs font-bold text-desa-primary">2. Tambahkan ke Layar</span>
+                  <p className="text-xs text-desa-muted">Ketuk menu browser dan pilih "Tambahkan ke Layar Utama".</p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-desa-bg/70 border border-desa-border space-y-1">
+                  <span className="text-xs font-bold text-desa-primary">3. Siap Dipakai</span>
+                  <p className="text-xs text-desa-muted">Ikon Pasar Desa langsung muncul di HP seperti aplikasi resmi.</p>
+                </div>
               </div>
             </div>
 
-            
-            <div className="lg:col-span-5 flex justify-center">
-              <div className="w-64 sm:w-72 rounded-[40px] bg-black p-3.5 shadow-2xl border-4 border-white/20 relative">
-                
-                <div className="w-24 h-4 bg-black rounded-full mx-auto mb-2" />
-
-                
-                <div className="rounded-[26px] bg-desa-bg text-desa-text overflow-hidden aspect-[9/18] p-3 flex flex-col justify-between border border-desa-primary/20">
-                  
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-[10px] text-desa-text/60">
-                      <span className="font-bold text-desa-primary">Pasar Desa PWA</span>
-                      <span>09:41</span>
-                    </div>
-                    <div className="p-2 rounded-xl bg-white shadow-sm border border-desa-primary/10 flex items-center gap-2 text-[11px] text-desa-text/60">
-                      <Search className="w-3.5 h-3.5 text-desa-accent" />
-                      <span>Cari produk lurik...</span>
-                    </div>
-                    
-                    <div className="h-16 rounded-xl bg-desa-primary text-desa-light p-2 text-[10px] flex flex-col justify-between relative overflow-hidden">
-                      <div className="absolute inset-0 bg-lurik-stripes-light opacity-20" />
-                  <span className="font-bold z-10">Bazar UMKM Sumedang</span>
-                      <span className="text-[9px] text-desa-highlight font-medium z-10">Diskon Produk Lokal</span>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-1.5 pt-1">
-                      <div className="bg-white rounded-lg p-1.5 border border-desa-primary/10">
-                        <div className="aspect-square rounded bg-gray-100 overflow-hidden mb-1">
-                          <img src="kain-lurik.jpg" alt="mock" className="w-full h-full object-cover" />
-                        </div>
-                        <div className="text-[9px] font-bold truncate">Kain Lurik Telupat</div>
-                        <div className="text-[9px] text-desa-accent font-semibold">Rp 185.000</div>
-                      </div>
-                      <div className="bg-white rounded-lg p-1.5 border border-desa-primary/10">
-                        <div className="aspect-square rounded bg-gray-100 overflow-hidden mb-1">
-                          <img src="https://images.unsplash.com/photo-1599490659213-e2b9527bd087?auto=format&fit=crop&w=200&q=80" alt="Contoh foto produk pada pratinjau aplikasi Pasar Desa" className="w-full h-full object-cover" />
-                        </div>
-                        <div className="text-[9px] font-bold truncate">Kripik Tempe Gurih</div>
-                        <div className="text-[9px] text-desa-accent font-semibold">Rp 18.000</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  
-                  <div className="pt-2 border-t border-desa-primary/10 flex justify-around text-[9px] text-desa-text/60">
-                    <span className="text-desa-accent font-bold">Beranda</span>
-                    <span>Katalog</span>
-                    <span>Pesanan</span>
-                    <span>Akun</span>
-                  </div>
-                </div>
+            <div className="lg:col-span-4 flex flex-col items-center justify-center p-6 bg-desa-surface rounded-xl border border-desa-border space-y-4 text-center">
+              <div className="w-12 h-12 rounded-xl bg-desa-primary text-white flex items-center justify-center">
+                <Smartphone className="w-6 h-6" />
               </div>
+              <div>
+                <h4 className="font-heading font-bold text-desa-primary text-base">Uji Coba Tampilan Mobile</h4>
+                <p className="text-xs text-desa-muted mt-1">Rasakan pengalaman belanja responsif dalam simulasi PWA langsung di browser Anda.</p>
+              </div>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={() => setCurrentView('mobile')}
+                className="w-full py-2.5 px-4 rounded-lg bg-desa-highlight hover:bg-desa-highlight/90 text-white font-semibold text-xs transition-colors shadow-2xs"
+              >
+                Buka Pratinjau Mobile
+              </motion.button>
             </div>
 
           </div>

@@ -24,6 +24,31 @@ function monthKey(date) {
   return new Intl.DateTimeFormat('sv-SE', { year: 'numeric', month: '2-digit', timeZone: 'Asia/Jakarta' }).format(date);
 }
 
+function safeOrderDate(order) {
+  if (order.createdAt) {
+    const d = new Date(order.createdAt);
+    if (!Number.isNaN(d.getTime())) return d;
+  }
+  if (order.date) {
+    const d = new Date(order.date);
+    if (!Number.isNaN(d.getTime())) return d;
+    const idMonths = {
+      jan: '01', feb: '02', mar: '03', apr: '04', mei: '05', jun: '06',
+      jul: '07', agu: '08', ags: '08', sep: '09', okt: '10', nov: '11', des: '12'
+    };
+    const parts = String(order.date).toLowerCase().split(/\s+/);
+    if (parts.length >= 3) {
+      const day = parts[0].padStart(2, '0');
+      const monthStr = parts[1].slice(0, 3);
+      const year = parts[2];
+      const month = idMonths[monthStr] || '10';
+      const parsed = new Date(`${year}-${month}-${day}T12:00:00`);
+      if (!Number.isNaN(parsed.getTime())) return parsed;
+    }
+  }
+  return new Date();
+}
+
 function buildDemoSeries(orders) {
   const monthBase = new Date();
   const periods = Array.from({ length: 6 }, (_, index) => {
@@ -32,7 +57,7 @@ function buildDemoSeries(orders) {
   });
 
   orders.filter(order => ['diambil', 'selesai'].includes(order.status)).forEach(order => {
-    const date = new Date(order.createdAt || order.date);
+    const date = safeOrderDate(order);
     if (Number.isNaN(date.getTime())) return;
     const period = monthKey(date);
     const month = periods.find(row => row.period === period);

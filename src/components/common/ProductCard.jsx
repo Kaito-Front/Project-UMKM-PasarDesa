@@ -1,129 +1,103 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
-import { Star, MapPin, Store, ShoppingCart, MessageSquare, ArrowRight, ShoppingBag } from 'lucide-react';
-import LurikDivider from './LurikDivider';
+import { Star, ShoppingCart, ShoppingBag, Check } from 'lucide-react';
 
 export default function ProductCard({ product, showQuickOrder = true, isCompact = false }) {
-  const { viewProduct, addToCart, openDirectCheckout, openChatWithShop, viewShop } = useApp();
+  const { viewProduct, addToCart, openDirectCheckout, viewShop } = useApp();
+  const [justAdded, setJustAdded] = useState(false);
+
+  const discountPercent = product.originalPrice && product.originalPrice > product.price
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : null;
+
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
+    addToCart(product, 1);
+    setJustAdded(true);
+    setTimeout(() => setJustAdded(false), 1200);
+  };
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 15 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      whileHover={{ y: -3, transition: { duration: 0.2, ease: 'easeOut' } }}
-      className="group bg-white rounded-2xl overflow-hidden border border-desa-primary/15 hover:border-desa-primary/40 hover:shadow-md transition-all duration-300 flex flex-col justify-between relative"
+      viewport={{ once: true, margin: '-20px' }}
+      whileHover={{ y: -4, transition: { duration: 0.2, ease: 'easeOut' } }}
+      className="group bg-white rounded-xl overflow-hidden border border-desa-border hover:border-desa-primary/40 hover:shadow-md transition-shadow duration-200 flex flex-col justify-between"
     >
-
       <div>
-        
+        {/* Product Image Container */}
         <div 
           onClick={() => viewProduct(product.id)}
-          className="relative aspect-square overflow-hidden bg-desa-primary/5 cursor-pointer"
+          className="relative aspect-square overflow-hidden bg-desa-bg cursor-pointer"
         >
-          <motion.img
+          <img
             src={product.images[0]}
             alt={product.name}
-            className="w-full h-full object-cover object-center"
-            whileHover={{ scale: 1.08 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
             loading="lazy"
           />
 
-          
-          <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
-            {product.isFeatured && (
-              <motion.span 
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-desa-accent text-white shadow-md tracking-wider uppercase"
-              >
-                Unggulan
-              </motion.span>
-            )}
-            {product.isNew && (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-desa-highlight text-white shadow-md">
-                Baru
+          {/* Badge */}
+          <div className="absolute top-2.5 left-2.5 z-10 flex gap-1">
+            {discountPercent ? (
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-desa-accent text-white shadow-xs">
+                Hemat {discountPercent}%
               </span>
-            )}
+            ) : product.isFeatured ? (
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-desa-primary text-desa-light shadow-xs tracking-wide">
+                Pilihan Desa
+              </span>
+            ) : null}
           </div>
-
-          
-          {product.originalPrice && product.originalPrice > product.price && (
-            <div className="absolute top-2.5 right-2.5">
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-desa-primary text-desa-light shadow-md">
-                -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
-              </span>
-            </div>
-          )}
-
-          
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              openChatWithShop(product.shopId, product);
-            }}
-            className="absolute bottom-2.5 right-2.5 p-2 rounded-xl bg-white/90 hover:bg-white text-desa-primary shadow-md hover:text-desa-accent transition-all opacity-0 group-hover:opacity-100 z-10 flex items-center gap-1 text-[10px] font-bold backdrop-blur-xs"
-            title="Chat Admin Toko untuk cek stok & barang"
-          >
-            <MessageSquare className="w-3.5 h-3.5 text-desa-accent" />
-            <span>Chat Toko</span>
-          </button>
         </div>
 
-        
-        <div className={`p-4 ${isCompact ? 'p-3' : 'p-4'}`}>
+        {/* Product Details */}
+        <div className={isCompact ? 'p-3' : 'p-4'}>
           
-          <div className="flex items-center justify-between text-xs text-desa-text/60 mb-1.5 gap-2">
+          {/* Shop & Region */}
+          <div className="flex items-center justify-between text-xs text-desa-muted mb-1.5 gap-2">
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 viewShop(product.shopId);
               }}
-              className="flex items-center gap-1 hover:text-desa-accent truncate font-medium transition-colors"
+              className="hover:text-desa-accent truncate font-medium transition-colors text-left"
             >
-              <Store className="w-3 h-3 text-desa-accent shrink-0" />
-              <span className="truncate">{product.shopName}</span>
+              {product.shopName}
             </button>
-            <div className="flex items-center gap-0.5 shrink-0 text-[11px]">
-              <MapPin className="w-3 h-3 text-desa-primary/60" />
-              <span className="truncate">{product.kecamatan.replace(/^Kecamatan /, '')}</span>
-            </div>
+            <span className="shrink-0 text-[11px] text-desa-subtle">
+              {product.kecamatan.replace(/^Kecamatan /, '')}
+            </span>
           </div>
 
-          
+          {/* Title */}
           <h3 
             onClick={() => viewProduct(product.id)}
-            className="font-medium text-desa-primary text-sm line-clamp-2 leading-snug cursor-pointer group-hover:text-desa-accent transition-colors mb-2"
+            className="font-medium text-desa-primary text-sm line-clamp-2 leading-snug cursor-pointer group-hover:text-desa-accent transition-colors mb-2 min-h-[2.5rem]"
             title={product.name}
           >
             {product.name}
           </h3>
 
-          
-          <div className="flex items-center gap-2 text-xs mb-3">
-            <div className="flex items-center text-amber-500 font-semibold gap-0.5">
+          {/* Rating & Sold Metadata */}
+          <div className="flex items-center gap-1.5 text-xs mb-3 text-desa-muted">
+            <div className="flex items-center text-amber-600 font-medium gap-0.5">
               <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
               <span>{product.rating.toFixed(1)}</span>
             </div>
-            <span className="text-desa-text/30">•</span>
-            <span className="text-desa-text/60 text-[11px]">
-              {product.sold} terjual
-            </span>
-            <span className="text-desa-text/30">•</span>
-            <span className="text-desa-highlight text-[11px] font-medium">
-              Stok {product.stock}
-            </span>
+            <span className="text-desa-subtle">•</span>
+            <span className="text-[11px]">{product.sold} terjual</span>
           </div>
 
-          
-          <div className="flex items-baseline gap-2">
+          {/* Pricing */}
+          <div className="flex items-baseline gap-2 pt-1 border-t border-desa-border/60">
             <span className="font-heading font-bold text-base text-desa-primary">
               Rp {product.price.toLocaleString('id-ID')}
             </span>
             {product.originalPrice && product.originalPrice > product.price && (
-              <span className="text-xs text-desa-text/40 line-through">
+              <span className="text-xs text-desa-subtle line-through">
                 Rp {product.originalPrice.toLocaleString('id-ID')}
               </span>
             )}
@@ -131,26 +105,51 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
         </div>
       </div>
 
-      
-      <div className="px-4 pb-4 pt-1 flex items-center gap-2 border-t border-desa-primary/10">
+      {/* Action Footer */}
+      <div className="px-4 pb-4 pt-1 flex items-center gap-2">
         <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.96 }}
-          onClick={() => addToCart(product, 1)}
-          className="flex-1 py-2 px-3 rounded-xl border border-desa-primary/25 text-desa-primary hover:bg-desa-primary hover:text-desa-light text-xs font-semibold transition-all text-center flex items-center justify-center gap-1.5 shadow-xs"
-          title="Tambah ke Keranjang Belanja"
+          whileTap={{ scale: 0.94 }}
+          onClick={handleAddToCart}
+          className={`flex-1 py-2 px-3 rounded-lg border text-xs font-semibold transition-all flex items-center justify-center gap-1.5 shadow-2xs ${
+            justAdded 
+              ? 'bg-desa-highlight text-white border-desa-highlight'
+              : 'border-desa-border bg-white text-desa-primary hover:bg-desa-primary hover:text-white hover:border-desa-primary'
+          }`}
+          title="Tambah ke Keranjang"
         >
-          <ShoppingCart className="w-3.5 h-3.5 text-desa-accent group-hover:text-white" />
-          <span>+ Keranjang</span>
+          <AnimatePresence mode="wait">
+            {justAdded ? (
+              <motion.span 
+                key="added" 
+                initial={{ scale: 0.7, opacity: 0 }} 
+                animate={{ scale: 1, opacity: 1 }} 
+                exit={{ scale: 0.7, opacity: 0 }}
+                className="flex items-center gap-1"
+              >
+                <Check className="w-3.5 h-3.5" />
+                <span>Masuk Keranjang</span>
+              </motion.span>
+            ) : (
+              <motion.span 
+                key="add" 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                exit={{ opacity: 0 }}
+                className="flex items-center gap-1.5"
+              >
+                <ShoppingCart className="w-3.5 h-3.5" />
+                <span>+ Keranjang</span>
+              </motion.span>
+            )}
+          </AnimatePresence>
         </motion.button>
 
         {showQuickOrder && (
           <motion.button
-            whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.94 }}
             onClick={() => openDirectCheckout(product, 1)}
-            className="py-2 px-3.5 rounded-xl bg-desa-accent hover:bg-desa-accent/90 text-white text-xs font-bold transition-all flex items-center justify-center gap-1 shadow-md shrink-0"
-            title="Beli Langsung / Checkout Cepat"
+            className="py-2 px-3 rounded-lg bg-desa-accent hover:bg-desa-accent/90 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1 shadow-2xs shrink-0"
+            title="Beli Langsung"
           >
             <ShoppingBag className="w-3.5 h-3.5" />
             <span>Beli</span>

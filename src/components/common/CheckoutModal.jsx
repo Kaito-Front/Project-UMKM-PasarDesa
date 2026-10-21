@@ -187,7 +187,7 @@ export default function CheckoutModal() {
     const itemsSnapshot = checkoutItems.map(item => ({
       productId: item.productId || item.product?.id,
       productName: item.product?.name || 'Produk Desa',
-      productImage: item.product?.images?.[0] || 'kain-lurik.jpg',
+      productImage: item.product?.images?.[0] || '/kain-lurik.jpg',
       shopName: item.product?.shopName || 'Toko UMKM Desa',
       price: Number(item.product?.price || 0),
       qty: Number(item.qty || 1),
@@ -597,7 +597,7 @@ export default function CheckoutModal() {
                   {checkoutItems.map((item, idx) => (
                     <div key={idx} className="flex items-center gap-3 pb-3 border-b border-desa-primary/5 last:border-0 last:pb-0">
                       <img
-                        src={item.product?.images?.[0] || 'kain-lurik.jpg'}
+                        src={item.product?.images?.[0] || '/kain-lurik.jpg'}
                         alt={item.product?.name}
                         className="w-14 h-14 object-cover rounded-xl border border-desa-primary/10"
                       />

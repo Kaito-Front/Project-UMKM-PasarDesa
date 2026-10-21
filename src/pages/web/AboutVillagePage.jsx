@@ -2,15 +2,8 @@ import React from 'react';
 import { useApp } from '../../context/AppContext';
 import LurikDivider from '../../components/common/LurikDivider';
 import { 
-  Building2, 
-  MapPin, 
-  Sparkles, 
-  Users, 
-  Award, 
-  ShieldCheck, 
-  ArrowRight,
-  Heart,
-  Landmark
+  Landmark,
+  ArrowRight
 } from 'lucide-react';
 
 export default function AboutVillagePage() {
@@ -19,62 +12,61 @@ export default function AboutVillagePage() {
   const kecamatanCenters = [
     {
       name: 'Kecamatan Sumedang Utara',
-      specialty: 'Sumedang Utara · sentra tenun lurik dan kerajinan',
-      desc: 'Pusat kebudayaan tenun tradisional dengan puluhan pengrajin wanita penjaga tradisi alat tenun bukan mesin sejak zaman kolonial.',
+      specialty: 'Sentra Tenun Lurik & Kerajinan Tekstil',
+      desc: 'Pusat tradisi tenun tradisional dengan puluhan pengrajin wanita penjaga tradisi alat tenun bukan mesin (ATBM) sejak puluhan tahun.',
       image: 'https://images.unsplash.com/photo-1606744888344-498238f01769?auto=format&fit=crop&w=600&q=80',
     },
     {
       name: 'Kecamatan Cimalaka',
-      specialty: 'Cimalaka · olahan pangan dan keripik tempe',
-      desc: 'Kecamatan penghasil camilan renyah legendaris berpadu rempah aromatik daun jeruk yang telah dikirim ke berbagai kota di Indonesia.',
+      specialty: 'Olahan Pangan & Keripik Tempe Renyah',
+      desc: 'Kecamatan penghasil camilan renyah legendaris berpadu rempah aromatik daun jeruk asli yang telah dikirim ke berbagai kota di Indonesia.',
       image: 'https://images.unsplash.com/photo-1599490659213-e2b9527bd087?auto=format&fit=crop&w=600&q=80',
     },
     {
       name: 'Kecamatan Tanjungsari',
-      specialty: 'Tanjungsari · madu dan gula aren',
-      desc: 'Terletak di lereng pegunungan berhawa sejuk dengan kawasan hutan lestari penghasil madu akasia murni dan nira aren organik.',
+      specialty: 'Madu Hutan Alami & Gula Aren Organik',
+      desc: 'Kawasan lereng pegunungan berhawa sejuk dengan hutan lestari penghasil madu lebah liar murni dan nira aren tanpa campuran kimia.',
       image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=600&q=80',
     },
     {
       name: 'Kecamatan Sumedang Selatan',
-      specialty: 'Sumedang Selatan · anyaman bambu dan gerabah',
-      desc: 'Pemanfaatan rumpun bambu apus desa menjadi produk hias rumah, wadah hampers ramah lingkungan, dan perlengkapan saji alami.',
+      specialty: 'Anyaman Bambu Apus & Gerabah Alami',
+      desc: 'Pemanfaatan rumpun bambu desa menjadi perlengkapan saji alami, wadah ramah lingkungan, dan produk dekorasi rumah berkualitas ekspor.',
       image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80',
     },
     {
       name: 'Kecamatan Jatinangor',
-      specialty: 'Jatinangor · produk kopi dan olahan lokal',
-      desc: 'Hamparan kebun kopi rakyat di ketinggian 800 MDPL yang menghasilkan biji kopi petik merah beraroma rempah hangat nan khas.',
+      specialty: 'Biji Kopi Rakyat & Olahan Kreatif',
+      desc: 'Hamparan kebun kopi rakyat di ketinggian pegunungan yang menghasilkan biji kopi petik merah beraroma rempah hangat nan khas.',
       image: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=600&q=80',
     }
   ];
 
   return (
-    <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
+    <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-14 sm:space-y-18">
       
-      
-      <div className="text-center max-w-3xl mx-auto space-y-4">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-desa-primary/5 border border-desa-primary/15 text-xs font-semibold text-desa-primary">
-          <Landmark className="w-4 h-4 text-desa-accent" />
-          <span>Profil Desa & Filosofi Lurik Kontemporer</span>
+      {/* Editorial Header */}
+      <div className="text-center max-w-2xl mx-auto space-y-4">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-desa-border text-xs font-semibold text-desa-primary">
+          <Landmark className="w-3.5 h-3.5 text-desa-accent" />
+          <span>Profil Desa & Filosofi Lurik Nusantara</span>
         </div>
 
         <h1 className="font-heading text-3xl sm:text-5xl font-bold text-desa-primary leading-tight">
-          Menjaga Warisan Leluhur, Menggerakkan Ekonomi Masa Depan.
+          Menjaga Warisan Leluhur, Menggerakkan Ekonomi Masa Depan
         </h1>
 
-        <p className="text-sm sm:text-base text-desa-text/80 leading-relaxed font-light">
-          Pasar Desa Mandiri lahir dari inisiatif warga desa bersama BUMDes untuk menghubungkan karya 
-          otentik 5 kecamatan pengrajin langsung dengan para penikmat produk lokal bermutu tinggi.
+        <p className="text-sm sm:text-base text-desa-muted leading-relaxed font-normal">
+          Pasar Desa lahir dari inisiatif warga desa bersama BUMDes untuk menghubungkan karya otentik 5 sentra pengrajin Sumedang langsung dengan para penikmat produk lokal bermutu tinggi.
         </p>
 
         <div className="pt-2">
-          <LurikDivider variant="dark" height="2px" />
+          <LurikDivider variant="dark" height="1px" />
         </div>
       </div>
 
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-center bg-white rounded-3xl p-5 sm:p-12 border border-desa-primary/15 shadow-sm">
+      {/* Cultural Heritage & Philosophy */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white rounded-2xl p-6 sm:p-10 border border-desa-border shadow-xs">
         <div className="space-y-4">
           <span className="text-xs font-bold uppercase tracking-wider text-desa-accent">
             Filosofi Budaya
@@ -82,76 +74,74 @@ export default function AboutVillagePage() {
           <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
             Makna Garis Garis Lurik
           </h2>
-          <p className="text-xs sm:text-sm text-desa-text/80 leading-relaxed font-light">
-            Kata <strong>"Lurik"</strong> berasal dari bahasa Jawa kuno <em>lorek</em> yang bermakna garis-garis sejajar. 
-            Motif ini melambangkan kesederhanaan, keteguhan hati, kejujuran, dan kesetaraan derajat antar sesama warga.
+          <p className="text-xs sm:text-sm text-desa-muted leading-relaxed font-normal">
+            Kata <strong>"Lurik"</strong> berakar dari kata <em>lorek</em> yang bermakna garis-garis sejajar penuntun arah. Motif ini melambangkan kesederhanaan hidup, keteguhan hati, kejujuran dalam berdagang, dan kesetaraan derajat antar sesama warga.
           </p>
-          <p className="text-xs sm:text-sm text-desa-text/80 leading-relaxed font-light">
-            Dalam platform <strong>Pasar Desa</strong>, palet warna <em>Lurik Kontemporer</em> menggabungkan arang primer (`#3A3A38`), 
-            terakota aksen (`#A85C3C`), dan hijau lumut daun (`#7C8C6B`) sebagai simbol harmoni alam dan manusia.
+          <p className="text-xs sm:text-sm text-desa-muted leading-relaxed font-normal">
+            Dalam identitas visual <strong>Pasar Desa</strong>, harmoni diwujudkan melalui perpaduan warna arang kayu alami, terakota tanah liat perajin, serta hijau lumut dedaunan sebagai lambang keselarasan antara alam dan karya tangan manusia.
           </p>
         </div>
 
-        <div className="h-64 sm:h-80 rounded-2xl overflow-hidden border border-desa-primary/20 relative">
+        <div className="h-64 sm:h-80 rounded-xl overflow-hidden border border-desa-border relative bg-desa-bg">
           <img
-            src="kain-lurik.jpg"
-            alt="Kain Tenun Lurik"
+            src="/kain-lurik.jpg"
+            alt="Kain Tenun Lurik Asli Sumedang"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
-            <span className="text-xs font-medium text-desa-light">
-              Pengrajin tenun ATBM Kecamatan Sumedang Utara dengan benang katun super.
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-5">
+            <span className="text-xs text-desa-light font-medium">
+              Kain tenun lurik ATBM hasil karya tangan perajin desa Sumedang Utara
             </span>
           </div>
         </div>
       </div>
 
-      
-      <div className="space-y-8">
-        <div className="text-center max-w-2xl mx-auto">
+      {/* 5 Kecamatan Craft Centers */}
+      <div className="space-y-6">
+        <div className="text-center max-w-xl mx-auto">
           <span className="text-xs font-bold uppercase tracking-wider text-desa-highlight">
-            Peta Potensi Kecamatan
+            Sentra Produksi Wilayah
           </span>
-          <h2 className="font-heading text-3xl font-bold text-desa-primary mt-1">
-            5 kecamatan tempat UMKM warga beroperasi
+          <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary mt-1">
+            5 Sentra Kecamatan Binaan BUMDes
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {kecamatanCenters.map((kecamatan, idx) => (
             <div 
               key={idx}
-              className="bg-white rounded-2xl overflow-hidden border border-desa-primary/15 hover:shadow-md transition-all flex flex-col justify-between"
+              className="bg-white rounded-xl overflow-hidden border border-desa-border hover:border-desa-primary/40 transition-colors flex flex-col justify-between"
             >
               <div>
-                <div className="h-44 overflow-hidden relative">
-                  <img src={kecamatan.image} alt={kecamatan.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded bg-desa-primary/80 backdrop-blur-sm text-white text-[11px] font-semibold">
+                <div className="h-44 overflow-hidden relative bg-desa-bg">
+                  <img src={kecamatan.image} alt={kecamatan.name} className="w-full h-full object-cover" />
+                  <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded bg-black/75 text-white text-[11px] font-medium">
                     {kecamatan.name}
                   </div>
                 </div>
 
-                <div className="p-5 space-y-2">
+                <div className="p-4 space-y-2">
                   <h3 className="font-heading font-bold text-base text-desa-primary">
                     {kecamatan.specialty}
                   </h3>
-                  <p className="text-xs text-desa-text/75 leading-relaxed font-light">
+                  <p className="text-xs text-desa-muted leading-relaxed font-normal">
                     {kecamatan.desc}
                   </p>
                 </div>
               </div>
 
-              <div className="p-5 pt-0">
+              <div className="p-4 pt-0">
                 <button
                   onClick={() => {
                     setSelectedKecamatan(kecamatan.name);
                     setWebPage('catalog');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="w-full py-2 px-3 rounded-xl border border-desa-primary/20 text-xs font-semibold text-desa-primary hover:bg-desa-primary hover:text-desa-light transition-all flex items-center justify-center gap-1.5"
+                  className="w-full py-2 px-3 rounded-lg border border-desa-border text-xs font-semibold text-desa-primary hover:bg-desa-bg transition-colors flex items-center justify-center gap-1.5"
                 >
-                  <span>Lihat Produk {kecamatan.name.split(' ')[1]}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <span>Lihat Produk {kecamatan.name.replace('Kecamatan ', '')}</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-desa-accent" />
                 </button>
               </div>
             </div>
@@ -162,4 +152,3 @@ export default function AboutVillagePage() {
     </div>
   );
 }
-
