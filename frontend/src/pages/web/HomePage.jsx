@@ -99,12 +99,10 @@ export default function HomePage() {
   return (
     <div className="space-y-20 lg:space-y-28 overflow-hidden">
       
-      {/* 1. Hero Section - Dynamic Staggered Reveal */}
       <section className="relative pt-8 pb-12 lg:pt-16 lg:pb-20">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             
-            {/* Left Content Column */}
             <motion.div 
               variants={heroContainer}
               initial="hidden"
@@ -115,7 +113,26 @@ export default function HomePage() {
                 variants={heroItem}
                 className="font-heading text-4xl sm:text-5xl lg:text-[3.8rem] xl:text-[4.2rem] font-bold tracking-[-0.03em] text-desa-primary leading-[1.08]"
               >
-                Karya Asli Pengrajin & Hasil Bumi Sumedang
+                <span className="block overflow-hidden">
+                  <motion.span
+                    className="block"
+                    initial={{ y: '105%' }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
+                  >
+                    Karya Asli Pengrajin &
+                  </motion.span>
+                </span>
+                <span className="block overflow-hidden">
+                  <motion.span
+                    className="block"
+                    initial={{ y: '105%' }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.18 }}
+                  >
+                    Hasil Bumi Sumedang
+                  </motion.span>
+                </span>
               </motion.h1>
 
               <motion.p 
@@ -125,7 +142,6 @@ export default function HomePage() {
                 Belanja langsung dari sentra tenun lurik ATBM, perajin anyaman bambu, produsen madu liar, dan olahan pangan desa terpercaya.
               </motion.p>
 
-              {/* Search Form */}
               <motion.form variants={heroItem} onSubmit={handleHeroSearchSubmit} className="pt-2 max-w-xl">
                 <div className="flex flex-col sm:flex-row items-stretch gap-2 p-1.5 bg-white rounded-xl shadow-xs border border-desa-border focus-within:border-desa-primary focus-within:ring-2 focus-within:ring-desa-primary/10 transition-all">
                   <div className="flex items-center gap-3 px-3 py-2 flex-1">
@@ -135,7 +151,7 @@ export default function HomePage() {
                       placeholder="Cari kain lurik, kripik tempe, madu hutan..."
                       value={heroSearch}
                       onChange={(e) => setHeroSearch(e.target.value)}
-                      className="w-full bg-transparent text-sm text-desa-text placeholder:text-desa-subtle focus:outline-none"
+                      className="w-full bg-transparent text-sm text-desa-text placeholder:text-desa-subtle focus:outline-none focus-visible:!outline-none"
                     />
                   </div>
                   <motion.button
@@ -149,7 +165,6 @@ export default function HomePage() {
                   </motion.button>
                 </div>
 
-                {/* Popular Keywords */}
                 <div className="flex flex-wrap items-center gap-2 mt-3 text-xs text-desa-muted">
                   <span className="font-medium text-desa-primary">Pencarian populer:</span>
                   {['Kain Lurik ATBM', 'Kripik Tempe', 'Madu Hutan', 'Anyaman Bambu'].map((tag) => (
@@ -172,7 +187,6 @@ export default function HomePage() {
               </motion.form>
             </motion.div>
 
-            {/* Right Showcase Column */}
             <motion.div 
               initial={{ opacity: 0, x: 24, scale: 0.97 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -256,7 +270,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. Categories Section */}
       <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between mb-6">
           <div>
@@ -288,18 +301,18 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.04, duration: 0.35 }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.96 }}
               onClick={() => handleCategorySelect(cat.id)}
-              className="px-4 py-2.5 rounded-lg bg-white hover:bg-desa-primary hover:text-white text-sm font-medium text-desa-primary cursor-pointer transition-all duration-200 group shadow-2xs border border-desa-border/70 hover:border-desa-primary"
+              className="relative px-4 py-2.5 rounded-lg bg-white hover:bg-desa-primary hover:text-white text-sm font-medium text-desa-primary cursor-pointer transition-colors duration-180 group shadow-2xs border border-desa-border/70 hover:border-desa-primary"
             >
-              <span>{cat.name}</span>
-              <span className="ml-1.5 text-desa-subtle group-hover:text-white/70 text-xs font-normal">({cat.count})</span>
+              <span className="relative z-10">{cat.name}</span>
+              <span className="relative z-10 ml-1.5 text-desa-subtle group-hover:text-white/70 text-xs font-normal">({cat.count})</span>
             </motion.button>
           ))}
         </div>
       </section>
 
-      {/* 3. Featured Products with Animated Spring Carousel */}
       <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4">
           <div>
@@ -349,7 +362,6 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* 4. UMKM Baru Bergabung Section */}
       <section className="bg-white/80 border-y border-desa-border py-14">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
@@ -435,7 +447,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. Statistik Ekosistem Pasar Desa */}
       <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-desa-primary text-desa-light rounded-2xl p-8 sm:p-12 relative overflow-hidden shadow-sm">
           <div className="absolute inset-0 bg-lurik-stripes-light opacity-5 pointer-events-none" />
@@ -506,7 +517,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 6. Clean PWA Feature Spotlight */}
       <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
         <div className="bg-white rounded-2xl border border-desa-border p-8 sm:p-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">

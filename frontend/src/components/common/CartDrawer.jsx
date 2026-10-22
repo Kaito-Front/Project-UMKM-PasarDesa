@@ -225,18 +225,30 @@ export default function CartDrawer() {
                               <button
                                 type="button"
                                 onClick={() => updateCartQty(item.productId, -1)}
-                                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-desa-primary transition-colors hover:bg-[#e9e5d9] focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desa-accent active:bg-desa-primary/10"
+                                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-desa-primary transition-colors hover:bg-[#e9e5d9] focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desa-accent active:bg-desa-primary/10 active:scale-95"
                                 aria-label={`Kurangi jumlah ${item.product.name}`}
                               >
                                 <Minus className="h-3.5 w-3.5" aria-hidden="true" />
                               </button>
-                              <span className="min-w-7 text-center text-xs font-semibold tabular-nums text-desa-primary" aria-live="polite">
-                                {item.qty}
-                              </span>
+                              <div className="relative h-5 min-w-7 overflow-hidden flex items-center justify-center">
+                                <AnimatePresence mode="popLayout" initial={false}>
+                                  <motion.span
+                                    key={item.qty}
+                                    initial={{ y: 8, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    exit={{ y: -8, opacity: 0 }}
+                                    transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                                    className="text-center text-xs font-semibold tabular-nums text-desa-primary"
+                                    aria-live="polite"
+                                  >
+                                    {item.qty}
+                                  </motion.span>
+                                </AnimatePresence>
+                              </div>
                               <button
                                 type="button"
                                 onClick={() => updateCartQty(item.productId, 1)}
-                                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-desa-primary transition-colors hover:bg-[#e9e5d9] focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desa-accent active:bg-desa-primary/10"
+                                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-desa-primary transition-colors hover:bg-[#e9e5d9] focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desa-accent active:bg-desa-primary/10 active:scale-95"
                                 aria-label={`Tambah jumlah ${item.product.name}`}
                               >
                                 <Plus className="h-3.5 w-3.5" aria-hidden="true" />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import ProductCard from '../../components/common/ProductCard';
@@ -44,6 +44,16 @@ export default function ProductDetailPage() {
   const [reviewComment, setReviewComment] = useState('');
   const [reviewsList, setReviewsList] = useState(product.reviews || []);
   const [justAdded, setJustAdded] = useState(false);
+  const [showStickyBar, setShowStickyBar] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowStickyBar(window.scrollY > 360);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
 
   const isFavorite = savedFavorites.includes(product.id);
 
@@ -83,7 +93,6 @@ export default function ProductDetailPage() {
   return (
     <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
       
-      {/* Breadcrumb Navigation */}
       <div className="flex items-center gap-2 text-xs text-desa-muted">
         <button 
           onClick={() => setWebPage('home')} 
@@ -104,10 +113,8 @@ export default function ProductDetailPage() {
         </span>
       </div>
 
-      {/* Main Split Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         
-        {/* Left Sticky Column: Gallery & Guarantees */}
         <div className="lg:col-span-6 lg:sticky lg:top-24 space-y-4">
           
           <div className="relative aspect-square rounded-2xl overflow-hidden bg-white border border-desa-border shadow-xs">
@@ -141,7 +148,6 @@ export default function ProductDetailPage() {
             </motion.button>
           </div>
 
-          {/* Thumbnails */}
           {product.images.length > 1 && (
             <div className="flex items-center gap-2.5 overflow-x-auto pb-1 no-scrollbar">
               {product.images.map((img, idx) => (
@@ -164,7 +170,6 @@ export default function ProductDetailPage() {
             </div>
           )}
 
-          {/* Trust Value Propositions */}
           <div className="grid grid-cols-3 gap-3 p-3.5 bg-white rounded-xl border border-desa-border text-xs">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-desa-highlight shrink-0" />
@@ -180,7 +185,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Technical Specifications */}
           {product.specifications && (
             <div className="p-4 bg-white rounded-xl border border-desa-border space-y-2">
               <h4 className="text-sm font-bold text-desa-muted">
@@ -198,10 +202,8 @@ export default function ProductDetailPage() {
           )}
         </div>
 
-        {/* Right Column: Title, Pricing, Actions & Story */}
         <div className="lg:col-span-6 space-y-6">
           
-          {/* Header Info */}
           <div>
             <div className="flex items-center gap-2 mb-2 text-xs">
               <span className="font-semibold text-desa-accent">
@@ -227,7 +229,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Price Box */}
           <div className="p-5 rounded-xl bg-white border border-desa-border space-y-1.5">
             <div className="flex items-baseline gap-3">
               <span className="font-heading text-3xl font-bold text-desa-primary">
@@ -245,7 +246,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Quantity & Notes */}
           <div className="space-y-3">
             <div className="flex items-center gap-4">
               <span className="text-sm font-bold text-desa-muted">
@@ -288,7 +288,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Primary Action Buttons */}
           <div className="flex items-stretch gap-3 pt-1">
             <motion.button
               whileTap={{ scale: 0.95 }}
@@ -345,7 +344,6 @@ export default function ProductDetailPage() {
             </motion.button>
           </div>
 
-          {/* Shop Card */}
           <div className="p-4 rounded-xl bg-white border border-desa-border flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <img
@@ -392,7 +390,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Product Story & Description */}
           <div className="space-y-3 pt-2">
             <h3 className="font-heading font-bold text-lg text-desa-primary pb-2">
               Tentang Produk & Filosofi Bahan
@@ -406,7 +403,6 @@ export default function ProductDetailPage() {
 
       </div>
 
-      {/* Reviews Section */}
       <section className="bg-white rounded-xl p-6 sm:p-8 border border-desa-border space-y-6">
         <div className="flex items-center justify-between border-b border-desa-border pb-4">
           <div>
@@ -429,7 +425,6 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Add Review Form */}
         <form onSubmit={handleAddReview} className="bg-desa-bg/50 p-4 rounded-xl border border-desa-border space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-desa-primary">Tulis Ulasan Anda:</span>
@@ -463,7 +458,6 @@ export default function ProductDetailPage() {
           </motion.button>
         </form>
 
-        {/* Reviews List */}
         <div className="space-y-4 divide-y divide-desa-border">
           {reviewsList.map((rev) => (
             <div key={rev.id} className="pt-4 first:pt-0 space-y-1.5">
@@ -484,7 +478,6 @@ export default function ProductDetailPage() {
         </div>
       </section>
 
-      {/* Related Products */}
       {relatedProducts.length > 0 && (
         <section className="space-y-6">
           <div className="flex items-center justify-between pb-2">
@@ -508,6 +501,43 @@ export default function ProductDetailPage() {
         </section>
       )}
 
+    
+      {/* Sticky Mobile Purchase Bar */}
+      <AnimatePresence>
+        {showStickyBar && (
+          <motion.div
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-desa-border px-4 py-3 sm:hidden shadow-lg flex items-center justify-between gap-3"
+          >
+            <div className="min-w-0 flex-1">
+              <span className="text-[11px] text-desa-muted block truncate">{product.name}</span>
+              <span className="font-heading text-base font-bold text-desa-primary">
+                Rp {product.price.toLocaleString('id-ID')}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <motion.button
+                whileTap={{ scale: 0.94 }}
+                onClick={handleAddToCart}
+                className="p-2.5 rounded-lg border border-desa-border bg-desa-bg text-desa-primary"
+                aria-label="Tambah ke keranjang"
+              >
+                <ShoppingCart className="w-4 h-4 text-desa-accent" />
+              </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.94 }}
+                onClick={() => openDirectCheckout(product, quantity, buyerNote)}
+                className="py-2.5 px-4 rounded-lg bg-desa-accent text-white text-xs font-semibold shadow-xs"
+              >
+                Beli Sekarang
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -45,7 +45,6 @@ export default function AboutVillagePage() {
   return (
     <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-14 sm:space-y-18">
       
-      {/* Editorial Header */}
       <div className="text-center max-w-2xl mx-auto space-y-4">
         <h1 className="font-heading text-3xl sm:text-5xl font-bold text-desa-primary leading-tight">
           Menjaga Warisan Leluhur, Menggerakkan Ekonomi Masa Depan
@@ -60,7 +59,6 @@ export default function AboutVillagePage() {
         </div>
       </div>
 
-      {/* Cultural Heritage & Philosophy */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white rounded-2xl p-6 sm:p-10 border border-desa-border shadow-xs">
         <div className="space-y-4">
           <span className="text-sm font-semibold text-desa-accent">
@@ -91,7 +89,6 @@ export default function AboutVillagePage() {
         </div>
       </div>
 
-      {/* 5 Kecamatan Craft Centers */}
       <div className="space-y-6">
         <div className="text-center max-w-xl mx-auto">
           <span className="text-sm font-semibold text-desa-highlight">

@@ -521,11 +521,7 @@ export function AppProvider({ children }) {
     const existingOrder = orders.find(order => order.id === orderId);
     const prevStatus = existingOrder?.status;
     const orderTotal = Number(existingOrder?.total || 0);
-
-    // Optimistically update local orders state
     setOrders(prev => prev.map(order => order.id === orderId ? { ...order, status: newStatus } : order));
-
-    // Optimistically update stats if transition affects completed omzet
     const wasCompleted = ['diambil', 'selesai'].includes(prevStatus);
     const isCompleted = ['diambil', 'selesai'].includes(newStatus);
     if (!wasCompleted && isCompleted) {
@@ -558,7 +554,6 @@ export function AppProvider({ children }) {
       return true;
     } catch (error) {
       console.warn('Backend updateOrderStatus fallback to local state:', error.message);
-      // Local state is already updated, notify success
       if (newStatus === 'selesai' || newStatus === 'diambil') {
         triggerNotification(
           'Pesanan Beres',

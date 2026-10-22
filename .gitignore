@@ -28,3 +28,4 @@ dist-ssr
 
 # Taste skill
 .taste-skill/
+/anti-slop

@@ -90,7 +90,6 @@ export default function AuthPage() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        {/* Form Container */}
         <div className="lg:col-span-7 bg-white rounded-2xl p-6 sm:p-8 border border-desa-border shadow-xs">
           
           <div className="flex items-center gap-3 mb-6">
@@ -107,7 +106,6 @@ export default function AuthPage() {
             </div>
           </div>
 
-          {/* Tabs */}
           <div className="flex border-b border-desa-border mb-6">
             <button
               type="button"
@@ -146,7 +144,6 @@ export default function AuthPage() {
             </p>
           )}
 
-          {/* Login Form */}
           {activeTab === 'masuk' && (
             <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div>
@@ -219,7 +216,6 @@ export default function AuthPage() {
             </form>
           )}
 
-          {/* Register Form */}
           {activeTab === 'daftar' && (
             <form onSubmit={handleRegisterSubmit} className="space-y-4">
               <div>
@@ -282,7 +278,6 @@ export default function AuthPage() {
                 </div>
               </div>
 
-              {/* Role Selection */}
               <div>
                 <label className="block text-xs font-semibold text-desa-primary mb-1.5">
                   Tujuan Pendaftaran Akun:
@@ -313,7 +308,6 @@ export default function AuthPage() {
                 </div>
               </div>
 
-              {/* Additional Merchant Inputs if Seller */}
               {regRole === 'jualan' && (
                 <div className="p-3.5 rounded-lg bg-desa-bg/60 border border-desa-border space-y-3">
                   <div>
@@ -381,7 +375,6 @@ export default function AuthPage() {
 
         </div>
 
-        {/* Right Info Column */}
         <div className="lg:col-span-5 space-y-4">
           <div className="bg-desa-primary text-white rounded-2xl p-6 shadow-xs space-y-4">
             <span className="text-xs font-bold px-2.5 py-0.5 rounded bg-desa-accent text-white inline-block">

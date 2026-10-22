@@ -88,7 +88,6 @@ export default function CatalogPage() {
   return (
     <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       
-      {/* Search and Sort Header */}
       <div className="bg-white rounded-xl p-4 sm:p-5 border border-desa-border shadow-xs">
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           
@@ -145,7 +144,6 @@ export default function CatalogPage() {
 
         </div>
 
-        {/* Active Filter Chips */}
         <AnimatePresence>
           {hasActiveFilter && (
             <motion.div 
@@ -206,10 +204,8 @@ export default function CatalogPage() {
         </AnimatePresence>
       </div>
 
-      {/* Main Grid & Sidebar Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-7 items-start">
         
-        {/* Left Filter Sidebar */}
         <aside className={`lg:col-span-1 bg-white rounded-xl p-5 border border-desa-border shadow-xs space-y-6 ${showMobileFilter ? 'block' : 'hidden lg:block'}`}>
           
           <div className="flex items-center justify-between pb-3">
@@ -229,7 +225,6 @@ export default function CatalogPage() {
             )}
           </div>
 
-          {/* Category Filter */}
           <div className="space-y-2">
             <h4 className="text-xs font-bold text-desa-muted">
               Kategori
@@ -243,14 +238,21 @@ export default function CatalogPage() {
                     setSelectedCategory(cat.id);
                     setCurrentPage(1);
                   }}
-                  className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center justify-between ${
+                  className={`relative w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center justify-between ${
                     selectedCategory === cat.id
-                      ? 'bg-desa-primary text-white font-semibold'
+                      ? 'text-white font-semibold'
                       : 'text-desa-text hover:bg-desa-bg'
                   }`}
                 >
-                  <span>{cat.name}</span>
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded ${
+                  {selectedCategory === cat.id && (
+                    <motion.div
+                      layoutId="catalogCategoryActivePill"
+                      className="absolute inset-0 bg-desa-primary rounded-lg z-0"
+                      transition={{ type: 'spring', stiffness: 500, damping: 32 }}
+                    />
+                  )}
+                  <span className="relative z-10">{cat.name}</span>
+                  <span className={`relative z-10 text-[10px] px-1.5 py-0.2 rounded ${
                     selectedCategory === cat.id ? 'bg-white/20 text-white' : 'text-desa-subtle'
                   }`}>
                     {cat.count}
@@ -262,7 +264,6 @@ export default function CatalogPage() {
 
           <div className="h-3" />
 
-          {/* Region Filter */}
           <div className="space-y-2">
             <h4 className="text-xs font-bold text-desa-muted">
               Wilayah Kecamatan
@@ -276,14 +277,21 @@ export default function CatalogPage() {
                     setSelectedKecamatan(kecamatan);
                     setCurrentPage(1);
                   }}
-                  className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center justify-between ${
+                  className={`relative w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center justify-between ${
                     selectedKecamatan === kecamatan
-                      ? 'bg-desa-accent text-white font-semibold'
+                      ? 'text-white font-semibold'
                       : 'text-desa-text hover:bg-desa-bg'
                   }`}
                 >
-                  <span className="truncate">{kecamatan}</span>
-                  {selectedKecamatan === kecamatan && <Check className="w-3.5 h-3.5" />}
+                  {selectedKecamatan === kecamatan && (
+                    <motion.div
+                      layoutId="catalogKecamatanActivePill"
+                      className="absolute inset-0 bg-desa-accent rounded-lg z-0"
+                      transition={{ type: 'spring', stiffness: 500, damping: 32 }}
+                    />
+                  )}
+                  <span className="relative z-10 truncate">{kecamatan}</span>
+                  {selectedKecamatan === kecamatan && <Check className="relative z-10 w-3.5 h-3.5" />}
                 </motion.button>
               ))}
             </div>
@@ -291,7 +299,6 @@ export default function CatalogPage() {
 
           <div className="h-3" />
 
-          {/* Price Range */}
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-bold text-desa-muted">
@@ -321,7 +328,6 @@ export default function CatalogPage() {
 
           <div className="h-3" />
 
-          {/* Minimum Rating */}
           <div className="space-y-2">
             <h4 className="text-xs font-bold text-desa-muted">
               Rating Pembeli
@@ -350,7 +356,6 @@ export default function CatalogPage() {
 
         </aside>
 
-        {/* Right Product Grid with Spring Motion */}
         <main className="lg:col-span-3 space-y-6">
           
           <div className="flex items-center justify-between text-sm text-desa-muted">
@@ -398,7 +403,6 @@ export default function CatalogPage() {
             </div>
           )}
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 pt-6">
               <motion.button

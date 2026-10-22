@@ -33,18 +33,34 @@ class AuthController extends Controller
         if (in_array($data['role'], ['jualan', 'keduanya'], true)) {
             $category = Category::query()->where('name', $data['shopCategory'] ?? '')->first();
             $shop = Shop::create([
-                'id' => 'toko-'.Str::uuid(), 'name' => $data['shopName'], 'owner' => $data['name'],
-                'category' => $category?->name ?? 'UMKM Desa', 'category_slug' => $category?->id ?? 'kuliner',
-                'kecamatan' => $data['kecamatan'] ?? '', 'address' => $data['kecamatan'] ?? '',
-                'phone' => $data['phone'], 'whatsapp' => preg_replace('/\D+/', '', $data['phone']),
-                'rating' => 0, 'review_count' => 0, 'join_date' => now()->translatedFormat('F Y'),
-                'operating_hours' => '08.00 - 17.00 WIB', 'description' => '', 'status' => 'menunggu', 'verified' => false,
+                'id' => 'toko-'.Str::uuid(),
+                'name' => $data['shopName'],
+                'owner' => $data['name'],
+                'category' => $category?->name ?? 'UMKM Desa',
+                'category_slug' => $category?->id ?? 'kuliner',
+                'kecamatan' => $data['kecamatan'] ?? '',
+                'address' => $data['kecamatan'] ?? '',
+                'phone' => $data['phone'],
+                'whatsapp' => preg_replace('/\D+/', '', $data['phone']),
+                'rating' => 0,
+                'review_count' => 0,
+                'join_date' => now()->translatedFormat('F Y'),
+                'operating_hours' => '08.00 - 17.00 WIB',
+                'description' => '',
+                'status' => 'menunggu',
+                'verified' => false,
             ]);
         }
 
         $user = User::create([
-            'name' => $data['name'], 'email' => $email, 'phone' => $data['phone'], 'password' => $data['password'],
-            'role' => $role, 'shop_id' => $shop?->id, 'shop_name' => $shop?->name, 'kecamatan' => $data['kecamatan'] ?? null,
+            'name' => $data['name'],
+            'email' => $email,
+            'phone' => $data['phone'],
+            'password' => $data['password'],
+            'role' => $role,
+            'shop_id' => $shop?->id,
+            'shop_name' => $shop?->name,
+            'kecamatan' => $data['kecamatan'] ?? null,
         ]);
 
         return $this->tokenResponse($user, 201);
@@ -52,7 +68,11 @@ class AuthController extends Controller
 
     public function login(Request $request): JsonResponse
     {
-        $data = $request->validate(['identifier' => ['required', 'string'], 'password' => ['required', 'string']]);
+        $data = $request->validate([
+            'identifier' => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ]);
+
         $user = User::query()->where('email', $data['identifier'])->orWhere('phone', $data['identifier'])->first();
 
         if (! $user || ! Hash::check($data['password'], $user->password)) {
@@ -65,6 +85,56 @@ class AuthController extends Controller
     public function me(Request $request): JsonResponse
     {
         return response()->json($this->serializeUser($request->user()));
+    }
+
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $data = $request->validate([
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'phone' => ['sometimes', 'required', 'string', 'max:30', Rule::unique('users', 'phone')->ignore($user->id)],
+            'kecamatan' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $user->update($data);
+
+        // Also update shop owner name or kecamatan if applicable
+        if ($user->shop_id && (isset($data['name']) || isset($data['kecamatan']))) {
+            $shop = Shop::find($user->shop_id);
+            if ($shop) {
+                $shopUpdate = [];
+                if (isset($data['name'])) {
+                    $shopUpdate['owner'] = $data['name'];
+                }
+                if (isset($data['kecamatan'])) {
+                    $shopUpdate['kecamatan'] = $data['kecamatan'];
+                }
+                $shop->update($shopUpdate);
+            }
+        }
+
+        return response()->json($this->serializeUser($user->fresh()));
+    }
+
+    public function updatePassword(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $data = $request->validate([
+            'current_password' => ['required', 'string'],
+            'new_password' => ['required', 'string', 'min:6'],
+        ]);
+
+        if (! Hash::check($data['current_password'], $user->password)) {
+            return response()->json(['message' => 'Kata sandi saat ini tidak cocok.'], 422);
+        }
+
+        $user->update([
+            'password' => $data['new_password'],
+        ]);
+
+        return response()->json(['message' => 'Kata sandi berhasil diperbarui.']);
     }
 
     public function logout(Request $request): JsonResponse
@@ -85,8 +155,13 @@ class AuthController extends Controller
     private function serializeUser(User $user): array
     {
         return [
-            'id' => (string) $user->id, 'name' => $user->name, 'phone' => $user->phone, 'email' => $user->email,
-            'role' => $user->role, 'shopId' => $user->shop_id, 'shopName' => $user->shop_name,
+            'id' => (string) $user->id,
+            'name' => $user->name,
+            'phone' => $user->phone,
+            'email' => $user->email,
+            'role' => $user->role,
+            'shopId' => $user->shop_id,
+            'shopName' => $user->shop_name,
             'kecamatan' => $user->kecamatan,
         ];
     }

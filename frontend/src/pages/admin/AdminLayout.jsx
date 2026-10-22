@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import MonthlyPerformanceChart from './MonthlyPerformanceChart';
@@ -27,6 +27,35 @@ import {
   Smartphone,
   MessageSquare
 } from 'lucide-react';
+
+
+function AnimatedNumber({ value }) {
+  const [displayed, setDisplayed] = useState(value);
+
+  useEffect(() => {
+    let startTimestamp = null;
+    const startValue = typeof displayed === 'number' ? displayed : 0;
+    const endValue = Number(value) || 0;
+    const duration = 500;
+
+    if (startValue === endValue) return;
+
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      setDisplayed(Math.round(startValue + (endValue - startValue) * ease));
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    };
+
+    const animId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animId);
+  }, [value]);
+
+  return <>{displayed.toLocaleString('id-ID')}</>;
+}
 
 export default function AdminLayout() {
   const { 

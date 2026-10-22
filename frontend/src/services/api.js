@@ -20,25 +20,34 @@ async function request(path, options = {}) {
   return response.status === 204 ? null : response.json();
 }
 
-export const fetchProducts = () => request('/products?include_hidden=1');
-export const fetchOrders = () => request('/orders');
-export const fetchStats = () => request('/stats');
 export const fetchCurrentUser = () => request('/auth/me');
 export const logoutRequest = () => request('/auth/logout', { method: 'POST' });
+
 export async function loginRequest(identifier, password) {
   const result = await request('/auth/login', { method: 'POST', body: JSON.stringify({ identifier, password }) });
   localStorage.setItem('pasardesa_token', result.token);
   return result.user;
 }
+
 export async function registerRequest(data) {
   const result = await request('/auth/register', { method: 'POST', body: JSON.stringify(data) });
   localStorage.setItem('pasardesa_token', result.token);
   return result.user;
 }
 
+export const updateProfile = data => request('/auth/profile', {
+  method: 'PATCH',
+  body: JSON.stringify(data),
+});
+
+export const updatePassword = (current_password, new_password) => request('/auth/password', {
+  method: 'PATCH',
+  body: JSON.stringify({ current_password, new_password }),
+});
+
 export async function fetchCategories() {
   const categories = await request('/categories');
-  const totalProducts = categories.reduce((total, category) => total + category.products_count, 0);
+  const totalProducts = categories.reduce((total, category) => total + (category.products_count || 0), 0);
 
   return [
     { id: 'semua', name: 'Semua Kategori', icon: 'LayoutGrid', count: totalProducts },
@@ -46,11 +55,25 @@ export async function fetchCategories() {
       id: category.id,
       name: category.name,
       icon: category.icon,
-      count: category.products_count,
+      count: category.products_count || 0,
       desc: category.description,
     })),
   ];
 }
+
+export const createCategory = category => request('/categories', {
+  method: 'POST',
+  body: JSON.stringify(category),
+});
+
+export const updateCategory = (categoryId, data) => request(`/categories/${categoryId}`, {
+  method: 'PUT',
+  body: JSON.stringify(data),
+});
+
+export const deleteCategory = categoryId => request(`/categories/${categoryId}`, {
+  method: 'DELETE',
+});
 
 export async function fetchShops() {
   const shops = await request('/shops');
@@ -64,9 +87,33 @@ export async function fetchShops() {
   }));
 }
 
+export const fetchShop = shopId => request(`/shops/${shopId}`);
+
+export const createShop = shop => request('/shops', {
+  method: 'POST',
+  body: JSON.stringify(shop),
+});
+
+export const updateShop = (shopId, data) => request(`/shops/${shopId}`, {
+  method: 'PUT',
+  body: JSON.stringify(data),
+});
+
+export const deleteShop = shopId => request(`/shops/${shopId}`, {
+  method: 'DELETE',
+});
+
+export const fetchProducts = () => request('/products?include_hidden=1');
+export const fetchProduct = productId => request(`/products/${productId}`);
+
 export const createProduct = product => request('/products', {
   method: 'POST',
   body: JSON.stringify(product),
+});
+
+export const updateProduct = (productId, data) => request(`/products/${productId}`, {
+  method: 'PUT',
+  body: JSON.stringify(data),
 });
 
 export const updateProductVisibility = (productId, isHidden) => request(`/products/${productId}/visibility`, {
@@ -79,6 +126,13 @@ export const updateProductNumbers = (productId, data) => request(`/products/${pr
   body: JSON.stringify(data),
 });
 
+export const deleteProduct = productId => request(`/products/${productId}`, {
+  method: 'DELETE',
+});
+
+export const fetchOrders = () => request('/orders');
+export const fetchOrder = orderId => request(`/orders/${orderId}`);
+
 export const createOrder = order => request('/orders', {
   method: 'POST',
   body: JSON.stringify(order),
@@ -89,6 +143,8 @@ export const updateOrderStatus = (orderId, status) => request(`/orders/${orderId
   body: JSON.stringify({ status }),
 });
 
-export const deleteProduct = productId => request(`/products/${productId}`, {
+export const cancelOrder = orderId => request(`/orders/${orderId}`, {
   method: 'DELETE',
 });
+
+export const fetchStats = () => request('/stats');

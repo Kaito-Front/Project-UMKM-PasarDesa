@@ -314,10 +314,14 @@ export default function MobileAppView() {
         <AnimatePresence>
           {pushNotification && (
             <motion.div 
-              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              drag="y"
+              dragConstraints={{ top: -60, bottom: 0 }}
+              dragElastic={0.2}
+              initial={{ opacity: 0, y: -40, scale: 0.94 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.95 }}
-              className="absolute top-14 left-4 right-4 z-30 bg-desa-primary text-desa-light p-3 rounded-2xl shadow-xl border border-desa-light/20 flex items-start gap-3 pointer-events-none"
+              exit={{ opacity: 0, y: -40, scale: 0.94 }}
+              transition={{ type: 'spring', stiffness: 450, damping: 30 }}
+              className="absolute top-14 left-4 right-4 z-30 bg-desa-primary text-desa-light p-3 rounded-2xl shadow-xl border border-desa-light/20 flex items-start gap-3"
             >
               <Bell className="w-5 h-5 text-[#C1CCB3] shrink-0 mt-0.5" />
               <div className="flex-1 text-left">
@@ -343,19 +347,54 @@ export default function MobileAppView() {
           </div>
 
           
-          <motion.button
-            whileTap={{ scale: 0.92 }}
-            onClick={() => {
-              const nextRole = mobileRole === 'pembeli' ? 'penjual' : 'pembeli';
-              setMobileRole(nextRole);
-              setCurrentTab(nextRole === 'penjual' ? 'dashboard' : 'beranda');
-              triggerNotification('Beralih Mode', `Sekarang Anda berada di ${nextRole === 'penjual' ? 'Mode Penjual UMKM' : 'Mode Pembeli'}`);
-            }}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-desa-bg border border-desa-primary/20 text-desa-primary hover:bg-desa-accent hover:text-white transition-all shadow-xs"
-          >
-            <Repeat className="w-3 h-3 text-desa-accent" />
-            <span>{mobileRole === 'pembeli' ? 'Ke Mode Jual' : 'Ke Mode Beli'}</span>
-          </motion.button>
+          <div className="relative inline-flex p-0.5 rounded-full bg-desa-bg border border-desa-primary/15 shadow-2xs">
+            <button
+              type="button"
+              onClick={() => {
+                setMobileRole('pembeli');
+                setCurrentTab('beranda');
+                triggerNotification('Beralih Mode', 'Sekarang Anda berada di Mode Pembeli');
+              }}
+              className={`relative z-10 px-3 py-1 rounded-full text-[10px] font-bold transition-colors ${
+                mobileRole === 'pembeli' ? 'text-white' : 'text-desa-primary hover:text-desa-accent'
+              }`}
+            >
+              {mobileRole === 'pembeli' && (
+                <motion.div
+                  layoutId="mobileRolePill"
+                  className="absolute inset-0 bg-desa-primary rounded-full z-0 shadow-xs"
+                  transition={{ type: 'spring', stiffness: 500, damping: 32 }}
+                />
+              )}
+              <span className="relative z-10 flex items-center gap-1">
+                <ShoppingBag className="w-3 h-3" />
+                <span>Belanja</span>
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileRole('penjual');
+                setCurrentTab('dashboard');
+                triggerNotification('Beralih Mode', 'Sekarang Anda berada di Mode Penjual UMKM');
+              }}
+              className={`relative z-10 px-3 py-1 rounded-full text-[10px] font-bold transition-colors ${
+                mobileRole === 'penjual' ? 'text-white' : 'text-desa-primary hover:text-desa-accent'
+              }`}
+            >
+              {mobileRole === 'penjual' && (
+                <motion.div
+                  layoutId="mobileRolePill"
+                  className="absolute inset-0 bg-desa-accent rounded-full z-0 shadow-xs"
+                  transition={{ type: 'spring', stiffness: 500, damping: 32 }}
+                />
+              )}
+              <span className="relative z-10 flex items-center gap-1">
+                <Store className="w-3 h-3" />
+                <span>Jualan</span>
+              </span>
+            </button>
+          </div>
         </div>
 
         

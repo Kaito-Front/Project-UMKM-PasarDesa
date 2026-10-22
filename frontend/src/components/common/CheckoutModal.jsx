@@ -651,9 +651,9 @@ export default function CheckoutModal() {
                       <div
                         key={sm.id}
                         onClick={() => setSelectedShippingId(sm.id)}
-                        className={`p-3 rounded-xl border cursor-pointer transition-all flex flex-col justify-between focus-visible:ring-2 focus-visible:ring-desa-accent focus-visible:outline-none ${
+                        className={`relative p-3 rounded-xl border cursor-pointer transition-colors flex flex-col justify-between focus-visible:ring-2 focus-visible:ring-desa-accent focus-visible:outline-none ${
                           isSelected
-                            ? 'bg-desa-accent/5 border-desa-accent shadow-xs'
+                            ? 'border-desa-accent shadow-xs'
                             : 'bg-desa-bg/20 border-desa-primary/10 hover:border-desa-primary/30'
                         }`}
                         tabIndex={0}
@@ -667,7 +667,14 @@ export default function CheckoutModal() {
                         aria-checked={isSelected}
                       >
                         <div>
-                          <div className="flex items-center justify-between">
+                          {isSelected && (
+                            <motion.div
+                              layoutId="selectedShippingPill"
+                              className="absolute inset-0 rounded-xl bg-desa-accent/5 border-2 border-desa-accent pointer-events-none z-0"
+                              transition={{ type: 'spring', stiffness: 500, damping: 32 }}
+                            />
+                          )}
+                          <div className="relative z-10 flex items-center justify-between">
                             <span className="text-xs font-bold text-desa-primary">{sm.name}</span>
                           </div>
                           <p className="text-[10px] text-desa-highlight font-semibold mt-0.5">{sm.eta}</p>
@@ -707,9 +714,9 @@ export default function CheckoutModal() {
                       <div
                         key={pm.id}
                         onClick={() => setSelectedPaymentId(pm.id)}
-                        className={`p-3.5 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-3 focus-visible:ring-2 focus-visible:ring-desa-accent focus-visible:outline-none ${
+                        className={`relative p-3.5 rounded-xl border cursor-pointer transition-colors flex items-center justify-between gap-3 focus-visible:ring-2 focus-visible:ring-desa-accent focus-visible:outline-none ${
                           isSelected
-                            ? 'bg-desa-accent/5 border-desa-accent shadow-xs'
+                            ? 'border-desa-accent shadow-xs'
                             : 'bg-desa-bg/20 border-desa-primary/10 hover:border-desa-primary/30'
                         }`}
                         tabIndex={0}
@@ -722,7 +729,14 @@ export default function CheckoutModal() {
                         role="radio"
                         aria-checked={isSelected}
                       >
-                        <div className="flex items-center gap-3">
+                        {isSelected && (
+                          <motion.div
+                            layoutId="selectedPaymentPill"
+                            className="absolute inset-0 rounded-xl bg-desa-accent/5 border-2 border-desa-accent pointer-events-none z-0"
+                            transition={{ type: 'spring', stiffness: 500, damping: 32 }}
+                          />
+                        )}
+                        <div className="relative z-10 flex items-center gap-3">
                           <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
                             isSelected ? 'border-desa-accent' : 'border-desa-primary/30'
                           }`}>
