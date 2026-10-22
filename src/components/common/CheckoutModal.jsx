@@ -313,8 +313,10 @@ export default function CheckoutModal() {
           </div>
 
           {/* MAIN CONTENT AREA */}
+          <AnimatePresence mode="wait">
           {isSuccess ? (
-            /* HASIL PEMBAYARAN / STRUK BUKTI RESMI */
+            <motion.div key="success-receipt" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }} className="flex-1 flex flex-col overflow-y-auto">
+            {/* HASIL PEMBAYARAN / STRUK BUKTI RESMI */}
             <div className="p-6 sm:p-8 space-y-6 overflow-y-auto print:p-0 print:space-y-4 print:overflow-visible" aria-live="polite">
               
               {/* Header Sukses (hanya di layar aplikasi, disembunyikan saat cetak fisik) */}
@@ -482,8 +484,10 @@ export default function CheckoutModal() {
                 </button>
               </div>
             </div>
+            </motion.div>
           ) : (
-            /* FORM CHECKOUT */
+            <motion.div key="checkout-form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="flex-1 flex flex-col overflow-hidden">
+            {/* FORM CHECKOUT */}
             <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
               
               {/* 1. Alamat Pengiriman */}
@@ -882,10 +886,8 @@ export default function CheckoutModal() {
                 </div>
               </div>
             </div>
-          )}
 
-          {/* FOOTER ACTIONS (disembunyikan saat cetak) */}
-          {!isSuccess && (
+            {/* FOOTER ACTIONS (disembunyikan saat cetak) */}
             <div className="p-4 sm:p-5 bg-white border-t border-desa-primary/10 flex items-center justify-between gap-4 no-print">
               <div className="hidden sm:block">
                 <span className="text-[11px] text-desa-text/60">Total yang harus dibayar:</span>
@@ -914,7 +916,9 @@ export default function CheckoutModal() {
                 </button>
               </div>
             </div>
+            </motion.div>
           )}
+          </AnimatePresence>
         </motion.div>
       </div>
     </AnimatePresence>

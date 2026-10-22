@@ -5,12 +5,6 @@ import ProductCard from '../../components/common/ProductCard';
 import { 
   Search, 
   ArrowRight, 
-  Utensils, 
-  Sprout, 
-  Palette, 
-  HeartPulse, 
-  Shirt, 
-  LayoutGrid,
   ChevronLeft,
   ChevronRight,
   Smartphone,
@@ -62,17 +56,6 @@ export default function HomePage() {
 
   const [heroSearch, setHeroSearch] = useState('');
   const [carouselIndex, setCarouselIndex] = useState(0);
-
-  const getCategoryIcon = (iconName) => {
-    switch(iconName) {
-      case 'Utensils': return <Utensils className="w-5 h-5 text-desa-accent" />;
-      case 'Sprout': return <Sprout className="w-5 h-5 text-desa-highlight" />;
-      case 'Palette': return <Palette className="w-5 h-5 text-desa-accent" />;
-      case 'HeartPulse': return <HeartPulse className="w-5 h-5 text-desa-accent" />;
-      case 'Shirt': return <Shirt className="w-5 h-5 text-desa-highlight" />;
-      default: return <LayoutGrid className="w-5 h-5 text-desa-primary" />;
-    }
-  };
 
   const handleHeroSearchSubmit = (e) => {
     e.preventDefault();
@@ -128,14 +111,9 @@ export default function HomePage() {
               animate="visible"
               className="lg:col-span-7 space-y-6"
             >
-              <motion.div variants={heroItem} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-desa-border text-xs font-medium text-desa-muted shadow-2xs">
-                <span className="w-2 h-2 rounded-full bg-desa-highlight animate-pulse" />
-                <span>Katalog Resmi BUMDes & UMKM Mandiri</span>
-              </motion.div>
-
               <motion.h1 
                 variants={heroItem}
-                className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-desa-primary leading-[1.12]"
+                className="font-heading text-4xl sm:text-5xl lg:text-[3.8rem] xl:text-[4.2rem] font-bold tracking-[-0.03em] text-desa-primary leading-[1.08]"
               >
                 Karya Asli Pengrajin & Hasil Bumi Sumedang
               </motion.h1>
@@ -205,7 +183,7 @@ export default function HomePage() {
                 <div className="bg-white rounded-2xl p-5 border border-desa-border shadow-md space-y-4">
                   <div className="flex items-center justify-between pb-3 border-b border-desa-border text-xs">
                     <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-desa-accent animate-ping" />
+                      <span className="w-2 h-2 rounded-full bg-desa-accent" />
                       <span className="font-semibold text-desa-primary tracking-wide">
                         Karya Unggulan Hari Ini
                       </span>
@@ -278,14 +256,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. Categories Section - Interactive Lift */}
+      {/* 2. Categories Section */}
       <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-6 pb-2 border-b border-desa-border">
+        <div className="flex items-end justify-between mb-6">
           <div>
             <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
               Kategori Produk
             </h2>
-            <p className="text-xs sm:text-sm text-desa-muted mt-1">
+            <p className="text-sm text-desa-muted mt-1">
               Jelajahi komoditas unggulan menurut rumpun kerajinan dan pangan
             </p>
           </div>
@@ -302,43 +280,33 @@ export default function HomePage() {
           </button>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+        <div className="flex flex-wrap gap-2.5">
           {categories.map((cat, idx) => (
-            <motion.div
+            <motion.button
               key={cat.id}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: idx * 0.05, duration: 0.35 }}
-              whileHover={{ y: -3, scale: 1.02, transition: { duration: 0.18 } }}
+              transition={{ delay: idx * 0.04, duration: 0.35 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => handleCategorySelect(cat.id)}
-              className="bg-white p-3.5 rounded-xl border border-desa-border hover:border-desa-primary/40 cursor-pointer transition-colors shadow-2xs flex items-center gap-3 group"
+              className="px-4 py-2.5 rounded-lg bg-white hover:bg-desa-primary hover:text-white text-sm font-medium text-desa-primary cursor-pointer transition-all duration-200 group shadow-2xs border border-desa-border/70 hover:border-desa-primary"
             >
-              <div className="w-9 h-9 rounded-lg bg-desa-bg flex items-center justify-center shrink-0 group-hover:bg-desa-surface transition-colors">
-                {getCategoryIcon(cat.icon)}
-              </div>
-              <div className="overflow-hidden">
-                <h3 className="font-medium text-desa-primary text-xs truncate group-hover:text-desa-accent transition-colors">
-                  {cat.name}
-                </h3>
-                <span className="text-[11px] text-desa-subtle">
-                  {cat.count} produk
-                </span>
-              </div>
-            </motion.div>
+              <span>{cat.name}</span>
+              <span className="ml-1.5 text-desa-subtle group-hover:text-white/70 text-xs font-normal">({cat.count})</span>
+            </motion.button>
           ))}
         </div>
       </section>
 
       {/* 3. Featured Products with Animated Spring Carousel */}
       <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 pb-2 border-b border-desa-border gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4">
           <div>
             <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
               Produk Pilihan & Terlaris
             </h2>
-            <p className="text-xs sm:text-sm text-desa-muted mt-1">
+            <p className="text-sm text-desa-muted mt-1">
               Produk berkualitas tinggi yang terkurasi langsung dari sentra pengrajin
             </p>
           </div>
@@ -389,7 +357,7 @@ export default function HomePage() {
               <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
                 Wirausaha & Pengrajin Desa
               </h2>
-              <p className="text-xs sm:text-sm text-desa-muted mt-1">
+              <p className="text-sm text-desa-muted mt-1">
                 Dukung kemandirian pelaku usaha mandiri dari berbagai kecamatan Kabupaten Sumedang
               </p>
             </div>
@@ -474,69 +442,65 @@ export default function HomePage() {
           
           <div className="relative z-10">
             <div className="text-center max-w-xl mx-auto mb-10">
-              <span className="text-xs font-medium tracking-wider uppercase text-desa-accent">
-                Dampak Ekonomi Kerakyatan
+              <span className="text-sm font-medium text-desa-accent">
+                Dampak nyata bagi warga
               </span>
               <h2 className="font-heading text-2xl sm:text-3xl font-bold text-white mt-1.5">
                 Statistik Ekosistem Pasar Desa
               </h2>
-              <p className="text-xs sm:text-sm text-desa-light/75 mt-2">
+              <p className="text-sm text-desa-light/75 mt-2">
                 Kolaborasi warga desa dan pemerintah dalam memajukan kemandirian ekonomi lokal
               </p>
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 text-center">
-              <motion.div 
-                whileHover={{ y: -3 }}
+              <div 
                 className="p-5 rounded-xl bg-white/5 border border-white/10"
               >
                 <Users className="w-6 h-6 text-desa-highlight mx-auto mb-2" />
                 <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
                   <Counter value={stats.totalUmkm} suffix="+" />
                 </div>
-                <p className="text-xs text-desa-light/70 mt-1 uppercase tracking-wider font-medium">
+                <p className="text-sm text-desa-light/70 mt-1 font-medium">
                   UMKM Binaan
                 </p>
-              </motion.div>
+              </div>
 
-              <motion.div 
-                whileHover={{ y: -3 }}
+              <div 
                 className="p-5 rounded-xl bg-white/5 border border-white/10"
               >
                 <Package className="w-6 h-6 text-desa-accent mx-auto mb-2" />
                 <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
                   <Counter value={stats.totalProducts} suffix="+" />
                 </div>
-                <p className="text-xs text-desa-light/70 mt-1 uppercase tracking-wider font-medium">
+                <p className="text-sm text-desa-light/70 mt-1 font-medium">
                   Produk Terkurasi
                 </p>
-              </motion.div>
+              </div>
 
-              <motion.div 
-                whileHover={{ y: -3 }}
+              <div 
                 className="p-5 rounded-xl bg-white/5 border border-white/10"
               >
                 <TrendingUp className="w-6 h-6 text-desa-highlight mx-auto mb-2" />
                 <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
                   <Counter value={stats.totalTransactions} />
                 </div>
-                <p className="text-xs text-desa-light/70 mt-1 uppercase tracking-wider font-medium">
+                <p className="text-sm text-desa-light/70 mt-1 font-medium">
                   Pesanan Terlayani
                 </p>
-              </motion.div>
+              </div>
 
-              <motion.div 
-                whileHover={{ y: -3 }}
+              <div 
                 className="p-5 rounded-xl bg-white/5 border border-white/10"
               >
                 <Award className="w-6 h-6 text-amber-400 mx-auto mb-2" />
                 <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
                   5 Sentra
                 </div>
-                <p className="text-xs text-desa-light/70 mt-1 uppercase tracking-wider font-medium">
+                <p className="text-sm text-desa-light/70 mt-1 font-medium">
                   Kecamatan Pengrajin
                 </p>
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>
@@ -548,11 +512,6 @@ export default function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             <div className="lg:col-span-8 space-y-4">
-              <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-desa-highlight bg-desa-highlight/10 px-2.5 py-1 rounded">
-                <Smartphone className="w-3.5 h-3.5" />
-                <span>Teknologi Progressive Web App (PWA)</span>
-              </div>
-
               <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
                 Akses Cepat di Layar Utama HP Anda
               </h2>
@@ -562,17 +521,17 @@ export default function HomePage() {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-                <div className="p-3.5 rounded-xl bg-desa-bg/70 border border-desa-border space-y-1">
-                  <span className="text-xs font-bold text-desa-primary">1. Buka di Browser</span>
-                  <p className="text-xs text-desa-muted">Buka website Pasar Desa melalui Chrome atau Safari di HP Anda.</p>
+                <div className="p-3.5 rounded-xl bg-desa-bg/70 space-y-1">
+                  <span className="text-sm font-bold text-desa-primary">Buka di Browser</span>
+                  <p className="text-sm text-desa-muted">Buka website Pasar Desa melalui Chrome atau Safari di HP Anda.</p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-desa-bg/70 border border-desa-border space-y-1">
-                  <span className="text-xs font-bold text-desa-primary">2. Tambahkan ke Layar</span>
-                  <p className="text-xs text-desa-muted">Ketuk menu browser dan pilih "Tambahkan ke Layar Utama".</p>
+                <div className="p-3.5 rounded-xl bg-desa-bg/70 space-y-1">
+                  <span className="text-sm font-bold text-desa-primary">Tambahkan ke Layar</span>
+                  <p className="text-sm text-desa-muted">Ketuk menu browser dan pilih "Tambahkan ke Layar Utama".</p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-desa-bg/70 border border-desa-border space-y-1">
-                  <span className="text-xs font-bold text-desa-primary">3. Siap Dipakai</span>
-                  <p className="text-xs text-desa-muted">Ikon Pasar Desa langsung muncul di HP seperti aplikasi resmi.</p>
+                <div className="p-3.5 rounded-xl bg-desa-bg/70 space-y-1">
+                  <span className="text-sm font-bold text-desa-primary">Siap Dipakai</span>
+                  <p className="text-sm text-desa-muted">Ikon Pasar Desa langsung muncul di HP seperti aplikasi resmi.</p>
                 </div>
               </div>
             </div>
@@ -583,13 +542,13 @@ export default function HomePage() {
               </div>
               <div>
                 <h4 className="font-heading font-bold text-desa-primary text-base">Uji Coba Tampilan Mobile</h4>
-                <p className="text-xs text-desa-muted mt-1">Rasakan pengalaman belanja responsif dalam simulasi PWA langsung di browser Anda.</p>
+                <p className="text-sm text-desa-muted mt-1">Rasakan pengalaman belanja responsif dalam simulasi PWA langsung di browser Anda.</p>
               </div>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => setCurrentView('mobile')}
-                className="w-full py-2.5 px-4 rounded-lg bg-desa-highlight hover:bg-desa-highlight/90 text-white font-semibold text-xs transition-colors shadow-2xs"
+                className="w-full py-2.5 px-4 rounded-lg bg-desa-highlight hover:bg-desa-highlight/90 text-white font-semibold text-sm transition-colors shadow-2xs"
               >
                 Buka Pratinjau Mobile
               </motion.button>

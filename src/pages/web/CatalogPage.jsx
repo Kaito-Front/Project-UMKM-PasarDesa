@@ -212,7 +212,7 @@ export default function CatalogPage() {
         {/* Left Filter Sidebar */}
         <aside className={`lg:col-span-1 bg-white rounded-xl p-5 border border-desa-border shadow-xs space-y-6 ${showMobileFilter ? 'block' : 'hidden lg:block'}`}>
           
-          <div className="flex items-center justify-between pb-3 border-b border-desa-border">
+          <div className="flex items-center justify-between pb-3">
             <div className="flex items-center gap-2">
               <SlidersHorizontal className="w-4 h-4 text-desa-accent" />
               <h3 className="font-heading font-bold text-sm text-desa-primary">
@@ -231,7 +231,7 @@ export default function CatalogPage() {
 
           {/* Category Filter */}
           <div className="space-y-2">
-            <h4 className="text-[11px] font-bold uppercase tracking-wider text-desa-muted">
+            <h4 className="text-xs font-bold text-desa-muted">
               Kategori
             </h4>
             <div className="space-y-1">
@@ -260,11 +260,11 @@ export default function CatalogPage() {
             </div>
           </div>
 
-          <div className="h-px bg-desa-border" />
+          <div className="h-3" />
 
           {/* Region Filter */}
           <div className="space-y-2">
-            <h4 className="text-[11px] font-bold uppercase tracking-wider text-desa-muted">
+            <h4 className="text-xs font-bold text-desa-muted">
               Wilayah Kecamatan
             </h4>
             <div className="space-y-1">
@@ -289,12 +289,12 @@ export default function CatalogPage() {
             </div>
           </div>
 
-          <div className="h-px bg-desa-border" />
+          <div className="h-3" />
 
           {/* Price Range */}
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <h4 className="text-[11px] font-bold uppercase tracking-wider text-desa-muted">
+              <h4 className="text-xs font-bold text-desa-muted">
                 Batas Harga
               </h4>
               <span className="text-xs font-semibold text-desa-accent">
@@ -319,11 +319,11 @@ export default function CatalogPage() {
             </div>
           </div>
 
-          <div className="h-px bg-desa-border" />
+          <div className="h-3" />
 
           {/* Minimum Rating */}
           <div className="space-y-2">
-            <h4 className="text-[11px] font-bold uppercase tracking-wider text-desa-muted">
+            <h4 className="text-xs font-bold text-desa-muted">
               Rating Pembeli
             </h4>
             <div className="flex flex-wrap gap-1.5">
@@ -353,7 +353,7 @@ export default function CatalogPage() {
         {/* Right Product Grid with Spring Motion */}
         <main className="lg:col-span-3 space-y-6">
           
-          <div className="flex items-center justify-between text-xs text-desa-muted">
+          <div className="flex items-center justify-between text-sm text-desa-muted">
             <span>
               Menampilkan <strong>{filteredProducts.length}</strong> produk lokal terkurasi
             </span>

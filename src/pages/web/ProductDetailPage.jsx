@@ -125,12 +125,19 @@ export default function ProductDetailPage() {
             </AnimatePresence>
 
             <motion.button
-              whileTap={{ scale: 0.75 }}
+              whileTap={{ scale: 0.8 }}
               onClick={() => toggleFavorite(product.id)}
               className="absolute top-3.5 right-3.5 p-2.5 rounded-full bg-white/90 backdrop-blur-xs text-desa-muted hover:text-rose-600 transition-colors shadow-xs"
               aria-label="Simpan ke favorit"
             >
-              <Heart className={`w-4 h-4 ${isFavorite ? 'fill-rose-500 text-rose-500' : ''}`} />
+              <motion.div
+                key={isFavorite ? 'fav' : 'unfav'}
+                initial={{ scale: 0.7 }}
+                animate={{ scale: [1, 1.35, 1] }}
+                transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+              >
+                <Heart className={`w-4 h-4 ${isFavorite ? 'fill-rose-500 text-rose-500' : ''}`} />
+              </motion.div>
             </motion.button>
           </div>
 
@@ -142,13 +149,16 @@ export default function ProductDetailPage() {
                   key={idx}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setActiveImageIndex(idx)}
-                  className={`w-18 h-18 rounded-lg overflow-hidden border-2 transition-all shrink-0 ${
-                    activeImageIndex === idx 
-                      ? 'border-desa-accent shadow-xs scale-102' 
-                      : 'border-desa-border opacity-70 hover:opacity-100'
-                  }`}
+                  className="relative w-18 h-18 rounded-lg overflow-hidden shrink-0 border border-desa-border focus:outline-none"
                 >
                   <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                  {activeImageIndex === idx && (
+                    <motion.div
+                      layoutId="thumbActiveRing"
+                      className="absolute inset-0 border-2 border-desa-accent rounded-lg pointer-events-none"
+                      transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+                    />
+                  )}
                 </motion.button>
               ))}
             </div>
@@ -158,22 +168,22 @@ export default function ProductDetailPage() {
           <div className="grid grid-cols-3 gap-3 p-3.5 bg-white rounded-xl border border-desa-border text-xs">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-desa-highlight shrink-0" />
-              <span className="text-[11px] text-desa-muted">Jaminan Karya Asli</span>
+              <span className="text-sm text-desa-muted">Jaminan Karya Asli</span>
             </div>
             <div className="flex items-center gap-2">
               <Truck className="w-4 h-4 text-desa-accent shrink-0" />
-              <span className="text-[11px] text-desa-muted">Kirim Seluruh RI</span>
+              <span className="text-sm text-desa-muted">Kirim Seluruh RI</span>
             </div>
             <div className="flex items-center gap-2">
               <RotateCcw className="w-4 h-4 text-desa-primary shrink-0" />
-              <span className="text-[11px] text-desa-muted">Garansi Kualitas</span>
+              <span className="text-sm text-desa-muted">Garansi Kualitas</span>
             </div>
           </div>
 
           {/* Technical Specifications */}
           {product.specifications && (
             <div className="p-4 bg-white rounded-xl border border-desa-border space-y-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-desa-muted">
+              <h4 className="text-sm font-bold text-desa-muted">
                 Spesifikasi Teknis Produk
               </h4>
               <div className="divide-y divide-desa-border text-xs">
@@ -238,7 +248,7 @@ export default function ProductDetailPage() {
           {/* Quantity & Notes */}
           <div className="space-y-3">
             <div className="flex items-center gap-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-desa-muted">
+              <span className="text-sm font-bold text-desa-muted">
                 Jumlah Pesanan:
               </span>
               <div className="flex items-center border border-desa-border rounded-lg bg-white">
@@ -384,10 +394,10 @@ export default function ProductDetailPage() {
 
           {/* Product Story & Description */}
           <div className="space-y-3 pt-2">
-            <h3 className="font-heading font-bold text-base text-desa-primary border-b border-desa-border pb-2">
+            <h3 className="font-heading font-bold text-lg text-desa-primary pb-2">
               Tentang Produk & Filosofi Bahan
             </h3>
-            <p className="text-sm text-desa-muted leading-relaxed whitespace-pre-line font-normal">
+            <p className="text-[15px] text-desa-muted leading-relaxed whitespace-pre-line">
               {product.description}
             </p>
           </div>
@@ -403,7 +413,7 @@ export default function ProductDetailPage() {
             <h3 className="font-heading font-bold text-lg text-desa-primary">
               Ulasan Pembeli ({reviewsList.length})
             </h3>
-            <p className="text-xs text-desa-muted">
+            <p className="text-sm text-desa-muted">
               Ulasan otentik dari warga dan penikmat produk lokal
             </p>
           </div>
@@ -477,7 +487,7 @@ export default function ProductDetailPage() {
       {/* Related Products */}
       {relatedProducts.length > 0 && (
         <section className="space-y-6">
-          <div className="flex items-center justify-between border-b border-desa-border pb-2">
+          <div className="flex items-center justify-between pb-2">
             <h3 className="font-heading font-bold text-lg text-desa-primary">
               Karya Lain dari {shop.name}
             </h3>

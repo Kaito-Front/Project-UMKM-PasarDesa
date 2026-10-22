@@ -117,7 +117,7 @@ export default function ShopDetailPage() {
           {/* Key Metrics */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-desa-border text-center">
             <div className="p-3 rounded-lg bg-desa-surface border border-desa-border/50">
-              <span className="text-[11px] text-desa-muted block">Rating Toko</span>
+              <span className="text-sm text-desa-muted block">Rating Toko</span>
               <div className="font-heading font-bold text-base text-desa-primary flex items-center justify-center gap-1 mt-0.5">
                 <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                 <span>{shop.rating}</span>
@@ -126,21 +126,21 @@ export default function ShopDetailPage() {
             </div>
 
             <div className="p-3 rounded-lg bg-desa-surface border border-desa-border/50">
-              <span className="text-[11px] text-desa-muted block">Total Produk</span>
+              <span className="text-sm text-desa-muted block">Total Produk</span>
               <div className="font-heading font-bold text-base text-desa-primary mt-0.5">
                 {shopProducts.length} Produk
               </div>
             </div>
 
             <div className="p-3 rounded-lg bg-desa-surface border border-desa-border/50">
-              <span className="text-[11px] text-desa-muted block">Jam Pelayanan</span>
+              <span className="text-sm text-desa-muted block">Jam Pelayanan</span>
               <div className="text-xs font-semibold text-desa-primary mt-1 truncate">
                 {shop.operatingHours.split('(')[0]}
               </div>
             </div>
 
             <div className="p-3 rounded-lg bg-desa-surface border border-desa-border/50">
-              <span className="text-[11px] text-desa-muted block">Bergabung Sejak</span>
+              <span className="text-sm text-desa-muted block">Bergabung Sejak</span>
               <div className="text-xs font-semibold text-desa-primary mt-1">
                 {shop.joinDate}
               </div>
@@ -152,7 +152,7 @@ export default function ShopDetailPage() {
       </div>
 
       {/* Tabs with layoutId underline indicator */}
-      <div className="flex border-b border-desa-border gap-6 text-xs font-semibold">
+      <div className="flex gap-6 text-sm font-semibold">
         <button
           onClick={() => setActiveTab('produk')}
           className={`pb-3 relative transition-colors ${

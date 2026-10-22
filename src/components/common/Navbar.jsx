@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import LurikDivider from './LurikDivider';
@@ -27,6 +27,15 @@ export default function Navbar() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [helpModalOpen, setHelpModalOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleNavClick = (page) => {
     setWebPage(page);
@@ -36,7 +45,11 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-desa-bg/95 backdrop-blur-md border-b border-desa-border transition-colors">
+      <header className={`sticky top-0 z-40 transition-all duration-200 ${
+        isScrolled 
+          ? 'bg-desa-bg/95 backdrop-blur-md border-b border-desa-border shadow-xs' 
+          : 'bg-desa-bg border-b border-desa-border/50'
+      }`}>
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-18">
             
@@ -54,7 +67,7 @@ export default function Navbar() {
                 <span className="font-heading text-xl font-bold tracking-tight text-desa-primary leading-tight">
                   Pasar Desa
                 </span>
-                <span className="text-[10px] tracking-wider uppercase text-desa-muted font-medium">
+                <span className="text-[11px] text-desa-muted font-medium">
                   Sumedang Mandiri
                 </span>
               </div>
@@ -64,7 +77,7 @@ export default function Navbar() {
             <nav className="hidden lg:flex items-center gap-8">
               <button
                 onClick={() => handleNavClick('home')}
-                className={`text-sm tracking-tight transition-colors py-1 relative ${
+                className={`text-[15px] tracking-tight transition-colors py-1 relative ${
                   webPage === 'home'
                     ? 'text-desa-accent font-semibold'
                     : 'text-desa-text hover:text-desa-accent font-medium'
@@ -82,7 +95,7 @@ export default function Navbar() {
 
               <button
                 onClick={() => handleNavClick('catalog')}
-                className={`text-sm tracking-tight transition-colors py-1 relative ${
+                className={`text-[15px] tracking-tight transition-colors py-1 relative ${
                   webPage === 'catalog'
                     ? 'text-desa-accent font-semibold'
                     : 'text-desa-text hover:text-desa-accent font-medium'
@@ -100,7 +113,7 @@ export default function Navbar() {
 
               <button
                 onClick={() => handleNavClick('about')}
-                className={`text-sm tracking-tight transition-colors py-1 relative ${
+                className={`text-[15px] tracking-tight transition-colors py-1 relative ${
                   webPage === 'about'
                     ? 'text-desa-accent font-semibold'
                     : 'text-desa-text hover:text-desa-accent font-medium'
@@ -118,7 +131,7 @@ export default function Navbar() {
 
               <button
                 onClick={() => setHelpModalOpen(true)}
-                className="text-sm font-medium text-desa-muted hover:text-desa-accent transition-colors"
+                className="text-[15px] font-medium text-desa-muted hover:text-desa-accent transition-colors"
               >
                 Bantuan & Layanan
               </button>
@@ -129,10 +142,9 @@ export default function Navbar() {
               
               {/* PWA Mode Trigger */}
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.96 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={() => setCurrentView('mobile')}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-desa-muted hover:text-desa-primary hover:bg-black/5 transition-all"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-desa-muted hover:text-desa-primary hover:bg-black/5 transition-all"
                 title="Buka Pratinjau Mobile PWA"
               >
                 <Smartphone className="w-3.5 h-3.5 text-desa-highlight" />
@@ -151,7 +163,7 @@ export default function Navbar() {
                 aria-label="Chat Layanan Desa"
               >
                 <MessageSquare className="w-4 h-4" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-desa-accent rounded-full animate-pulse" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-desa-accent rounded-full" />
               </motion.button>
 
               {/* Cart Button with Animated Bounce Pop on Count Change */}
@@ -167,9 +179,9 @@ export default function Navbar() {
                 {cartCount > 0 && (
                   <motion.span 
                     key={cartCount}
-                    initial={{ scale: 0.6 }}
-                    animate={{ scale: [1.25, 1] }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+                    initial={{ scale: 0.4, rotate: -10 }}
+                    animate={{ scale: [1, 1.3, 0.95, 1], rotate: [0, -6, 6, 0] }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 18 }}
                     className="absolute top-0.5 right-0.5 min-w-4 h-4 px-1 bg-desa-accent text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-xs"
                   >
                     {cartCount}
@@ -227,8 +239,9 @@ export default function Navbar() {
                 {cartCount > 0 && (
                   <motion.span 
                     key={cartCount}
-                    initial={{ scale: 0.6 }}
-                    animate={{ scale: [1.2, 1] }}
+                    initial={{ scale: 0.4, rotate: -10 }}
+                    animate={{ scale: [1, 1.3, 0.95, 1], rotate: [0, -6, 6, 0] }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 18 }}
                     className="absolute top-0.5 right-0.5 min-w-4 h-4 px-1 bg-desa-accent text-white text-[9px] font-bold rounded-full flex items-center justify-center"
                   >
                     {cartCount}

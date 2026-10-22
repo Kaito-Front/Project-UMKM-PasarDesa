@@ -31,17 +31,17 @@ export default function Footer() {
               </span>
             </div>
             
-            <p className="text-xs text-desa-light/75 leading-relaxed font-normal">
+            <p className="text-sm text-desa-light/75 leading-relaxed">
               Platform digitalisasi ekonomi BUMDes yang menghubungkan perajin tenun, petani madu, dan pelaku usaha lokal Kabupaten Sumedang dengan penikmat karya nusantara.
             </p>
           </div>
 
           {/* Regional Service Office */}
           <div className="space-y-3">
-            <h4 className="font-heading text-sm font-semibold text-white border-b border-white/10 pb-2">
+            <h4 className="font-heading text-base font-semibold text-white pb-2">
               Sekretariat & Wilayah Layanan
             </h4>
-            <ul className="space-y-2.5 text-xs text-desa-light/80">
+            <ul className="space-y-2.5 text-sm text-desa-light/80">
               <li className="flex items-start gap-2">
                 <MapPin className="w-3.5 h-3.5 text-desa-accent shrink-0 mt-0.5" />
                 <span>Kecamatan Sumedang Utara, Kabupaten Sumedang, Jawa Barat</span>
@@ -63,10 +63,10 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div className="space-y-3">
-            <h4 className="font-heading text-sm font-semibold text-white border-b border-white/10 pb-2">
+            <h4 className="font-heading text-base font-semibold text-white pb-2">
               Navigasi Cepat
             </h4>
-            <ul className="space-y-2 text-xs text-desa-light/80">
+            <ul className="space-y-2 text-sm text-desa-light/80">
               <li>
                 <button 
                   onClick={() => { setWebPage('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
@@ -104,7 +104,7 @@ export default function Footer() {
 
           {/* Governance & Administrative link */}
           <div className="space-y-3">
-            <h4 className="font-heading text-sm font-semibold text-white border-b border-white/10 pb-2">
+            <h4 className="font-heading text-base font-semibold text-white pb-2">
               Tata Kelola BUMDes
             </h4>
             <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs space-y-2">
@@ -129,7 +129,7 @@ export default function Footer() {
 
         </div>
 
-        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-[11px] text-desa-light/60 gap-3">
+        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-desa-light/60 gap-3">
           <p>© 2026 Pasar Desa Mandiri Kabupaten Sumedang. Hak Cipta Dilindungi.</p>
           <p>Karya Nyata Membangun Ekonomi Desa Berbasis Kebudayaan.</p>
         </div>

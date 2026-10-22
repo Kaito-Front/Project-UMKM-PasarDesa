@@ -161,7 +161,7 @@ export default function AuthPage() {
                     placeholder="Contoh: 081234567890 atau email@desa.id"
                     value={loginIdentifier}
                     onChange={(e) => setLoginIdentifier(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2.5 bg-desa-bg/40 border border-desa-border rounded-lg text-xs sm:text-sm text-desa-text focus:outline-none focus:border-desa-primary focus:bg-white"
+                    className="w-full pl-9 pr-4 py-2.5 bg-desa-bg/40 border border-desa-border rounded-lg text-sm text-desa-text focus:outline-none focus:border-desa-primary focus:bg-white"
                   />
                 </div>
               </div>
@@ -171,7 +171,7 @@ export default function AuthPage() {
                   <label className="block text-xs font-semibold text-desa-primary">
                     Kata Sandi
                   </label>
-                  <span className="text-[11px] text-desa-subtle">
+                  <span className="text-xs text-desa-subtle">
                     Demo: 123456
                   </span>
                 </div>
@@ -183,7 +183,7 @@ export default function AuthPage() {
                     placeholder="Masukkan kata sandi akun"
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
-                    className="w-full pl-9 pr-10 py-2.5 bg-desa-bg/40 border border-desa-border rounded-lg text-xs sm:text-sm text-desa-text focus:outline-none focus:border-desa-primary focus:bg-white"
+                    className="w-full pl-9 pr-10 py-2.5 bg-desa-bg/40 border border-desa-border rounded-lg text-sm text-desa-text focus:outline-none focus:border-desa-primary focus:bg-white"
                   />
                   <button
                     type="button"
@@ -199,7 +199,7 @@ export default function AuthPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-2.5 rounded-lg bg-desa-primary hover:bg-desa-primary/90 text-white font-semibold text-xs shadow-xs transition-colors flex items-center justify-center gap-2"
+                  className="w-full py-2.5 rounded-lg bg-desa-primary hover:bg-desa-primary/90 text-white font-semibold text-sm shadow-xs transition-colors flex items-center justify-center gap-2"
                 >
                   <span>{isSubmitting ? 'Memproses...' : 'Masuk ke Pasar Desa'}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -232,7 +232,7 @@ export default function AuthPage() {
                   placeholder="Nama sesuai KTP"
                   value={regName}
                   onChange={(e) => setRegName(e.target.value)}
-                  className="w-full px-3 py-2 bg-desa-bg/40 border border-desa-border rounded-lg text-xs text-desa-text focus:outline-none focus:border-desa-primary focus:bg-white"
+                  className="w-full px-3 py-2 bg-desa-bg/40 border border-desa-border rounded-lg text-sm text-desa-text focus:outline-none focus:border-desa-primary focus:bg-white"
                 />
               </div>
 
@@ -248,7 +248,7 @@ export default function AuthPage() {
                     placeholder="08xxxxxxxxxx"
                     value={regPhone}
                     onChange={(e) => setRegPhone(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 bg-desa-bg/40 border border-desa-border rounded-lg text-xs text-desa-text focus:outline-none focus:border-desa-primary focus:bg-white"
+                    className="w-full pl-9 pr-3 py-2 bg-desa-bg/40 border border-desa-border rounded-lg text-sm text-desa-text focus:outline-none focus:border-desa-primary focus:bg-white"
                   />
                 </div>
               </div>
@@ -264,7 +264,7 @@ export default function AuthPage() {
                     placeholder="Minimal 6 karakter"
                     value={regPassword}
                     onChange={(e) => setRegPassword(e.target.value)}
-                    className="w-full px-3 py-2 bg-desa-bg/40 border border-desa-border rounded-lg text-xs text-desa-text focus:outline-none focus:border-desa-primary focus:bg-white"
+                    className="w-full px-3 py-2 bg-desa-bg/40 border border-desa-border rounded-lg text-sm text-desa-text focus:outline-none focus:border-desa-primary focus:bg-white"
                   />
                 </div>
                 <div>
@@ -277,7 +277,7 @@ export default function AuthPage() {
                     placeholder="Konfirmasi sandi"
                     value={regConfirmPassword}
                     onChange={(e) => setRegConfirmPassword(e.target.value)}
-                    className="w-full px-3 py-2 bg-desa-bg/40 border border-desa-border rounded-lg text-xs text-desa-text focus:outline-none focus:border-desa-primary focus:bg-white"
+                    className="w-full px-3 py-2 bg-desa-bg/40 border border-desa-border rounded-lg text-sm text-desa-text focus:outline-none focus:border-desa-primary focus:bg-white"
                   />
                 </div>
               </div>
@@ -326,19 +326,19 @@ export default function AuthPage() {
                       placeholder="Contoh: Griya Lurik Berkah"
                       value={regShopName}
                       onChange={(e) => setRegShopName(e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-desa-border rounded-lg text-xs text-desa-text focus:outline-none focus:border-desa-primary"
+                      className="w-full px-3 py-2 bg-white border border-desa-border rounded-lg text-sm text-desa-text focus:outline-none focus:border-desa-primary"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[11px] font-semibold text-desa-primary mb-1">
+                      <label className="block text-xs font-semibold text-desa-primary mb-1">
                         Kategori Produk
                       </label>
                       <select
                         value={regShopCategory}
                         onChange={(e) => setRegShopCategory(e.target.value)}
-                        className="w-full px-2.5 py-1.5 bg-white border border-desa-border rounded-lg text-xs text-desa-primary"
+                        className="w-full px-2.5 py-1.5 bg-white border border-desa-border rounded-lg text-sm text-desa-primary"
                       >
                         <option value="Kerajinan Tangan">Kerajinan Tangan</option>
                         <option value="Kuliner Tradisional">Kuliner Tradisional</option>
@@ -349,13 +349,13 @@ export default function AuthPage() {
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-semibold text-desa-primary mb-1">
+                      <label className="block text-xs font-semibold text-desa-primary mb-1">
                         Wilayah Kecamatan
                       </label>
                       <select
                         value={regKecamatan}
                         onChange={(e) => setRegKecamatan(e.target.value)}
-                        className="w-full px-2.5 py-1.5 bg-white border border-desa-border rounded-lg text-xs text-desa-primary"
+                        className="w-full px-2.5 py-1.5 bg-white border border-desa-border rounded-lg text-sm text-desa-primary"
                       >
                         {KECAMATAN_LIST.filter(k => k !== 'Semua Kecamatan').map(k => (
                           <option key={k} value={k}>{k}</option>
@@ -370,7 +370,7 @@ export default function AuthPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-2.5 rounded-lg bg-desa-primary hover:bg-desa-primary/90 text-white font-semibold text-xs shadow-xs transition-colors flex items-center justify-center gap-2"
+                  className="w-full py-2.5 rounded-lg bg-desa-primary hover:bg-desa-primary/90 text-white font-semibold text-sm shadow-xs transition-colors flex items-center justify-center gap-2"
                 >
                   <span>{isSubmitting ? 'Memproses...' : 'Daftarkan Akun Sekarang'}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -384,7 +384,7 @@ export default function AuthPage() {
         {/* Right Info Column */}
         <div className="lg:col-span-5 space-y-4">
           <div className="bg-desa-primary text-white rounded-2xl p-6 shadow-xs space-y-4">
-            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-desa-accent text-white inline-block">
+            <span className="text-xs font-bold px-2.5 py-0.5 rounded bg-desa-accent text-white inline-block">
               Keunggulan Ekosistem
             </span>
 
@@ -392,11 +392,11 @@ export default function AuthPage() {
               Kemandirian Ekonomi Warga Berbasis Digital
             </h3>
 
-            <p className="text-xs text-desa-light/80 leading-relaxed font-normal">
+            <p className="text-sm text-desa-light/80 leading-relaxed">
               Pasar Desa memfasilitasi transaksi jujur langsung antara pengrajin dan pembeli dengan verifikasi resmi dari BUMDes.
             </p>
 
-            <div className="space-y-2.5 pt-1 text-xs text-desa-light/90">
+            <div className="space-y-2.5 pt-1 text-sm text-desa-light/90">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-desa-highlight shrink-0" />
                 <span>Tanpa potongan komisi perantara luar</span>
@@ -417,7 +417,7 @@ export default function AuthPage() {
               <ShieldCheck className="w-4 h-4 text-desa-highlight" />
               <span>Pendampingan Balai Desa</span>
             </h4>
-            <p className="text-desa-muted leading-relaxed">
+            <p className="text-sm text-desa-muted leading-relaxed">
               Petugas BUMDes siap mendampingi pendaftaran izin usaha mikro dan verifikasi produk di kantor Balai Desa.
             </p>
           </div>

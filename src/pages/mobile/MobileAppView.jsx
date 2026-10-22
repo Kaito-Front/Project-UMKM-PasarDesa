@@ -938,7 +938,7 @@ export default function MobileAppView() {
                 <Home className="w-5 h-5" />
                 <span>Beranda</span>
                 {currentTab === 'beranda' && (
-                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-desa-accent" />
+                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-4 h-1 rounded-full bg-desa-accent" transition={{ type: "spring", stiffness: 500, damping: 30 }} />
                 )}
               </button>
 
@@ -951,7 +951,7 @@ export default function MobileAppView() {
                 <ShoppingBag className="w-5 h-5" />
                 <span>Katalog</span>
                 {currentTab === 'katalog' && (
-                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-desa-accent" />
+                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-4 h-1 rounded-full bg-desa-accent" transition={{ type: "spring", stiffness: 500, damping: 30 }} />
                 )}
               </button>
 
@@ -964,7 +964,7 @@ export default function MobileAppView() {
                 <Package className="w-5 h-5" />
                 <span>Pesanan</span>
                 {currentTab === 'pesanan' && (
-                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-desa-accent" />
+                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-4 h-1 rounded-full bg-desa-accent" transition={{ type: "spring", stiffness: 500, damping: 30 }} />
                 )}
               </button>
 
@@ -977,7 +977,7 @@ export default function MobileAppView() {
                 <User className="w-5 h-5" />
                 <span>Akun</span>
                 {currentTab === 'akun' && (
-                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-desa-accent" />
+                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-4 h-1 rounded-full bg-desa-accent" transition={{ type: "spring", stiffness: 500, damping: 30 }} />
                 )}
               </button>
             </>
@@ -992,7 +992,7 @@ export default function MobileAppView() {
                 <TrendingUp className="w-5 h-5" />
                 <span>Dashboard</span>
                 {currentTab === 'dashboard' && (
-                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-desa-accent" />
+                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-4 h-1 rounded-full bg-desa-accent" transition={{ type: "spring", stiffness: 500, damping: 30 }} />
                 )}
               </button>
 
@@ -1005,7 +1005,7 @@ export default function MobileAppView() {
                 <Package className="w-5 h-5" />
                 <span>Produk</span>
                 {currentTab === 'produk' && (
-                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-desa-accent" />
+                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-4 h-1 rounded-full bg-desa-accent" transition={{ type: "spring", stiffness: 500, damping: 30 }} />
                 )}
               </button>
 
@@ -1018,7 +1018,7 @@ export default function MobileAppView() {
                 <ShoppingBag className="w-5 h-5" />
                 <span>Pesanan</span>
                 {currentTab === 'pesanan' && (
-                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-desa-accent" />
+                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-4 h-1 rounded-full bg-desa-accent" transition={{ type: "spring", stiffness: 500, damping: 30 }} />
                 )}
               </button>
 
@@ -1031,7 +1031,7 @@ export default function MobileAppView() {
                 <Store className="w-5 h-5" />
                 <span>Toko Saya</span>
                 {currentTab === 'toko' && (
-                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-desa-accent" />
+                  <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-4 h-1 rounded-full bg-desa-accent" transition={{ type: "spring", stiffness: 500, damping: 30 }} />
                 )}
               </button>
             </>
@@ -1048,12 +1048,21 @@ export default function MobileAppView() {
               className="absolute inset-0 z-40 bg-black/60 backdrop-blur-sm flex flex-col justify-end"
             >
               <motion.div 
+                drag="y"
+                dragConstraints={{ top: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(_, info) => {
+                  if (info.offset.y > 90 || info.velocity.y > 400) {
+                    setMobileSelectedProduct(null);
+                  }
+                }}
                 initial={{ y: '100%' }}
                 animate={{ y: 0 }}
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 28, stiffness: 350 }}
-                className="bg-white rounded-t-3xl max-h-[85%] overflow-y-auto p-5 space-y-4 shadow-2xl"
+                className="bg-white rounded-t-3xl max-h-[85%] overflow-y-auto p-5 pt-3 space-y-4 shadow-2xl relative"
               >
+                <div className="w-10 h-1 bg-desa-border rounded-full mx-auto mb-2 shrink-0 opacity-70" />
                 <div className="flex items-center justify-between pb-2 border-b border-desa-primary/10">
                   <span className="text-xs font-bold text-desa-accent">{mobileSelectedProduct.categoryName}</span>
                   <button
@@ -1118,13 +1127,22 @@ export default function MobileAppView() {
               className="absolute inset-0 z-40 bg-black/60 backdrop-blur-sm flex flex-col justify-end"
             >
               <motion.form 
+                drag="y"
+                dragConstraints={{ top: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(_, info) => {
+                  if (info.offset.y > 90 || info.velocity.y > 400) {
+                    setShowAddProductModal(false);
+                  }
+                }}
                 initial={{ y: '100%' }}
                 animate={{ y: 0 }}
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 28, stiffness: 350 }}
                 onSubmit={handleAddProductSubmit} 
-                className="bg-white rounded-t-3xl max-h-[90%] overflow-y-auto p-5 space-y-3.5 shadow-2xl"
+                className="bg-white rounded-t-3xl max-h-[90%] overflow-y-auto p-5 pt-3 space-y-3.5 shadow-2xl relative"
               >
+                <div className="w-10 h-1 bg-desa-border rounded-full mx-auto mb-2 shrink-0 opacity-70" />
                 <div className="flex items-center justify-between pb-2 border-b border-desa-primary/10">
                   <h3 className="font-heading font-bold text-sm text-desa-primary">Tambah Produk Toko Baru</h3>
                   <button

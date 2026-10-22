@@ -181,8 +181,9 @@ export default function CartDrawer() {
                   </div>
 
                   <ul className="divide-y divide-desa-primary/10">
+                    <AnimatePresence mode="popLayout">
                     {cart.map((item) => (
-                      <li key={item.productId} className="group flex gap-3.5 py-5 first:pt-5 sm:gap-4">
+                      <motion.li layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -24, height: 0, overflow: 'hidden', transition: { duration: 0.22, ease: 'easeOut' } }} key={item.productId} className="group flex gap-3.5 py-5 first:pt-5 sm:gap-4">
                         <button
                           type="button"
                           onClick={() => handleViewProduct(item.productId)}
@@ -252,8 +253,9 @@ export default function CartDrawer() {
                         >
                           <Trash2 className="h-4 w-4" aria-hidden="true" />
                         </button>
-                      </li>
+                      </motion.li>
                     ))}
+                    </AnimatePresence>
                   </ul>
                 </>
               )}

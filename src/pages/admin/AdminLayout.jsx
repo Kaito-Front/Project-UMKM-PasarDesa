@@ -266,13 +266,20 @@ export default function AdminLayout() {
               type="button"
               aria-current={adminTab === id ? 'page' : undefined}
               onClick={() => { setAdminTab(id); setMobileNavOpen(false); }}
-              className={`flex min-h-9 w-full items-center justify-between gap-3 rounded-md px-3 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9E5335] ${adminTab === id ? 'bg-[#EAE8E1] font-semibold text-[#232220]' : 'text-[#52504A] hover:bg-[#EFECE5] hover:text-[#232220]'}`}
+              className={`relative flex min-h-9 w-full items-center justify-between gap-3 rounded-md px-3 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9E5335] ${adminTab === id ? 'font-semibold text-[#232220]' : 'text-[#52504A] hover:bg-[#EFECE5] hover:text-[#232220]'}`}
             >
-              <span className="flex min-w-0 items-center gap-3">
+              {adminTab === id && (
+                <motion.div
+                  layoutId="adminNavActiveIndicator"
+                  className="absolute inset-0 bg-[#EAE8E1] rounded-md z-0"
+                  transition={{ type: 'spring', stiffness: 500, damping: 32 }}
+                />
+              )}
+              <span className="relative z-10 flex min-w-0 items-center gap-3">
                 <Icon className="h-4 w-4 shrink-0 text-[#65635D]" aria-hidden="true" />
                 <span className="truncate">{label}</span>
               </span>
-              {count > 0 && <span className="min-w-5 rounded-sm bg-white px-1.5 py-0.5 text-center text-xs tabular-nums text-[#2F2F2D]">{count}</span>}
+              {count > 0 && <span className="relative z-10 min-w-5 rounded-sm bg-white px-1.5 py-0.5 text-center text-xs tabular-nums text-[#2F2F2D]">{count}</span>}
             </button>
           ))}
           <div className="grid grid-cols-2 gap-2 border-t border-[#D8D5CC] pt-3 xl:hidden">
@@ -360,6 +367,9 @@ export default function AdminLayout() {
 
         
         <main className="min-w-0 flex-1 space-y-8 overflow-y-auto bg-[#F7F6F2] p-4 sm:p-6 xl:p-9">
+        <AnimatePresence mode="wait">
+        <motion.div key={adminTab} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.16 }} className="space-y-8">
+
 
         
         {adminTab === 'dashboard' && (
@@ -1186,6 +1196,8 @@ export default function AdminLayout() {
           </div>
         )}
 
+        </motion.div>
+        </AnimatePresence>
         </main>
       </div>
     </div>

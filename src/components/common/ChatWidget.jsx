@@ -100,8 +100,8 @@ export default function ChatWidget() {
           </div>
 
           <motion.button
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.92 }}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.94 }}
             onClick={() => setIsChatOpen(true)}
             className="w-14 h-14 rounded-2xl bg-desa-accent text-white shadow-xl flex items-center justify-center relative overflow-hidden group border-2 border-white/40"
             aria-label="Buka Chatbox Desa"
@@ -382,7 +382,7 @@ export default function ChatWidget() {
                 }
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
-                className="flex-1 px-3.5 py-2.5 text-xs rounded-xl border border-desa-primary/20 bg-desa-bg/30 text-desa-text focus:outline-none focus:ring-1 focus:ring-desa-accent"
+                className="flex-1 px-3.5 py-2.5 text-sm rounded-xl border border-desa-primary/20 bg-desa-bg/30 text-desa-text focus:outline-none focus:ring-1 focus:ring-desa-accent"
               />
               <button
                 type="submit"

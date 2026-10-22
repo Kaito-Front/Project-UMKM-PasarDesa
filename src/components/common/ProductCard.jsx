@@ -23,7 +23,6 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-20px' }}
-      whileHover={{ y: -4, transition: { duration: 0.2, ease: 'easeOut' } }}
       className="group bg-white rounded-xl overflow-hidden border border-desa-border hover:border-desa-primary/40 hover:shadow-md transition-shadow duration-200 flex flex-col justify-between"
     >
       <div>
@@ -57,7 +56,7 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
         <div className={isCompact ? 'p-3' : 'p-4'}>
           
           {/* Shop & Region */}
-          <div className="flex items-center justify-between text-xs text-desa-muted mb-1.5 gap-2">
+          <div className="flex items-center justify-between text-sm text-desa-muted mb-1.5 gap-2">
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -67,7 +66,7 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
             >
               {product.shopName}
             </button>
-            <span className="shrink-0 text-[11px] text-desa-subtle">
+            <span className="shrink-0 text-xs text-desa-subtle">
               {product.kecamatan.replace(/^Kecamatan /, '')}
             </span>
           </div>
@@ -75,24 +74,24 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
           {/* Title */}
           <h3 
             onClick={() => viewProduct(product.id)}
-            className="font-medium text-desa-primary text-sm line-clamp-2 leading-snug cursor-pointer group-hover:text-desa-accent transition-colors mb-2 min-h-[2.5rem]"
+            className="font-medium text-desa-primary text-[15px] line-clamp-2 leading-snug cursor-pointer group-hover:text-desa-accent transition-colors mb-2 min-h-[2.5rem]"
             title={product.name}
           >
             {product.name}
           </h3>
 
           {/* Rating & Sold Metadata */}
-          <div className="flex items-center gap-1.5 text-xs mb-3 text-desa-muted">
+          <div className="flex items-center gap-1.5 text-sm mb-3 text-desa-muted">
             <div className="flex items-center text-amber-600 font-medium gap-0.5">
               <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
               <span>{product.rating.toFixed(1)}</span>
             </div>
             <span className="text-desa-subtle">•</span>
-            <span className="text-[11px]">{product.sold} terjual</span>
+            <span className="text-xs">{product.sold} terjual</span>
           </div>
 
           {/* Pricing */}
-          <div className="flex items-baseline gap-2 pt-1 border-t border-desa-border/60">
+          <div className="flex items-baseline gap-2 pt-2">
             <span className="font-heading font-bold text-base text-desa-primary">
               Rp {product.price.toLocaleString('id-ID')}
             </span>
@@ -110,7 +109,7 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
         <motion.button
           whileTap={{ scale: 0.94 }}
           onClick={handleAddToCart}
-          className={`flex-1 py-2 px-3 rounded-lg border text-xs font-semibold transition-all flex items-center justify-center gap-1.5 shadow-2xs ${
+          className={`flex-1 py-2 px-3 rounded-lg border text-sm font-semibold transition-all flex items-center justify-center gap-1.5 shadow-2xs ${
             justAdded 
               ? 'bg-desa-highlight text-white border-desa-highlight'
               : 'border-desa-border bg-white text-desa-primary hover:bg-desa-primary hover:text-white hover:border-desa-primary'
@@ -146,9 +145,9 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
 
         {showQuickOrder && (
           <motion.button
-            whileTap={{ scale: 0.94 }}
+            whileTap={{ scale: 0.96 }}
             onClick={() => openDirectCheckout(product, 1)}
-            className="py-2 px-3 rounded-lg bg-desa-accent hover:bg-desa-accent/90 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1 shadow-2xs shrink-0"
+            className="py-2 px-3 rounded-lg bg-desa-accent hover:bg-desa-accent/90 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-1 shadow-2xs shrink-0"
             title="Beli Langsung"
           >
             <ShoppingBag className="w-3.5 h-3.5" />

@@ -1,8 +1,8 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import LurikDivider from '../../components/common/LurikDivider';
 import { 
-  Landmark,
   ArrowRight
 } from 'lucide-react';
 
@@ -47,16 +47,11 @@ export default function AboutVillagePage() {
       
       {/* Editorial Header */}
       <div className="text-center max-w-2xl mx-auto space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-desa-border text-xs font-semibold text-desa-primary">
-          <Landmark className="w-3.5 h-3.5 text-desa-accent" />
-          <span>Profil Desa & Filosofi Lurik Nusantara</span>
-        </div>
-
         <h1 className="font-heading text-3xl sm:text-5xl font-bold text-desa-primary leading-tight">
           Menjaga Warisan Leluhur, Menggerakkan Ekonomi Masa Depan
         </h1>
 
-        <p className="text-sm sm:text-base text-desa-muted leading-relaxed font-normal">
+        <p className="text-base sm:text-lg text-desa-muted leading-relaxed">
           Pasar Desa lahir dari inisiatif warga desa bersama BUMDes untuk menghubungkan karya otentik 5 sentra pengrajin Sumedang langsung dengan para penikmat produk lokal bermutu tinggi.
         </p>
 
@@ -68,16 +63,16 @@ export default function AboutVillagePage() {
       {/* Cultural Heritage & Philosophy */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white rounded-2xl p-6 sm:p-10 border border-desa-border shadow-xs">
         <div className="space-y-4">
-          <span className="text-xs font-bold uppercase tracking-wider text-desa-accent">
+          <span className="text-sm font-semibold text-desa-accent">
             Filosofi Budaya
           </span>
           <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
             Makna Garis Garis Lurik
           </h2>
-          <p className="text-xs sm:text-sm text-desa-muted leading-relaxed font-normal">
+          <p className="text-sm sm:text-base text-desa-muted leading-relaxed">
             Kata <strong>"Lurik"</strong> berakar dari kata <em>lorek</em> yang bermakna garis-garis sejajar penuntun arah. Motif ini melambangkan kesederhanaan hidup, keteguhan hati, kejujuran dalam berdagang, dan kesetaraan derajat antar sesama warga.
           </p>
-          <p className="text-xs sm:text-sm text-desa-muted leading-relaxed font-normal">
+          <p className="text-sm sm:text-base text-desa-muted leading-relaxed">
             Dalam identitas visual <strong>Pasar Desa</strong>, harmoni diwujudkan melalui perpaduan warna arang kayu alami, terakota tanah liat perajin, serta hijau lumut dedaunan sebagai lambang keselarasan antara alam dan karya tangan manusia.
           </p>
         </div>
@@ -88,7 +83,7 @@ export default function AboutVillagePage() {
             alt="Kain Tenun Lurik Asli Sumedang"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-5">
+          <div className="absolute inset-x-0 bottom-0 bg-desa-primary/80 flex items-end p-5">
             <span className="text-xs text-desa-light font-medium">
               Kain tenun lurik ATBM hasil karya tangan perajin desa Sumedang Utara
             </span>
@@ -99,7 +94,7 @@ export default function AboutVillagePage() {
       {/* 5 Kecamatan Craft Centers */}
       <div className="space-y-6">
         <div className="text-center max-w-xl mx-auto">
-          <span className="text-xs font-bold uppercase tracking-wider text-desa-highlight">
+          <span className="text-sm font-semibold text-desa-highlight">
             Sentra Produksi Wilayah
           </span>
           <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary mt-1">
@@ -109,8 +104,12 @@ export default function AboutVillagePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {kecamatanCenters.map((kecamatan, idx) => (
-            <div 
+            <motion.div 
               key={idx}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.07, duration: 0.4 }}
               className="bg-white rounded-xl overflow-hidden border border-desa-border hover:border-desa-primary/40 transition-colors flex flex-col justify-between"
             >
               <div>
@@ -125,7 +124,7 @@ export default function AboutVillagePage() {
                   <h3 className="font-heading font-bold text-base text-desa-primary">
                     {kecamatan.specialty}
                   </h3>
-                  <p className="text-xs text-desa-muted leading-relaxed font-normal">
+                  <p className="text-sm text-desa-muted leading-relaxed">
                     {kecamatan.desc}
                   </p>
                 </div>
@@ -144,7 +143,7 @@ export default function AboutVillagePage() {
                   <ArrowRight className="w-3.5 h-3.5 text-desa-accent" />
                 </button>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
