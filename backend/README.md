@@ -25,6 +25,7 @@ API berjalan di `http://127.0.0.1:8000/api`. Frontend sudah memakai alamat terse
 - `POST /api/auth/register` (Throttle: 10 req/menit)
 - `POST /api/auth/login` (Throttle: 10 req/menit)
 - `POST /api/orders` (Throttle: 5 req/menit)
+- `POST /api/chat/ai` (Asisten AI Desa - Google Gemini, Throttle: 15 req/menit)
 - `GET /api/categories`
 - `GET /api/shops`
 - `GET /api/products`

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ChatAiController;
 use App\Http\Controllers\Api\MarketplaceController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,7 @@ Route::middleware('throttle:10,1')->group(function () {
     Route::post('/auth/login', [AuthController::class, 'login']);
 });
 Route::middleware('throttle:5,1')->post('/orders', [MarketplaceController::class, 'storeOrder']);
+Route::middleware('throttle:15,1')->post('/chat/ai', [ChatAiController::class, 'handleChat']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/me', [AuthController::class, 'me']);

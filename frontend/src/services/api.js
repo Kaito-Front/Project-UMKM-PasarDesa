@@ -154,3 +154,8 @@ export const cancelOrder = orderId => request(`/orders/${orderId}`, {
 });
 
 export const fetchStats = () => request('/stats');
+
+export const sendAiChatMessage = (message, history = [], targetShopId = null) => request('/chat/ai', {
+  method: 'POST',
+  body: JSON.stringify({ message, history, targetShopId }),
+});

@@ -24,8 +24,14 @@ Aplikasi ini dibagi menjadi tiga modul (Role-based):
    - Moderasi produk dan manajemen kategori.
    - Laporan transaksi (Export CSV) dan broadcast pengumuman.
 
+4. **Asisten Cerdas Virtual Desa (AI-Powered)**
+   - Didukung oleh Google Gemini AI dengan integrasi Knowledge Base desa secara *real-time*.
+   - Mampu menjawab ketersediaan stok, rekomendasi toko pengrajin Sumedang, tarif kurir kilat desa, dan panduan belanja.
+   - Indikator mengetik responsif dan rekomendasi opsi cepat interaktif.
+
 ## Tech Stack
 - **Frontend:** React 19, Vite, Tailwind CSS, Framer Motion
+- **AI Engine:** Google Gemini (1.5 Flash), Light-RAG Context Injection
 - **PWA:** `vite-plugin-pwa`, Service Worker (Workbox precaching), Web Manifest
 - **Backend:** Laravel 13, MySQL
 - **Autentikasi & Keamanan:** Laravel Sanctum (Bearer Token), Rate Limiting (Throttle)

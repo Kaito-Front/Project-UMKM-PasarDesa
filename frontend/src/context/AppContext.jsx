@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { createOrder as createOrderRequest, createProduct as createProductRequest, fetchCategories, fetchCurrentUser, fetchOrders, fetchProducts, fetchShops, fetchStats, loginRequest, logoutRequest, registerRequest, updateOrderStatus as updateOrderStatusRequest, updateProductNumbers as updateProductNumbersRequest, updateProductVisibility, updateShop as updateShopRequest } from '../services/api';
+import { createOrder as createOrderRequest, createProduct as createProductRequest, fetchCategories, fetchCurrentUser, fetchOrders, fetchProducts, fetchShops, fetchStats, loginRequest, logoutRequest, registerRequest, sendAiChatMessage, updateOrderStatus as updateOrderStatusRequest, updateProductNumbers as updateProductNumbersRequest, updateProductVisibility, updateShop as updateShopRequest } from '../services/api';
 import { 
   PRODUCTS as INITIAL_PRODUCTS, 
   SHOPS as INITIAL_SHOPS, 
@@ -45,6 +45,7 @@ export function AppProvider({ children }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [checkoutDirectItem, setCheckoutDirectItem] = useState(null);
+  const [isAiTyping, setIsAiTyping] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -350,33 +351,57 @@ export function AppProvider({ children }) {
     handleSmartBotOrSellerReply(text.trim(), threadId);
   };
 
-  const handleSmartBotOrSellerReply = (query, threadId) => {
+  const handleSmartBotOrSellerReply = async (query, threadId) => {
+    setIsAiTyping(true);
+    const history = (chatThreads[threadId] || []).slice(-6).map(m => ({
+      sender: m.sender,
+      text: m.text,
+    }));
+
+    try {
+      const res = await sendAiChatMessage(query, history, threadId);
+      if (res?.reply) {
+        const isBot = threadId === 'general-bot';
+        const targetShop = shops.find(s => s.id === threadId);
+        const replyMsg = {
+          id: `${isBot ? 'bot' : 'sel'}-${Date.now()}`,
+          sender: isBot ? 'bot' : 'seller',
+          senderName: isBot ? 'Teh Sari (Asisten AI Desa)' : (targetShop?.owner || 'Admin Toko'),
+          text: res.reply,
+          time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+          quickOptions: res.quickOptions || (isBot ? ['Cek Ketersediaan Stok', 'Tanya Ongkir Kurir', 'Hubungkan ke Penjual'] : null)
+        };
+
+        setChatThreads(prev => ({
+          ...prev,
+          [threadId]: [...(prev[threadId] || []), replyMsg]
+        }));
+        return;
+      }
+    } catch (err) {
+      console.warn('AI Assistant API unavailable, fallback to local response:', err.message);
+    } finally {
+      setIsAiTyping(false);
+    }
+
     const lower = query.toLowerCase();
     if (threadId === 'general-bot') {
       setTimeout(() => {
-        let replyText = '';
-        let options = null;
+        let replyText = 'Terima kasih atas pesan Anda. Sebagai Asisten Virtual Desa, saya siap membantu mencari informasi produk UMKM, tarif kurir, atau menghubungkan langsung ke Admin Toko pengrajin.';
+        let options = ['Cek Ketersediaan Stok', 'Tanya Ongkir Kurir', 'Hubungkan ke Penjual'];
 
         if (lower.includes('stok') || lower.includes('ketersediaan') || lower.includes('barang')) {
           replyText = 'Untuk pengecekan ketersediaan stok produk secara akurat, Anda dapat melihat langsung di katalog desa atau kami hubungkan ke Admin Toko yang bersangkutan. Toko mana yang ingin Anda hubungi?';
           options = ['Griya Tenun Lurik Lestari', 'Kripik Tempe Bu Darmi', 'Madu Hutan Tanjungsari'];
         } else if (lower.includes('ongkir') || lower.includes('kirim') || lower.includes('kurir')) {
-          replyText = 'Pengiriman di wilayah Sumedang dilayani oleh Kurir Kilat Desa dengan tarif mulai Rp 5.000. Untuk ambil langsung di toko pengrajin tidak dikenakan biaya.';
-          options = ['Cek Ketersediaan Stok', 'Hubungkan ke Admin Toko', 'Cara Pembayaran'];
-        } else if (lower.includes('komplain') || lower.includes('keluhan') || lower.includes('rusak') || lower.includes('salah')) {
-          replyText = 'Kami siap menindaklanjuti kendala pesanan Anda. Tim pengawas BUMDes menjamin garansi penggantian produk 100% jika terjadi cacat atau salah kirim. Mohon sebutkan nomor pesanan atau hubungi admin toko terkait.';
-          options = ['Hubungkan ke Admin Toko', 'Layanan Pelanggan Desa'];
-        } else if (lower.includes('admin') || lower.includes('hubungkan') || lower.includes('penjual')) {
-          replyText = 'Baik, silakan pilih toko pengrajin yang ingin Anda tuju untuk membuka ruang pesan langsung dengan penjual.';
-          options = ['Toko Tenun Ibu Sumarsih', 'Kripik Tempe Bu Darmi', 'Madu Pak Joko'];
-        } else {
-          replyText = 'Terima kasih atas pesan Anda. Sebagai Asisten Virtual Desa, saya dapat membantu memberikan informasi produk UMKM, tarif kurir desa, atau menghubungkan langsung ke Admin Toko pengrajin.';
-          options = ['Cek Ketersediaan Stok', 'Tanya Ongkir & Kurir Sumedang', 'Hubungkan ke Admin Toko'];
+          replyText = 'Pengiriman di wilayah Sumedang dilayani oleh Kurir Kilat Desa dengan tarif flat Rp 5.000. Untuk ambil langsung di toko pengrajin tidak dikenakan biaya.';
+          options = ['Cek Ketersediaan Stok', 'Hubungkan ke Penjual', 'Cara Pembayaran'];
         }
 
         const botReply = {
           id: `bot-${Date.now()}`,
           sender: 'bot',
+          senderName: 'Asisten Virtual Desa',
           text: replyText,
           time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
           quickOptions: options
@@ -386,28 +411,17 @@ export function AppProvider({ children }) {
           ...prev,
           'general-bot': [...(prev['general-bot'] || []), botReply]
         }));
-      }, 700);
+      }, 500);
       return;
     }
+
     const targetShop = shops.find(s => s.id === threadId) || shops[0];
-
     setTimeout(() => {
-      let sellerReply = '';
-      if (lower.includes('ready') || lower.includes('stok') || lower.includes('ada')) {
-        sellerReply = `Halo kak! Alhamdulillah produk di toko kami ${targetShop.name} saat ini ready stock siap dikirim langsung hari ini. Ada rincian ukuran atau jumlah khusus yang diinginkan?`;
-      } else if (lower.includes('komplain') || lower.includes('rusak') || lower.includes('cacat') || lower.includes('pecah')) {
-        sellerReply = `Kami memohon maaf yang sebesar-besarnya atas ketidaknyamanan tersebut kak. Kepercayaan warga adalah amanah bagi kami. Mohon sertakan foto barang dan nomor pesanan, kami segera ganti produk yang baru tanpa biaya tambahan.`;
-      } else if (lower.includes('kustom') || lower.includes('pesan') || lower.includes('panjang') || lower.includes('warna')) {
-        sellerReply = `Tentu bisa kak! Sebagai pengrajin lokal, kami menerima pesanan kustom (motif, ukuran panjang, atau kemasan hampers). Silakan tambahkan catatan saat checkout ya kak.`;
-      } else {
-        sellerReply = `Terima kasih telah menghubungi ${targetShop.name}. Pesan Anda sudah kami terima dan siap kami layani dengan sepenuh hati. Silakan lakukan checkout atau tanyakan hal lain bila diperlukan.`;
-      }
-
       const replyMsg = {
         id: `sel-${Date.now()}`,
         sender: 'seller',
         senderName: targetShop.owner,
-        text: sellerReply,
+        text: `Halo kak! Terima kasih telah menghubungi ${targetShop.name}. Pesan Anda sudah kami terima dan siap kami layani dengan sepenuh hati. Silakan lakukan checkout atau tanyakan hal lain bila diperlukan.`,
         time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
       };
 
@@ -415,7 +429,7 @@ export function AppProvider({ children }) {
         ...prev,
         [threadId]: [...(prev[threadId] || []), replyMsg]
       }));
-    }, 900);
+    }, 600);
   };
   const connectToShopFromBot = (shopId) => {
     setIsConnectingSeller(true);
@@ -659,6 +673,7 @@ export function AppProvider({ children }) {
       sendChatMessage,
       connectToShopFromBot,
       isConnectingSeller,
+      isAiTyping,
       addProduct,
       toggleProductStatus,
       updateProductNumbers,

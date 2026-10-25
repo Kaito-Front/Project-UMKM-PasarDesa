@@ -5,18 +5,13 @@ import {
   X, 
   Send, 
   Bot, 
-  User, 
   Store, 
-  ShieldCheck, 
   ChevronRight, 
-  HelpCircle, 
-  AlertCircle,
-  PackageCheck,
-  RotateCcw,
   Sparkles
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import LurikDivider from './LurikDivider';
+import FormattedChatMessage from './FormattedChatMessage';
 
 export default function ChatWidget() {
   const { 
@@ -30,8 +25,8 @@ export default function ChatWidget() {
     sendChatMessage, 
     connectToShopFromBot,
     isConnectingSeller,
-    shops,
-    viewProduct
+    isAiTyping,
+    shops
   } = useApp();
 
   const [inputMessage, setInputMessage] = useState('');
@@ -146,12 +141,12 @@ export default function ChatWidget() {
                   </div>
 
                   <div>
-                    <h4 className="font-heading text-sm font-bold truncate max-w-[200px]">
-                      {activeChatShopId === 'general-bot' ? 'Asisten Virtual Desa' : currentShop?.name}
+                    <h4 className="font-heading text-sm font-bold truncate max-w-[200px] flex items-center gap-1.5">
+                      {activeChatShopId === 'general-bot' ? 'Asisten AI Desa ✨' : currentShop?.name}
                     </h4>
                     <p className="text-[11px] text-desa-light/70 truncate max-w-[200px]">
                       {activeChatShopId === 'general-bot' 
-                        ? 'Bot Layanan & Informasi Warga' 
+                        ? 'Didukung Google Gemini AI' 
                         : `Admin: ${currentShop?.owner} (${currentShop?.kecamatan.split(' (')[0]})`}
                     </p>
                   </div>
@@ -223,7 +218,7 @@ export default function ChatWidget() {
                       >
                         <div className="truncate">
                           <p className="font-semibold text-desa-primary truncate">{s.name}</p>
-                          <p className="text-[10px] text-desa-text/60 truncate">{s.owner} • {s.kecamatan}</p>
+                          <p className="text-[10px] text-desa-text/60 truncate">{s.owner} â€¢ {s.kecamatan}</p>
                         </div>
                         <ChevronRight className="w-3.5 h-3.5 text-desa-accent shrink-0" />
                       </button>
@@ -285,44 +280,56 @@ export default function ChatWidget() {
                 return (
                   <div
                     key={msg.id}
-                    className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}
+                    className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} w-full`}
                   >
-                    
                     {!isUser && (
-                      <span className="text-[10px] font-semibold text-desa-text/60 mb-1 ml-1">
-                        {isBot ? 'Asisten Virtual Desa' : `${msg.senderName || 'Admin Toko'}`}
-                      </span>
+                      <div className="flex items-center gap-1.5 mb-1 ml-1">
+                        {isBot ? (
+                          <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-desa-primary">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-200" />
+                            <span>Teh Sari</span>
+                            <span className="text-[9px] font-medium text-desa-accent bg-desa-accent/10 px-1.5 py-0.5 rounded-full border border-desa-accent/20">
+                              Asisten AI
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="inline-flex items-center gap-1 text-[11px] font-semibold text-desa-primary">
+                            <Store className="w-3.5 h-3.5 text-desa-accent" />
+                            <span>{msg.senderName || 'Admin Toko'}</span>
+                          </div>
+                        )}
+                      </div>
                     )}
 
                     <div
-                      className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs shadow-xs leading-relaxed ${
+                      className={`max-w-[88%] rounded-2xl px-3.5 py-3 text-xs shadow-xs leading-relaxed transition-all ${
                         isUser
-                          ? 'bg-desa-accent text-white rounded-br-xs'
+                          ? 'bg-desa-accent text-white rounded-br-xs shadow-sm'
                           : isSeller
-                          ? 'bg-white border border-desa-accent/30 text-desa-primary rounded-bl-xs'
-                          : 'bg-white border border-desa-primary/10 text-desa-primary rounded-bl-xs'
+                          ? 'bg-white border border-desa-accent/30 text-desa-primary rounded-tl-xs shadow-xs'
+                          : 'bg-white border border-desa-primary/10 text-desa-primary rounded-tl-xs shadow-xs'
                       }`}
                     >
-                      <p>{msg.text}</p>
-                      <span
-                        className={`text-[9px] block text-right mt-1 ${
-                          isUser ? 'text-white/70' : 'text-desa-text/50'
+                      <FormattedChatMessage text={msg.text} isUser={isUser} />
+                      <div
+                        className={`text-[9.5px] mt-2 pt-1 border-t flex items-center justify-end ${
+                          isUser ? 'border-white/20 text-white/70' : 'border-desa-primary/5 text-desa-muted/70'
                         }`}
                       >
-                        {msg.time}
-                      </span>
+                        <span>{msg.time}</span>
+                      </div>
                     </div>
 
-                    
                     {msg.quickOptions && msg.quickOptions.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mt-2 max-w-[90%]">
+                      <div className="flex flex-wrap gap-1.5 mt-2 max-w-[92%] pl-1">
                         {msg.quickOptions.map((opt, i) => (
                           <button
                             key={i}
                             onClick={() => handleQuickOptionClick(opt)}
-                            className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white border border-desa-accent/40 text-desa-accent hover:bg-desa-accent hover:text-white transition-all shadow-xs"
+                            className="px-2.5 py-1 rounded-full text-[10.5px] font-medium bg-white border border-desa-accent/30 text-desa-accent hover:bg-desa-accent hover:text-white transition-all shadow-xs flex items-center gap-1 active:scale-95"
                           >
-                            {opt}
+                            <span>{opt}</span>
+                            <ChevronRight className="w-3 h-3 opacity-60" />
                           </button>
                         ))}
                       </div>
@@ -330,6 +337,22 @@ export default function ChatWidget() {
                   </div>
                 );
               })}
+
+              {isAiTyping && (
+                <div className="flex flex-col items-start animate-fadeIn">
+                  <span className="text-[10px] font-semibold text-desa-accent mb-1 ml-1 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-desa-accent animate-spin" />
+                    Teh Sari sedang berpikir...
+                  </span>
+                  <div className="bg-white border border-desa-primary/10 rounded-2xl rounded-bl-xs px-3.5 py-2.5 shadow-xs">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-desa-accent animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-2 h-2 rounded-full bg-desa-accent animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-2 h-2 rounded-full bg-desa-accent animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <div ref={messagesEndRef} />
             </div>
