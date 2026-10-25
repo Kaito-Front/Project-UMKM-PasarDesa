@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { createOrder as createOrderRequest, createProduct as createProductRequest, fetchCategories, fetchCurrentUser, fetchOrders, fetchProducts, fetchShops, fetchStats, loginRequest, logoutRequest, registerRequest, updateOrderStatus as updateOrderStatusRequest, updateProductNumbers as updateProductNumbersRequest, updateProductVisibility } from '../services/api';
+import { createOrder as createOrderRequest, createProduct as createProductRequest, fetchCategories, fetchCurrentUser, fetchOrders, fetchProducts, fetchShops, fetchStats, loginRequest, logoutRequest, registerRequest, updateOrderStatus as updateOrderStatusRequest, updateProductNumbers as updateProductNumbersRequest, updateProductVisibility, updateShop as updateShopRequest } from '../services/api';
 import { 
   PRODUCTS as INITIAL_PRODUCTS, 
   SHOPS as INITIAL_SHOPS, 
@@ -110,13 +110,7 @@ export function AppProvider({ children }) {
       }
       return user;
     } catch (apiError) {
-      const foundUser = users.find(u => (u.email?.toLowerCase() === identifier?.toLowerCase() || u.phone === identifier));
-      if (foundUser && (password === 'admin123' || password === '123456' || password === 'password123' || foundUser.role === 'admin')) {
-        setCurrentUser(foundUser);
-        setIsLoggedIn(true);
-        return foundUser;
-      }
-      throw apiError;
+      throw new Error(apiError?.message || 'Gagal masuk. Periksa kembali koneksi ke backend API atau kredensial Anda.');
     }
   };
   const register = async (data) => {
@@ -565,9 +559,19 @@ export function AppProvider({ children }) {
       return true;
     }
   };
-  const verifyShop = (shopId, newStatus) => {
+  const verifyShop = async (shopId, newStatus) => {
     setShops(prev => prev.map(s => s.id === shopId ? { ...s, status: newStatus, verified: newStatus === 'aktif' } : s));
-    triggerNotification('Verifikasi UMKM', `Status UMKM telah diubah menjadi "${newStatus}".`);
+    try {
+      await updateShopRequest(shopId, {
+        status: newStatus,
+        verified: newStatus === 'aktif'
+      });
+      fetchShops().then(setShops).catch(() => {});
+      triggerNotification('Verifikasi UMKM', `Status UMKM telah diubah menjadi "${newStatus}".`);
+    } catch (error) {
+      console.warn('Gagal sinkronisasi status toko ke backend API:', error.message);
+      triggerNotification('Verifikasi UMKM (Lokal)', `Status UMKM diperbarui di memori lokal: "${newStatus}".`);
+    }
   };
   const broadcastAnnouncement = (ann) => {
     const newAnn = {

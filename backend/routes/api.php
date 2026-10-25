@@ -11,9 +11,11 @@ Route::get('/stats', [MarketplaceController::class, 'stats']);
 Route::get('/products', [MarketplaceController::class, 'products']);
 Route::get('/products/{product}', [MarketplaceController::class, 'showProduct']);
 
-Route::post('/auth/register', [AuthController::class, 'register']);
-Route::post('/auth/login', [AuthController::class, 'login']);
-Route::post('/orders', [MarketplaceController::class, 'storeOrder']);
+Route::middleware('throttle:10,1')->group(function () {
+    Route::post('/auth/register', [AuthController::class, 'register']);
+    Route::post('/auth/login', [AuthController::class, 'login']);
+});
+Route::middleware('throttle:5,1')->post('/orders', [MarketplaceController::class, 'storeOrder']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/me', [AuthController::class, 'me']);

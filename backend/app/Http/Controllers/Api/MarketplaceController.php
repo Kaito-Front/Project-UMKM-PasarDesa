@@ -175,7 +175,7 @@ class MarketplaceController extends Controller
             'description' => ['nullable', 'string'],
             'avatar' => ['nullable', 'string'],
             'banner' => ['nullable', 'string'],
-            'status' => ['sometimes', Rule::in(['aktif', 'nonaktif', 'menunggu'])],
+            'status' => ['sometimes', Rule::in(['aktif', 'nonaktif', 'menunggu', 'menunggu_verifikasi', 'ditolak'])],
             'verified' => ['sometimes', 'boolean'],
         ]);
 
@@ -335,6 +335,10 @@ class MarketplaceController extends Controller
             'reviews' => ['nullable', 'array'],
         ]);
 
+        if ($user->role !== 'admin') {
+            unset($validated['reviews']);
+        }
+
         $data = [];
         if (isset($validated['name'])) $data['name'] = $validated['name'];
         if (isset($validated['price'])) $data['price'] = $validated['price'];
@@ -380,22 +384,18 @@ class MarketplaceController extends Controller
         $query = Order::query()->latest();
 
         if ($user->role === 'admin') {
-        } elseif (in_array($user->role, ['penjual', 'keduanya'], true) && ($user->shop_name || $user->shop_id)) {
+        } elseif (in_array($user->role, ['penjual', 'keduanya'], true) && $user->shop_id) {
             $query->where(function ($q) use ($user) {
-                if ($user->shop_id) {
-                    $q->where('shop_id', $user->shop_id)
-                        ->orWhere('items', 'like', '%"shopId":"'.$user->shop_id.'"%')
-                        ->orWhere('items', 'like', '%"shop_id":"'.$user->shop_id.'"%');
-                }
-                if ($user->shop_name) {
-                    $q->orWhere('shop_name', 'like', '%'.$user->shop_name.'%');
-                }
+                $q->where('shop_id', $user->shop_id)
+                    ->orWhere('items', 'like', '%"shopId":"'.$user->shop_id.'"%')
+                    ->orWhere('items', 'like', '%"shop_id":"'.$user->shop_id.'"%');
             });
         } else {
             $query->where(function ($q) use ($user) {
-                $q->where('user_id', $user->id)
-                    ->orWhere('phone', $user->phone)
-                    ->orWhere('buyer_name', $user->name);
+                $q->where('user_id', $user->id);
+                if ($user->phone) {
+                    $q->orWhere('phone', $user->phone);
+                }
             });
         }
 
@@ -409,12 +409,12 @@ class MarketplaceController extends Controller
     public function showOrder(Request $request, Order $order): JsonResponse
     {
         $user = $request->user();
-        $isOwnerSeller = ($user->shop_id && $order->shop_id === $user->shop_id)
-            || ($user->shop_name && str_contains($order->shop_name, $user->shop_name))
-            || ($user->shop_id && str_contains(json_encode($order->items), (string) $user->shop_id));
+        $isOwnerSeller = $user->shop_id && (
+            $order->shop_id === $user->shop_id
+            || str_contains(json_encode($order->items), (string) $user->shop_id)
+        );
         $isBuyer = ($order->user_id && $order->user_id === $user->id)
-            || $order->phone === $user->phone
-            || $order->buyer_name === $user->name;
+            || ($user->phone && $order->phone === $user->phone);
 
         abort_unless($user->role === 'admin' || $isOwnerSeller || $isBuyer, 403, 'Anda tidak memiliki hak akses melihat pesanan ini.');
 
@@ -558,7 +558,7 @@ class MarketplaceController extends Controller
     public function destroyOrder(Request $request, Order $order): JsonResponse
     {
         $user = $request->user();
-        $isBuyer = ($order->user_id && $order->user_id === $user->id) || $order->phone === $user->phone;
+        $isBuyer = ($order->user_id && $order->user_id === $user->id) || ($user->phone && $order->phone === $user->phone);
         $isAdmin = $user->role === 'admin';
 
         abort_unless($isAdmin || ($isBuyer && in_array($order->status, ['diproses', 'ditolak'], true)), 403, 'Pesanan tidak dapat dibatalkan atau dihapus.');

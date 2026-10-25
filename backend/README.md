@@ -20,18 +20,35 @@ Jalankan perintah PHP dan Composer dari Laragon Terminal agar keduanya tersedia 
 
 API berjalan di `http://127.0.0.1:8000/api`. Frontend sudah memakai alamat tersebut secara default. Atur `VITE_API_URL` di `frontend/.env` bila alamat API berbeda.
 
-## Endpoint
+## Endpoint Utama
 
+- `POST /api/auth/register` (Throttle: 10 req/menit)
+- `POST /api/auth/login` (Throttle: 10 req/menit)
+- `POST /api/orders` (Throttle: 5 req/menit)
 - `GET /api/categories`
 - `GET /api/shops`
 - `GET /api/products`
 - `GET /api/products/{id}`
-- `POST /api/products`
-- `PATCH /api/products/{id}/visibility`
-- `GET /api/orders`
-- `POST /api/orders`
-- `PATCH /api/orders/{id}/status`
+- `GET /api/stats`
 
-Data kategori, toko, produk, dan pesanan awal dibuat oleh `php artisan db:seed`. Checkout menghitung total dari harga produk dalam database dan mengurangi stok dalam satu transaksi database.
+### Endpoint Terproteksi (Bearer Token - Laravel Sanctum)
 
-Endpoint perubahan data belum memakai autentikasi; gunakan untuk demo lokal sampai login API ditambahkan.
+- `GET /api/auth/me`
+- `PATCH /api/auth/profile`
+- `PATCH /api/auth/password` (Otomatis mencabut seluruh sesi lain)
+- `POST /api/auth/logout`
+- `POST /api/products` (Seller/Admin)
+- `PUT/PATCH /api/products/{id}` (Seller/Admin)
+- `PATCH /api/products/{id}/visibility` (Seller/Admin)
+- `DELETE /api/products/{id}` (Seller/Admin)
+- `PATCH /api/shops/{id}` (Owner/Admin)
+- `GET /api/orders` (Role filtered - bebas IDOR)
+- `GET /api/orders/{id}` (Strict owner/buyer validation)
+- `PATCH /api/orders/{id}/status` (Seller/Admin)
+
+## Akun Bawaan (Database Seeder)
+
+| Peran | Identifier (Email / No HP) | Kata Sandi Default | Sumber Konfigurasi |
+| :--- | :--- | :--- | :--- |
+| **Admin Desa** | `admin@pasardesa.go.id` / `081122334455` | `DesaMandiri@2026!` | `ADMIN_PASSWORD` di `.env` |
+| **Penjual (Demo)** | `sumarsih@pasardesa.id` / `081234567890` | `PasarLurik@2026!` | `DEMO_SELLER_PASSWORD` di `.env` |

@@ -40,10 +40,16 @@ export const updateProfile = data => request('/auth/profile', {
   body: JSON.stringify(data),
 });
 
-export const updatePassword = (current_password, new_password) => request('/auth/password', {
-  method: 'PATCH',
-  body: JSON.stringify({ current_password, new_password }),
-});
+export async function updatePassword(current_password, new_password) {
+  const result = await request('/auth/password', {
+    method: 'PATCH',
+    body: JSON.stringify({ current_password, new_password }),
+  });
+  if (result?.token) {
+    localStorage.setItem('pasardesa_token', result.token);
+  }
+  return result;
+}
 
 export async function fetchCategories() {
   const categories = await request('/categories');

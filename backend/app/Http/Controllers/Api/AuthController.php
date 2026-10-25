@@ -134,7 +134,16 @@ class AuthController extends Controller
             'password' => $data['new_password'],
         ]);
 
-        return response()->json(['message' => 'Kata sandi berhasil diperbarui.']);
+        // Revoke all existing tokens across all devices for security
+        $user->tokens()->delete();
+
+        // Issue a fresh token for this current session
+        $newToken = $user->createToken('frontend')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Kata sandi berhasil diperbarui. Sesi pada perangkat lain telah diakhiri demi keamanan.',
+            'token' => $newToken,
+        ]);
     }
 
     public function logout(Request $request): JsonResponse
