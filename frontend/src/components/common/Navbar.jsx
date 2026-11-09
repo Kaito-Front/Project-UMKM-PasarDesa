@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
-import LurikDivider from './LurikDivider';
 import { 
   Store, 
   User, 
@@ -13,7 +12,8 @@ import {
   HelpCircle,
   Phone,
   Clock,
-  ShieldCheck
+  ShieldCheck,
+  ChevronRight
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -45,133 +45,139 @@ export default function Navbar() {
 
   return (
     <>
-      <header className={`sticky top-0 z-40 transition-all duration-200 ${
-        isScrolled 
-          ? 'bg-desa-bg/95 backdrop-blur-md border-b border-desa-border shadow-xs' 
-          : 'bg-desa-bg border-b border-desa-border/50'
-      }`}>
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-18">
-            
-            {/* Brand Logo */}
+      {/* Floating Pill Header Bar (Reference: Shoe Product Showcase Hero) */}
+      <header className="sticky top-0 z-40 transition-all duration-300 py-3 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-screen-2xl mx-auto">
+          <nav 
+            className={`transition-all duration-300 rounded-full px-4 sm:px-6 py-2.5 flex items-center justify-between border ${
+              isScrolled 
+                ? 'bg-white/90 backdrop-blur-md border-desa-border shadow-md' 
+                : 'bg-white/75 backdrop-blur-sm border-desa-border/70 shadow-xs'
+            }`}
+          >
+            {/* Brand Pill (Left) */}
             <motion.div 
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => handleNavClick('home')}
-              className="flex items-center gap-3 cursor-pointer group select-none"
+              className="flex items-center gap-2.5 cursor-pointer group select-none"
             >
-              <div className="w-10 h-10 rounded-xl bg-desa-primary text-desa-light flex items-center justify-center shadow-xs group-hover:bg-desa-accent transition-colors duration-200">
-                <Store className="w-5 h-5 text-desa-light" />
+              <div className="w-9 h-9 rounded-full bg-desa-primary text-white flex items-center justify-center shadow-xs transition-colors duration-200 group-hover:bg-desa-accent group-hover:text-desa-primary">
+                <Store className="w-4 h-4 transition-transform group-hover:scale-110" />
               </div>
               <div className="flex flex-col">
-                <span className="font-heading text-xl font-bold tracking-tight text-desa-primary leading-tight">
-                  Pasar Desa
-                </span>
-                <span className="text-[11px] text-desa-muted font-medium">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-heading text-base font-bold tracking-tight text-desa-primary leading-none">
+                    Pasar Desa
+                  </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-desa-accent hidden sm:inline-block" />
+                </div>
+                <span className="text-[10px] text-desa-muted font-medium tracking-wide leading-tight">
                   Sumedang Mandiri
                 </span>
               </div>
             </motion.div>
 
-            {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center gap-8">
+            {/* Desktop Navigation Links (Center Capsule) */}
+            <div className="hidden lg:flex items-center bg-desa-surface/80 rounded-full p-1 border border-desa-border/60">
               <button
                 onClick={() => handleNavClick('home')}
-                className={`text-[15px] tracking-tight transition-colors py-1 relative ${
+                className={`relative px-4 py-1.5 rounded-full text-xs font-semibold tracking-tight transition-all ${
                   webPage === 'home'
-                    ? 'text-desa-accent font-semibold'
-                    : 'text-desa-text hover:text-desa-accent font-medium'
+                    ? 'text-white'
+                    : 'text-desa-muted hover:text-desa-primary'
                 }`}
               >
-                Beranda
                 {webPage === 'home' && (
-                  <motion.span 
-                    layoutId="activeNavUnderline"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-desa-accent rounded-full"
-                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                  <motion.div 
+                    layoutId="activeNavPill"
+                    className="absolute inset-0 bg-desa-primary rounded-full shadow-xs"
+                    transition={{ type: 'spring', stiffness: 450, damping: 32 }}
                   />
                 )}
+                <span className="relative z-10">Beranda</span>
               </button>
 
               <button
                 onClick={() => handleNavClick('catalog')}
-                className={`text-[15px] tracking-tight transition-colors py-1 relative ${
+                className={`relative px-4 py-1.5 rounded-full text-xs font-semibold tracking-tight transition-all ${
                   webPage === 'catalog'
-                    ? 'text-desa-accent font-semibold'
-                    : 'text-desa-text hover:text-desa-accent font-medium'
+                    ? 'text-white'
+                    : 'text-desa-muted hover:text-desa-primary'
                 }`}
               >
-                Katalog Produk
                 {webPage === 'catalog' && (
-                  <motion.span 
-                    layoutId="activeNavUnderline"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-desa-accent rounded-full"
-                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                  <motion.div 
+                    layoutId="activeNavPill"
+                    className="absolute inset-0 bg-desa-primary rounded-full shadow-xs"
+                    transition={{ type: 'spring', stiffness: 450, damping: 32 }}
                   />
                 )}
+                <span className="relative z-10">Katalog Produk</span>
               </button>
 
               <button
                 onClick={() => handleNavClick('about')}
-                className={`text-[15px] tracking-tight transition-colors py-1 relative ${
+                className={`relative px-4 py-1.5 rounded-full text-xs font-semibold tracking-tight transition-all ${
                   webPage === 'about'
-                    ? 'text-desa-accent font-semibold'
-                    : 'text-desa-text hover:text-desa-accent font-medium'
+                    ? 'text-white'
+                    : 'text-desa-muted hover:text-desa-primary'
                 }`}
               >
-                Tentang Desa
                 {webPage === 'about' && (
-                  <motion.span 
-                    layoutId="activeNavUnderline"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-desa-accent rounded-full"
-                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                  <motion.div 
+                    layoutId="activeNavPill"
+                    className="absolute inset-0 bg-desa-primary rounded-full shadow-xs"
+                    transition={{ type: 'spring', stiffness: 450, damping: 32 }}
                   />
                 )}
+                <span className="relative z-10">Tentang Desa</span>
               </button>
 
               <button
                 onClick={() => setHelpModalOpen(true)}
-                className="text-[15px] font-medium text-desa-muted hover:text-desa-accent transition-colors"
+                className="px-3.5 py-1.5 rounded-full text-xs font-medium text-desa-muted hover:text-desa-primary transition-colors"
               >
-                Bantuan & Layanan
+                Bantuan
               </button>
-            </nav>
+            </div>
 
-            {/* Right Action Icons & Controls */}
-            <div className="hidden lg:flex items-center gap-3">
+            {/* Right Action Icons & Controls (Right Pill Group) */}
+            <div className="hidden lg:flex items-center gap-2">
               
               {/* PWA Mode Trigger */}
               <motion.button
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => setCurrentView('mobile')}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-desa-muted hover:text-desa-primary hover:bg-black/5 transition-all"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-desa-muted hover:text-desa-primary hover:bg-desa-surface transition-all border border-transparent hover:border-desa-border/70"
                 title="Buka Pratinjau Mobile PWA"
               >
-                <Smartphone className="w-3.5 h-3.5 text-desa-highlight" />
-                <span>Versi Mobile</span>
+                <Smartphone className="w-3.5 h-3.5 text-desa-primary" />
+                <span>PWA Mobile</span>
               </motion.button>
 
-              <div className="h-4 w-px bg-desa-border" />
+              <div className="h-4 w-px bg-desa-border/80 mx-1" />
 
               {/* Chat Button */}
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.06 }}
                 whileTap={{ scale: 0.94 }}
                 onClick={() => setIsChatOpen(true)}
-                className="relative p-2 rounded-lg text-desa-primary hover:bg-black/5 transition-colors"
-                title="Chat Layanan Desa & Toko"
-                aria-label="Chat Layanan Desa"
+                className="relative p-2 rounded-full text-desa-primary hover:bg-desa-surface transition-colors border border-transparent hover:border-desa-border/70"
+                title="Chat Asisten Desa & Toko"
+                aria-label="Chat Asisten Desa"
               >
                 <MessageSquare className="w-4 h-4" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-desa-accent rounded-full" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-desa-accent rounded-full ring-2 ring-white" />
               </motion.button>
 
-              {/* Cart Button with Animated Bounce Pop on Count Change */}
+              {/* Cart Button with Sunbeam Yellow Count Badge */}
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.06 }}
                 whileTap={{ scale: 0.94 }}
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2 rounded-lg text-desa-primary hover:bg-black/5 transition-colors"
+                className="relative p-2 rounded-full text-desa-primary hover:bg-desa-surface transition-colors border border-transparent hover:border-desa-border/70"
                 title="Keranjang Belanja"
                 aria-label="Keranjang Belanja"
               >
@@ -179,10 +185,10 @@ export default function Navbar() {
                 {cartCount > 0 && (
                   <motion.span 
                     key={cartCount}
-                    initial={{ scale: 0.4, rotate: -10 }}
-                    animate={{ scale: [1, 1.3, 0.95, 1], rotate: [0, -6, 6, 0] }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 18 }}
-                    className="absolute top-0.5 right-0.5 min-w-4 h-4 px-1 bg-desa-accent text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-xs"
+                    initial={{ scale: 0.4 }}
+                    animate={{ scale: [1, 1.25, 1] }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+                    className="absolute -top-1 -right-1 min-w-4.5 h-4.5 px-1 bg-desa-accent text-desa-primary text-[10px] font-bold rounded-full flex items-center justify-center shadow-xs ring-2 ring-white"
                   >
                     {cartCount}
                   </motion.span>
@@ -191,27 +197,27 @@ export default function Navbar() {
 
               {/* User Account / Auth Button */}
               {isLoggedIn ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 ml-1">
                   {currentUser?.role === 'admin' && (
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.96 }}
                       onClick={() => setCurrentView('admin')}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-desa-primary text-white text-xs font-semibold shadow-xs hover:bg-desa-accent transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-desa-primary text-white text-xs font-semibold shadow-xs hover:bg-desa-primary/90 transition-colors"
                       title="Buka Dashboard Admin"
                     >
                       <Store className="w-3.5 h-3.5 text-desa-accent" />
-                      <span>Panel Admin</span>
+                      <span>Admin</span>
                     </motion.button>
                   )}
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.96 }}
                     onClick={() => logout()}
-                    className="flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-lg border border-desa-border bg-white text-desa-primary text-xs font-semibold hover:border-desa-primary/40 transition-colors shadow-2xs"
+                    className="flex items-center gap-1.5 pl-3 pr-3.5 py-1.5 rounded-full border border-desa-border bg-desa-surface text-desa-primary text-xs font-semibold hover:border-desa-primary/40 transition-colors shadow-2xs"
                   >
-                    <User className="w-3.5 h-3.5 text-desa-accent" />
-                    <span>{currentUser ? currentUser.name.split(' ')[0] : 'Akun'} (Keluar)</span>
+                    <User className="w-3.5 h-3.5 text-desa-muted" />
+                    <span>{currentUser ? currentUser.name.split(' ')[0] : 'Akun'}</span>
                   </motion.button>
                 </div>
               ) : (
@@ -219,10 +225,10 @@ export default function Navbar() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => handleNavClick('auth')}
-                  className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-desa-primary text-desa-light text-xs font-semibold hover:bg-desa-primary/90 transition-all shadow-xs"
+                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-desa-primary text-white text-xs font-semibold hover:bg-desa-primary/90 transition-all shadow-xs ml-1"
                 >
-                  <User className="w-3.5 h-3.5" />
-                  <span>Masuk / Daftar</span>
+                  <User className="w-3.5 h-3.5 text-desa-accent" />
+                  <span>Masuk</span>
                 </motion.button>
               )}
             </div>
@@ -232,17 +238,16 @@ export default function Navbar() {
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2 text-desa-primary hover:bg-black/5 rounded-lg transition-colors"
+                className="relative p-2 text-desa-primary hover:bg-black/5 rounded-full transition-colors"
                 aria-label="Buka Keranjang"
               >
                 <ShoppingCart className="w-5 h-5" />
                 {cartCount > 0 && (
                   <motion.span 
                     key={cartCount}
-                    initial={{ scale: 0.4, rotate: -10 }}
-                    animate={{ scale: [1, 1.3, 0.95, 1], rotate: [0, -6, 6, 0] }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 18 }}
-                    className="absolute top-0.5 right-0.5 min-w-4 h-4 px-1 bg-desa-accent text-white text-[9px] font-bold rounded-full flex items-center justify-center"
+                    initial={{ scale: 0.4 }}
+                    animate={{ scale: [1, 1.25, 1] }}
+                    className="absolute top-0 right-0 min-w-4 h-4 px-1 bg-desa-accent text-desa-primary text-[9px] font-bold rounded-full flex items-center justify-center ring-2 ring-white"
                   >
                     {cartCount}
                   </motion.span>
@@ -252,48 +257,46 @@ export default function Navbar() {
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-desa-primary hover:bg-black/5 rounded-lg transition-colors"
+                className="p-2 text-desa-primary hover:bg-black/5 rounded-full transition-colors"
                 aria-label="Toggle Menu"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </motion.button>
             </div>
-          </div>
+          </nav>
         </div>
-
-        <LurikDivider variant="dark" height="1px" />
 
         {/* Mobile Navigation Drawer */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div 
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25 }}
-              className="lg:hidden bg-desa-bg border-b border-desa-border px-4 pt-3 pb-6 space-y-3 overflow-hidden"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="lg:hidden mt-2 bg-white/95 backdrop-blur-md border border-desa-border rounded-2xl px-4 pt-3 pb-5 space-y-3 shadow-lg overflow-hidden"
             >
               <div className="flex flex-col gap-1">
                 <button
                   onClick={() => handleNavClick('home')}
-                  className={`text-left px-3 py-2.5 rounded-lg font-medium text-sm ${
-                    webPage === 'home' ? 'bg-desa-primary text-desa-light' : 'text-desa-text hover:bg-black/5'
+                  className={`text-left px-3 py-2 rounded-xl font-medium text-xs ${
+                    webPage === 'home' ? 'bg-desa-primary text-white font-semibold' : 'text-desa-text hover:bg-desa-surface'
                   }`}
                 >
                   Beranda
                 </button>
                 <button
                   onClick={() => handleNavClick('catalog')}
-                  className={`text-left px-3 py-2.5 rounded-lg font-medium text-sm ${
-                    webPage === 'catalog' ? 'bg-desa-primary text-desa-light' : 'text-desa-text hover:bg-black/5'
+                  className={`text-left px-3 py-2 rounded-xl font-medium text-xs ${
+                    webPage === 'catalog' ? 'bg-desa-primary text-white font-semibold' : 'text-desa-text hover:bg-desa-surface'
                   }`}
                 >
                   Katalog Produk
                 </button>
                 <button
                   onClick={() => handleNavClick('about')}
-                  className={`text-left px-3 py-2.5 rounded-lg font-medium text-sm ${
-                    webPage === 'about' ? 'bg-desa-primary text-desa-light' : 'text-desa-text hover:bg-black/5'
+                  className={`text-left px-3 py-2 rounded-xl font-medium text-xs ${
+                    webPage === 'about' ? 'bg-desa-primary text-white font-semibold' : 'text-desa-text hover:bg-desa-surface'
                   }`}
                 >
                   Tentang Desa
@@ -303,115 +306,126 @@ export default function Navbar() {
                     setHelpModalOpen(true);
                     setMobileMenuOpen(false);
                   }}
-                  className="text-left px-3 py-2.5 rounded-lg font-medium text-sm text-desa-muted hover:bg-black/5"
+                  className="text-left px-3 py-2 rounded-xl font-medium text-xs text-desa-muted hover:bg-desa-surface"
                 >
                   Bantuan & Layanan
                 </button>
               </div>
 
-              <div className="pt-3 border-t border-desa-border flex flex-col gap-2">
-                {currentUser?.role === 'admin' && (
-                  <button
-                    onClick={() => {
-                      setCurrentView('admin');
-                      setMobileMenuOpen(false);
-                    }}
-                    className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg text-xs font-semibold bg-desa-primary text-white shadow-xs"
-                  >
-                    <Store className="w-4 h-4 text-desa-accent" />
-                    <span>Buka Panel Admin BUMDes</span>
-                  </button>
-                )}
+              <div className="pt-2 border-t border-desa-border flex flex-col gap-2">
                 <button
                   onClick={() => {
                     setCurrentView('mobile');
                     setMobileMenuOpen(false);
                   }}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg text-xs font-semibold border border-desa-border bg-white text-desa-primary"
+                  className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-desa-surface text-desa-primary text-xs font-semibold border border-desa-border"
                 >
-                  <Smartphone className="w-4 h-4 text-desa-highlight" />
-                  <span>Buka Mode Aplikasi Mobile (PWA)</span>
+                  <Smartphone className="w-4 h-4 text-desa-primary" />
+                  <span>Buka Mode Mobile PWA</span>
                 </button>
 
                 <button
-                  onClick={() => handleNavClick('auth')}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg text-xs font-semibold bg-desa-primary text-desa-light shadow-xs"
+                  onClick={() => {
+                    setIsChatOpen(true);
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-desa-surface text-desa-primary text-xs font-semibold border border-desa-border"
                 >
-                  <User className="w-4 h-4" />
-                  <span>{isLoggedIn ? 'Keluar dari Akun' : 'Masuk / Daftar Akun'}</span>
+                  <MessageSquare className="w-4 h-4 text-desa-accent" />
+                  <span>Chat Asisten Virtual Desa</span>
                 </button>
+
+                {isLoggedIn ? (
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full py-2 rounded-xl bg-desa-surface text-desa-muted text-xs font-semibold border border-desa-border hover:text-desa-primary"
+                  >
+                    Keluar ({currentUser?.name.split(' ')[0]})
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleNavClick('auth')}
+                    className="w-full py-2.5 rounded-xl bg-desa-primary text-white text-xs font-semibold hover:bg-desa-primary/90 flex items-center justify-center gap-2 shadow-xs"
+                  >
+                    <User className="w-3.5 h-3.5 text-desa-accent" />
+                    <span>Masuk / Daftar Akun</span>
+                  </button>
+                )}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </header>
 
-      {/* Clean Help Modal */}
+      {/* Help Modal */}
       <AnimatePresence>
         {helpModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setHelpModalOpen(false)}
-              className="fixed inset-0 bg-desa-primary/50 backdrop-blur-xs"
-            />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-desa-primary/60 backdrop-blur-xs">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-              className="relative w-full max-w-md bg-white rounded-2xl p-6 border border-desa-border shadow-xl z-10 space-y-5"
+              className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-desa-border space-y-5"
             >
-              <div className="flex items-start justify-between">
+              <div className="flex items-center justify-between pb-3 border-b border-desa-border">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-lg bg-desa-bg flex items-center justify-center text-desa-accent">
-                    <HelpCircle className="w-5 h-5" />
+                  <div className="w-8 h-8 rounded-full bg-desa-surface flex items-center justify-center text-desa-primary">
+                    <HelpCircle className="w-4 h-4 text-desa-primary" />
                   </div>
                   <div>
-                    <h3 className="font-heading text-lg font-bold text-desa-primary">
-                      Pusat Bantuan Desa
+                    <h3 className="font-heading font-bold text-desa-primary text-base">
+                      Pusat Informasi & Bantuan
                     </h3>
-                    <p className="text-xs text-desa-muted">Layanan administrasi & pengaduan transaksi</p>
+                    <p className="text-xs text-desa-muted">
+                      Layanan resmi BUMDes Pasar Desa Sumedang
+                    </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setHelpModalOpen(false)}
-                  className="p-1 rounded-md text-desa-muted hover:text-desa-primary hover:bg-desa-bg"
+                  className="p-1 rounded-full text-desa-muted hover:bg-desa-surface transition-colors"
+                  aria-label="Tutup Modal"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <div className="space-y-3 text-xs text-desa-text">
-                <div className="p-3.5 rounded-xl bg-desa-bg/70 border border-desa-border space-y-2">
-                  <div className="flex items-center gap-2 font-medium text-desa-primary">
-                    <Phone className="w-4 h-4 text-desa-accent shrink-0" />
-                    <span>WhatsApp Layanan Warga: <strong>0812-3456-7890</strong></span>
+              <div className="space-y-3 text-xs text-desa-muted">
+                <div className="p-3.5 rounded-xl bg-desa-surface border border-desa-border/70 space-y-1.5">
+                  <div className="flex items-center gap-2 font-semibold text-desa-primary">
+                    <Clock className="w-3.5 h-3.5 text-desa-accent" />
+                    <span>Jam Operasional Pelayanan</span>
                   </div>
-                  <div className="flex items-center gap-2 font-medium text-desa-primary">
-                    <Clock className="w-4 h-4 text-desa-highlight shrink-0" />
-                    <span>Jam Operasional: Senin – Sabtu (08.00 – 16.00 WIB)</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-desa-muted">
-                    <ShieldCheck className="w-4 h-4 text-desa-muted shrink-0" />
-                    <span>Sekretariat BUMDes Mandiri Kabupaten Sumedang</span>
-                  </div>
+                  <p>Senin – Sabtu: 08.00 – 16.30 WIB. Pesanan di luar jam kerja diproses hari berikutnya.</p>
                 </div>
-                <p className="text-desa-muted leading-relaxed">
-                  Untuk pertanyaan produk, Anda juga dapat menggunakan tombol <strong>Chat Asisten & Toko</strong> di pojok kanan bawah.
-                </p>
+
+                <div className="p-3.5 rounded-xl bg-desa-surface border border-desa-border/70 space-y-1.5">
+                  <div className="flex items-center gap-2 font-semibold text-desa-primary">
+                    <Phone className="w-3.5 h-3.5 text-desa-accent" />
+                    <span>Kontak Helpdesk Desa</span>
+                  </div>
+                  <p>WhatsApp BUMDes: +62 821-1234-5678 • Email: bumdes@pasardesa.sumedangkab.go.id</p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-desa-surface border border-desa-border/70 space-y-1.5">
+                  <div className="flex items-center gap-2 font-semibold text-desa-primary">
+                    <ShieldCheck className="w-3.5 h-3.5 text-desa-primary" />
+                    <span>Jaminan Keaslian Produk</span>
+                  </div>
+                  <p>Setiap produk diproduksi langsung oleh pengrajin & petani terverifikasi dari 5 sentra kecamatan di Sumedang.</p>
+                </div>
               </div>
 
               <div className="pt-2 flex justify-end">
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
+                <button
                   onClick={() => setHelpModalOpen(false)}
-                  className="px-4 py-2 rounded-lg bg-desa-primary text-white text-xs font-semibold hover:bg-desa-primary/90 transition-colors"
+                  className="px-4 py-2 rounded-full bg-desa-primary text-white text-xs font-semibold hover:bg-desa-primary/90 transition-colors"
                 >
-                  Tutup
-                </motion.button>
+                  Tutup Informasi
+                </button>
               </div>
             </motion.div>
           </div>

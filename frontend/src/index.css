@@ -3,8 +3,8 @@
 @tailwind utilities;
 @layer base {
     body {
-        background-color: #EFEDE6;
-        color: #232220;
+        background-color: #E8ECE6;
+        color: #18251C;
         font-family: 'Work Sans', sans-serif;
         font-size: 15px;
         min-width: 320px;
@@ -71,8 +71,21 @@
 }
 
 :where(a, button, select, textarea, [tabindex]):focus-visible {
-    outline: 2px solid #9E5335 !important;
+    outline: 2px solid #F5B731 !important;
     outline-offset: 2px !important;
+}
+
+@keyframes productFloat {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-8px) rotate(0.5deg);
+    }
+}
+
+.animate-product-float {
+    animation: productFloat 5s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

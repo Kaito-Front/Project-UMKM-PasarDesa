@@ -41,11 +41,11 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
           {/* Badge */}
           <div className="absolute top-2.5 left-2.5 z-10 flex gap-1">
             {discountPercent ? (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-desa-accent text-white shadow-xs">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-desa-accent text-desa-primary shadow-xs">
                 Hemat {discountPercent}%
               </span>
             ) : product.isFeatured ? (
-              <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-desa-primary text-desa-light shadow-xs tracking-wide">
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-desa-primary text-white shadow-xs tracking-wide">
                 Pilihan Desa
               </span>
             ) : null}
@@ -147,7 +147,7 @@ export default function ProductCard({ product, showQuickOrder = true, isCompact 
           <motion.button
             whileTap={{ scale: 0.96 }}
             onClick={() => openDirectCheckout(product, 1)}
-            className="py-2 px-3 rounded-lg bg-desa-accent hover:bg-desa-accent/90 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-1 shadow-2xs shrink-0"
+            className="py-2 px-3.5 rounded-lg bg-desa-accent hover:bg-desa-accent/90 text-desa-primary text-sm font-bold transition-colors flex items-center justify-center gap-1 shadow-2xs shrink-0"
             title="Beli Langsung"
           >
             <ShoppingBag className="w-3.5 h-3.5" />

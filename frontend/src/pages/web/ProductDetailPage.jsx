@@ -328,7 +328,7 @@ export default function ProductDetailPage() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => openDirectCheckout(product, quantity, buyerNote)}
-              className="flex-1 py-3 px-4 rounded-lg bg-desa-accent hover:bg-desa-accent/90 text-white font-semibold text-xs shadow-xs transition-colors flex items-center justify-center gap-1.5"
+              className="flex-1 py-3 px-4 rounded-lg bg-desa-accent hover:bg-desa-accent/90 text-desa-primary font-bold text-xs shadow-xs transition-colors flex items-center justify-center gap-1.5"
             >
               <ShoppingBag className="w-4 h-4" />
               <span>Beli Sekarang</span>
@@ -530,7 +530,7 @@ export default function ProductDetailPage() {
               <motion.button
                 whileTap={{ scale: 0.94 }}
                 onClick={() => openDirectCheckout(product, quantity, buyerNote)}
-                className="py-2.5 px-4 rounded-lg bg-desa-accent text-white text-xs font-semibold shadow-xs"
+                className="py-2.5 px-4 rounded-lg bg-desa-accent text-desa-primary text-xs font-bold shadow-xs"
               >
                 Beli Sekarang
               </motion.button>

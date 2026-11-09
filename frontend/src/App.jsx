@@ -20,7 +20,7 @@ function MainApp() {
   const { currentView, webPage, dataSource } = useApp();
 
   return (
-    <div className="min-h-screen bg-desa-bg text-desa-text font-sans flex flex-col justify-between selection:bg-desa-accent selection:text-white">
+    <div className="min-h-screen bg-desa-bg text-desa-text font-sans flex flex-col justify-between selection:bg-desa-accent selection:text-desa-primary">
       
       {currentView === 'web' && <Navbar />}
 

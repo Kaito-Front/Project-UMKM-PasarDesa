@@ -288,7 +288,7 @@ export default function CartDrawer() {
                 <button
                   type="button"
                   onClick={openCartCheckout}
-                  className="group inline-flex min-h-[3.35rem] w-full items-center justify-center gap-3 rounded-full bg-desa-primary px-5 text-sm font-semibold text-desa-light shadow-[0_8px_20px_rgba(58,58,56,0.15)] transition duration-200 hover:gap-4 hover:bg-desa-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desa-accent focus-visible:ring-offset-2 active:scale-[0.99]"
+                  className="group inline-flex min-h-[3.35rem] w-full items-center justify-center gap-3 rounded-full bg-desa-primary px-5 text-sm font-semibold text-white shadow-md transition duration-200 hover:gap-4 hover:bg-desa-accent hover:text-desa-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-desa-accent focus-visible:ring-offset-2 active:scale-[0.99]"
                 >
                   Lanjut ke checkout
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />

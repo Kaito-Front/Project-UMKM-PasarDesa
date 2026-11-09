@@ -6,16 +6,29 @@ export default {
   theme: {
     extend: {
       colors: {
-        'desa-bg': '#EFEDE6',
-        'desa-surface': '#F9F8F5',
-        'desa-primary': '#2F2F2D',
-        'desa-accent': '#9E5335',
-        'desa-highlight': '#485736',
-        'desa-text': '#232220',
-        'desa-muted': '#65635D',
-        'desa-subtle': '#85827A',
-        'desa-border': '#D8D5CC',
-        'desa-light': '#EFEDE6',
+        // 60% Sage Mist Ground & Surfaces
+        'desa-bg': '#E8ECE6',
+        'desa-surface': '#F2F5F0',
+        'desa-border': '#D1D8CE',
+        'desa-light': '#F8FAF7',
+        'sage-mist': '#E8ECE6',
+        'sage-surface': '#F2F5F0',
+        'sage-border': '#D1D8CE',
+
+        // 30% Deep Forest Ink, Structure & Typography
+        'desa-primary': '#1C2D22',
+        'desa-text': '#18251C',
+        'desa-muted': '#506154',
+        'desa-subtle': '#758579',
+        'deep-forest': '#1C2D22',
+        'forest-dark': '#142119',
+        'forest-muted': '#506154',
+
+        // 10% Sunbeam Yellow Eye-Catching Accent & Highlights
+        'desa-accent': '#F5B731',
+        'desa-highlight': '#E5A51E',
+        'sunbeam': '#F5B731',
+        'sunbeam-glow': '#FEF9EE',
       },
       fontFamily: {
         serif: ['Fraunces', 'serif'],

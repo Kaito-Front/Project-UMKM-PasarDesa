@@ -32,7 +32,13 @@ dist-ssr
 /.codex/
 .taste-skill/
 /anti-slop
+.agents/
+/skills/
+antislop.md
 
 # Databases
 *.sqlite
 *.sqlite-journal
+/docs
+GEMINI.md
+antislop.md

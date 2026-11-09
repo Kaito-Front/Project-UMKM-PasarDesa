@@ -98,7 +98,7 @@ export default function ChatWidget() {
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.94 }}
             onClick={() => setIsChatOpen(true)}
-            className="w-14 h-14 rounded-2xl bg-desa-accent text-white shadow-xl flex items-center justify-center relative overflow-hidden group border-2 border-white/40"
+            className="w-14 h-14 rounded-full bg-desa-accent text-desa-primary shadow-xl flex items-center justify-center relative overflow-hidden group border-2 border-white/60"
             aria-label="Buka Chatbox Desa"
           >
             
@@ -304,7 +304,7 @@ export default function ChatWidget() {
                     <div
                       className={`max-w-[88%] rounded-2xl px-3.5 py-3 text-xs shadow-xs leading-relaxed transition-all ${
                         isUser
-                          ? 'bg-desa-accent text-white rounded-br-xs shadow-sm'
+                          ? 'bg-desa-accent text-desa-primary font-medium rounded-br-xs shadow-sm'
                           : isSeller
                           ? 'bg-white border border-desa-accent/30 text-desa-primary rounded-tl-xs shadow-xs'
                           : 'bg-white border border-desa-primary/10 text-desa-primary rounded-tl-xs shadow-xs'
@@ -410,7 +410,7 @@ export default function ChatWidget() {
               <button
                 type="submit"
                 disabled={!inputMessage.trim()}
-                className="w-10 h-10 rounded-xl bg-desa-accent text-white flex items-center justify-center hover:bg-desa-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm shrink-0"
+                className="w-10 h-10 rounded-xl bg-desa-accent text-desa-primary flex items-center justify-center hover:bg-desa-highlight disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm shrink-0"
                 aria-label="Kirim Pesan"
               >
                 <Send className="w-4 h-4" />

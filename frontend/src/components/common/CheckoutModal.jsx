@@ -775,7 +775,7 @@ export default function CheckoutModal() {
                       {/* Sisi Kanan: Detail Merchant & Instruksi Demo */}
                       <div className="flex-1 space-y-3 text-xs text-left">
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-desa-accent text-white uppercase tracking-wider">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-desa-accent text-desa-primary uppercase tracking-wider">
                             QRIS Nasional
                           </span>
                           <span className="text-[10px] font-semibold text-desa-highlight bg-desa-highlight/15 px-2 py-0.5 rounded-full">
@@ -923,7 +923,7 @@ export default function CheckoutModal() {
                   onClick={handleConfirmOrder}
                   disabled={isSubmitting}
                   aria-busy={isSubmitting}
-                  className="flex-2 sm:flex-initial px-7 py-3 rounded-xl bg-desa-accent text-white text-xs font-bold hover:bg-desa-accent/90 transition-all shadow-md flex items-center justify-center gap-2 focus-visible:ring-2 focus-visible:ring-desa-accent focus-visible:outline-none disabled:opacity-60"
+                  className="flex-2 sm:flex-initial px-7 py-3 rounded-xl bg-desa-accent text-desa-primary text-xs font-bold hover:bg-desa-highlight transition-all shadow-md flex items-center justify-center gap-2 focus-visible:ring-2 focus-visible:ring-desa-accent focus-visible:outline-none disabled:opacity-60"
                 >
                   <ShieldCheck className="w-4 h-4" />
                   <span>{isSubmitting ? 'Menyimpan Pesanan…' : 'Konfirmasi & Bayar Sekarang'}</span>
