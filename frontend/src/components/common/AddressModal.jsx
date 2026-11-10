@@ -208,7 +208,7 @@ export default function AddressModal() {
                 <input
                   type="tel"
                   required
-                  placeholder="Contoh: 0813-9988-7766"
+                  placeholder="Contoh: 0819-1519-4171"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-desa-primary/20 bg-white text-xs text-desa-text focus:outline-none focus:ring-2 focus:ring-desa-accent"

@@ -14,8 +14,8 @@ export default function LurikDivider({
       <div 
         className={`w-[1.5px] h-full ${
           variant === 'accent' 
-            ? 'bg-[repeating-linear-gradient(0deg,#F5B731_0px,#F5B731_1.5px,transparent_1.5px,transparent_7px)]' 
-            : 'bg-[repeating-linear-gradient(0deg,#1C2D22_0px,#1C2D22_1.5px,transparent_1.5px,transparent_7px)]'
+            ? 'bg-[repeating-linear-gradient(0deg,#E83D23_0px,#E83D23_1.5px,transparent_1.5px,transparent_7px)]' 
+            : 'bg-[repeating-linear-gradient(0deg,#163324_0px,#163324_1.5px,transparent_1.5px,transparent_7px)]'
         } opacity-35 ${className}`} 
         aria-hidden="true"
       />
@@ -26,7 +26,7 @@ export default function LurikDivider({
     return (
       <div 
         style={{ height }}
-        className={`w-full bg-[repeating-linear-gradient(90deg,#F5B731_0px,#F5B731_1.5px,transparent_1.5px,transparent_7px)] opacity-40 ${animClass} ${className}`} 
+        className={`w-full bg-[repeating-linear-gradient(90deg,#E83D23_0px,#E83D23_1.5px,transparent_1.5px,transparent_7px)] opacity-40 ${animClass} ${className}`} 
         aria-hidden="true"
       />
     );
@@ -36,7 +36,7 @@ export default function LurikDivider({
     return (
       <div 
         style={{ height }}
-        className={`w-full bg-[repeating-linear-gradient(90deg,rgba(232,236,230,0.4)_0px,rgba(232,236,230,0.4)_1.5px,transparent_1.5px,transparent_8px)] ${animClass} ${className}`} 
+        className={`w-full bg-[repeating-linear-gradient(90deg,rgba(251,248,243,0.5)_0px,rgba(251,248,243,0.5)_1.5px,transparent_1.5px,transparent_8px)] ${animClass} ${className}`} 
         aria-hidden="true"
       />
     );
@@ -46,7 +46,7 @@ export default function LurikDivider({
     return (
       <div className={`w-full space-y-1 ${animClass} ${className}`} aria-hidden="true">
         <div className="w-full h-[1px] bg-desa-border" />
-        <div className="w-full h-[1.5px] bg-[repeating-linear-gradient(90deg,#1C2D22_0px,#1C2D22_1.5px,transparent_1.5px,transparent_8px)] opacity-35" />
+        <div className="w-full h-[1.5px] bg-[repeating-linear-gradient(90deg,#163324_0px,#163324_1.5px,transparent_1.5px,transparent_8px)] opacity-35" />
         <div className="w-full h-[1px] bg-desa-border" />
       </div>
     );
@@ -55,7 +55,7 @@ export default function LurikDivider({
   return (
     <div 
       style={{ height }}
-      className={`w-full bg-[repeating-linear-gradient(90deg,#1C2D22_0px,#1C2D22_1.5px,transparent_1.5px,transparent_8px)] opacity-30 ${animClass} ${className}`} 
+      className={`w-full bg-[repeating-linear-gradient(90deg,#163324_0px,#163324_1.5px,transparent_1.5px,transparent_8px)] opacity-30 ${animClass} ${className}`} 
       aria-hidden="true"
     />
   );

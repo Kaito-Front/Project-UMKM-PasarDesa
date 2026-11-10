@@ -55,10 +55,10 @@ export default function MarketIntroPortal({ onComplete }) {
         exit={{ opacity: 0, scale: 1.05 }}
         transition={{ duration: 0.45, ease: "easeInOut" }}
         className="fixed inset-0 z-[9999] overflow-hidden bg-desa-primary text-white flex flex-col justify-between select-none"
-        style={{ backgroundColor: '#1C2D22' }}
+        style={{ backgroundColor: '#163324' }}
       >
         {/* Ambient Warm Golden Glow in Center */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(245,183,49,0.14)_0%,_transparent_70%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(232,61,35,0.14)_0%,_transparent_70%)] pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-desa-accent/15 rounded-full blur-[130px] pointer-events-none" />
 
         {/* Top Header Bar inside Intro */}

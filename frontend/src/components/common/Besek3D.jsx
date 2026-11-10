@@ -232,7 +232,7 @@ export default function Besek3D({ onInteract }) {
   }, [onInteract]);
 
   return (
-    <div className="relative w-full h-[380px] sm:h-[480px] lg:h-[540px] flex items-center justify-center select-none">
+    <div className="relative w-full h-[260px] xs:h-[300px] sm:h-[420px] lg:h-[520px] flex items-center justify-center select-none">
       <div 
         ref={containerRef} 
         id="besek-3d-container"

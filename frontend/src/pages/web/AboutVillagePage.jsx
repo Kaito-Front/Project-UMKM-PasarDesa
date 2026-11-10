@@ -3,7 +3,9 @@ import { motion } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import LurikDivider from '../../components/common/LurikDivider';
 import { 
-  ArrowRight
+  ArrowRight,
+  Sparkles,
+  MapPin
 } from 'lucide-react';
 
 export default function AboutVillagePage() {
@@ -45,7 +47,13 @@ export default function AboutVillagePage() {
   return (
     <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-14 sm:space-y-18">
       
+      {/* Hero Header */}
       <div className="text-center max-w-2xl mx-auto space-y-4">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/75 backdrop-blur-md border border-white/80 shadow-xs text-xs font-semibold text-desa-accent">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Kearifan Lokal BUMDes Sumedang</span>
+        </div>
+
         <h1 className="font-heading text-3xl sm:text-5xl font-bold text-desa-primary leading-tight">
           Menjaga Warisan Leluhur, Menggerakkan Ekonomi Masa Depan
         </h1>
@@ -59,47 +67,52 @@ export default function AboutVillagePage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white rounded-2xl p-6 sm:p-10 border border-desa-border shadow-xs">
+      {/* Philosophy Card with Liquid Glass look */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-white/75 backdrop-blur-xl rounded-3xl p-6 sm:p-10 border border-white/80 shadow-[0_12px_40px_rgb(0,0,0,0.04)]">
         <div className="space-y-4">
-          <span className="text-sm font-semibold text-desa-accent">
-            Filosofi Budaya
+          <span className="text-xs font-bold tracking-wider uppercase text-desa-accent">
+            Filosofi Budaya & Identitas Visual
           </span>
           <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
-            Makna Garis Garis Lurik
+            Makna Garis-Garis Lurik
           </h2>
           <p className="text-sm sm:text-base text-desa-muted leading-relaxed">
             Kata <strong>"Lurik"</strong> berakar dari kata <em>lorek</em> yang bermakna garis-garis sejajar penuntun arah. Motif ini melambangkan kesederhanaan hidup, keteguhan hati, kejujuran dalam berdagang, dan kesetaraan derajat antar sesama warga.
           </p>
           <p className="text-sm sm:text-base text-desa-muted leading-relaxed">
-            Dalam identitas visual <strong>Pasar Desa</strong>, harmoni diwujudkan melalui perpaduan warna arang kayu alami, terakota tanah liat perajin, serta hijau lumut dedaunan sebagai lambang keselarasan antara alam dan karya tangan manusia.
+            Dalam identitas visual kontemporer <strong>Pasar Desa</strong>, harmoni diwujudkan melalui perpaduan 60% kanvas <strong>Oatmilk</strong> yang hangat dan bersih, 30% keteduhan <strong>Forest Green</strong> pinus pegunungan Sumedang sebagai pilar struktural, serta 10% aksen <strong>Tomato Red</strong> sebagai lambang gairah dan daya tarik hasil panen lokal.
           </p>
         </div>
 
-        <div className="h-64 sm:h-80 rounded-xl overflow-hidden border border-desa-border relative bg-desa-bg">
+        <div className="h-72 sm:h-88 rounded-2xl overflow-hidden border border-white/80 relative bg-desa-bg shadow-sm">
           <img
             src="/kain-lurik.jpg"
             alt="Kain Tenun Lurik Asli Sumedang"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-x-0 bottom-0 bg-desa-primary/80 flex items-end p-5">
-            <span className="text-xs text-desa-light font-medium">
-              Kain tenun lurik ATBM hasil karya tangan perajin desa Sumedang Utara
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-desa-primary/90 via-desa-primary/50 to-transparent p-5 backdrop-blur-xs">
+            <span className="text-xs text-[#FBF8F3] font-medium leading-relaxed block">
+              Kain tenun lurik ATBM hasil karya tangan perajin desa Sumedang Utara.
             </span>
           </div>
         </div>
       </div>
 
+      {/* Production Centers */}
       <div className="space-y-6">
-        <div className="text-center max-w-xl mx-auto">
-          <span className="text-sm font-semibold text-desa-highlight">
+        <div className="text-center max-w-xl mx-auto space-y-2">
+          <span className="text-xs font-bold tracking-wider uppercase text-desa-accent">
             Sentra Produksi Wilayah
           </span>
-          <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary mt-1">
+          <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
             5 Sentra Kecamatan Binaan BUMDes
           </h2>
+          <p className="text-sm text-desa-muted">
+            Setiap kecamatan memiliki keunikan alam dan keahlian kriya turun-temurun.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {kecamatanCenters.map((kecamatan, idx) => (
             <motion.div 
               key={idx}
@@ -107,17 +120,22 @@ export default function AboutVillagePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.07, duration: 0.4 }}
-              className="bg-white rounded-xl overflow-hidden border border-desa-border hover:border-desa-primary/40 transition-colors flex flex-col justify-between"
+              className="bg-white/75 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md transition-all flex flex-col justify-between group"
             >
               <div>
-                <div className="h-44 overflow-hidden relative bg-desa-bg">
-                  <img src={kecamatan.image} alt={kecamatan.name} className="w-full h-full object-cover" />
-                  <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded bg-black/75 text-white text-[11px] font-medium">
-                    {kecamatan.name}
+                <div className="h-48 overflow-hidden relative bg-desa-bg">
+                  <img 
+                    src={kecamatan.image} 
+                    alt={kecamatan.name} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                  />
+                  <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-desa-primary/80 backdrop-blur-md text-white text-[11px] font-semibold flex items-center gap-1 shadow-sm">
+                    <MapPin className="w-3 h-3 text-desa-accent" />
+                    <span>{kecamatan.name}</span>
                   </div>
                 </div>
 
-                <div className="p-4 space-y-2">
+                <div className="p-5 space-y-2">
                   <h3 className="font-heading font-bold text-base text-desa-primary">
                     {kecamatan.specialty}
                   </h3>
@@ -127,17 +145,17 @@ export default function AboutVillagePage() {
                 </div>
               </div>
 
-              <div className="p-4 pt-0">
+              <div className="p-5 pt-0">
                 <button
                   onClick={() => {
                     setSelectedKecamatan(kecamatan.name);
                     setWebPage('catalog');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                   }}
-                  className="w-full py-2 px-3 rounded-lg border border-desa-border text-xs font-semibold text-desa-primary hover:bg-desa-bg transition-colors flex items-center justify-center gap-1.5"
+                  className="w-full py-2.5 px-4 rounded-xl border border-desa-border bg-white/70 backdrop-blur-sm text-xs font-semibold text-desa-primary hover:bg-desa-accent hover:text-white hover:border-desa-accent transition-all flex items-center justify-center gap-2 group/btn shadow-2xs"
                 >
                   <span>Lihat Produk {kecamatan.name.replace('Kecamatan ', '')}</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-desa-accent" />
+                  <ArrowRight className="w-3.5 h-3.5 text-desa-accent group-hover/btn:text-white group-hover/btn:translate-x-0.5 transition-all" />
                 </button>
               </div>
             </motion.div>

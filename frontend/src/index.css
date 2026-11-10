@@ -3,8 +3,8 @@
 @tailwind utilities;
 @layer base {
     body {
-        background-color: #E8ECE6;
-        color: #18251C;
+        background-color: #FBF8F3;
+        color: #183324;
         font-family: 'Work Sans', sans-serif;
         font-size: 15px;
         min-width: 320px;
@@ -18,6 +18,11 @@
         font-family: 'Fraunces', serif;
         letter-spacing: -0.025em;
     }
+}
+
+::selection {
+    background-color: #E83D23;
+    color: #FFFFFF;
 }
 
 .font-ui h1,
@@ -71,7 +76,7 @@
 }
 
 :where(a, button, select, textarea, [tabindex]):focus-visible {
-    outline: 2px solid #F5B731 !important;
+    outline: 2px solid #E83D23 !important;
     outline-offset: 2px !important;
 }
 

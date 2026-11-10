@@ -28,8 +28,8 @@ export const SHOPS = [
     address: 'Kecamatan Sumedang Utara, Kabupaten Sumedang, Jawa Barat',
     lat: -6.8293742,
     lng: 107.9116474,
-    phone: '081234567890',
-    whatsapp: '6281234567890',
+    phone: '081915194171',
+    whatsapp: '6281915194171',
     rating: 4.9,
     reviewCount: 142,
     joinDate: 'Januari 2024',
@@ -50,15 +50,15 @@ export const SHOPS = [
     address: 'Kecamatan Cimalaka, Kabupaten Sumedang, Jawa Barat',
     lat: -6.8025187,
     lng: 107.9413323,
-    phone: '085678901234',
-    whatsapp: '6285678901234',
+    phone: '081915194171',
+    whatsapp: '6281915194171',
     rating: 4.8,
     reviewCount: 98,
     joinDate: 'Maret 2024',
     operatingHours: '07.00 - 20.00 WIB (Setiap Hari)',
     description: 'Kripik tempe renyah gurih dengan daun jeruk asli dan racikan rempah warisan simbah. Tanpa bahan pengawet, dibuat fresh setiap pagi.',
     avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
-    banner: 'https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=1200&q=80',
+    banner: '/products/kripik-tempe.jpg',
     status: 'aktif',
     verified: true,
   },
@@ -72,15 +72,15 @@ export const SHOPS = [
     address: 'Kecamatan Tanjungsari, Kabupaten Sumedang, Jawa Barat',
     lat: -6.8440915,
     lng: 107.7932319,
-    phone: '087812345678',
-    whatsapp: '6287812345678',
+    phone: '081915194171',
+    whatsapp: '6281915194171',
     rating: 5.0,
     reviewCount: 64,
     joinDate: 'Februari 2024',
     operatingHours: '08.00 - 18.00 WIB (Senin - Minggu)',
     description: 'Kelompok tani hutan memproduksi madu lebah liar murni tanpa campuran dan gula aren cetak murni dari pohon enau lereng bukit desa.',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
-    banner: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=1200&q=80',
+    avatar: '/products/madu-hutan.jpg',
+    banner: '/products/madu-hutan.jpg',
     status: 'aktif',
     verified: true,
   },
@@ -94,15 +94,15 @@ export const SHOPS = [
     address: 'Kecamatan Sumedang Selatan, Kabupaten Sumedang, Jawa Barat',
     lat: -6.859079,
     lng: 107.9202767,
-    phone: '082198765432',
-    whatsapp: '6282198765432',
+    phone: '081915194171',
+    whatsapp: '6281915194171',
     rating: 4.7,
     reviewCount: 53,
     joinDate: 'April 2024',
     operatingHours: '08.00 - 16.30 WIB (Senin - Sabtu)',
     description: 'Produsen keranjang, besek hampers, kap lampu, dan perabotan ramah lingkungan berbahan bambu apus pilihan yang diawetkan alami.',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
-    banner: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80',
+    avatar: '/products/besek-bambu.jpg',
+    banner: '/products/besek-bambu.jpg',
     status: 'aktif',
     verified: true,
   },
@@ -116,15 +116,15 @@ export const SHOPS = [
     address: 'Kecamatan Jatinangor, Kabupaten Sumedang, Jawa Barat',
     lat: -6.9370992,
     lng: 107.7813872,
-    phone: '089533344455',
-    whatsapp: '6289533344455',
+    phone: '081915194171',
+    whatsapp: '6281915194171',
     rating: 4.9,
     reviewCount: 110,
     joinDate: 'Mei 2024',
     operatingHours: '09.00 - 21.00 WIB (Setiap Hari)',
     description: 'Biji kopi robusta petik merah dengan aroma rempah khas tanah pegunungan desa. Roasting medium-dark dengan crema tebal dan gurih.',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
-    banner: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1200&q=80',
+    banner: '/products/kopi-robusta.jpg',
     status: 'menunggu',
     verified: false,
   }
@@ -181,8 +181,7 @@ export const PRODUCTS = [
     isPopular: true,
     isNew: false,
     images: [
-      'https://images.unsplash.com/photo-1599490659213-e2b9527bd087?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=800&q=80'
+      '/products/kripik-tempe.jpg'
     ],
     description: 'Camilan khas desa yang selalu dirindukan. Dibuat dari kedelai pilihan berpadu bumbu rempah tradisional dan rajangan daun jeruk wangi. Renyah gurih tanpa rasa minyak berlebih, dikemas ziplock higienis kedap udara.',
     specifications: [
@@ -212,8 +211,7 @@ export const PRODUCTS = [
     isPopular: false,
     isNew: true,
     images: [
-      'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80'
+      '/products/madu-hutan.jpg'
     ],
     description: 'Madu murni hasil panen kelompok petani lebah di wilayah Tanjungsari. Tanpa proses pasteurisasi berlebih sehingga kandungan alaminya tetap terjaga.',
     specifications: [
@@ -242,8 +240,7 @@ export const PRODUCTS = [
     isPopular: true,
     isNew: false,
     images: [
-      'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80'
+      '/products/besek-bambu.jpg'
     ],
     description: 'Keranjang besek tradisional dengan sentuhan estetika minimalis. Dibuat dari bambu apus halus yang telah diasap agar anti-jamur dan awet bertahun-tahun. Cocok untuk wadah hantaran, bento desa, atau souvenir ramah lingkungan.',
     specifications: [
@@ -270,8 +267,7 @@ export const PRODUCTS = [
     isPopular: true,
     isNew: true,
     images: [
-      'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80'
+      '/products/kopi-robusta.jpg'
     ],
     description: 'Biji kopi pilihan yang dipetik hanya saat matang merah di perkebunan rakyat lereng desa. Profil sangrai medium roast menghasilkan cita rasa karamel dengan aftertaste rempah cengkeh yang hangat.',
     specifications: [
@@ -298,7 +294,7 @@ export const PRODUCTS = [
     isPopular: true,
     isNew: false,
     images: [
-      'https://images.unsplash.com/photo-1621996346565-e3d5d6281782?auto=format&fit=crop&w=800&q=80'
+      '/products/gula-aren.jpg'
     ],
     description: 'Nira aren murni yang dimasak perlahan di atas tungku kayu bakar tradisional. Aroma wangi khas asap kayu dengan indeks glikemik lebih ramah dibanding gula pasir.',
     specifications: [
@@ -323,7 +319,7 @@ export const MOCK_ORDERS = [
     id: 'ORD-2026-081',
     productName: 'Kain Tenun Lurik Klasik Motif Telupat',
     buyerName: 'Rudi Hartono',
-    phone: '081399887766',
+    phone: '081915194171',
     date: '14 Okt 2026',
     createdAt: '2026-10-14T09:00:00+07:00',
     total: 185000,
@@ -337,7 +333,7 @@ export const MOCK_ORDERS = [
     id: 'ORD-2026-080',
     productName: 'Kripik Tempe Renyah Gurih Daun Jeruk (250gr)',
     buyerName: 'Dewi Lestari',
-    phone: '082211445566',
+    phone: '081915194171',
     date: '13 Okt 2026',
     createdAt: '2026-10-13T10:30:00+07:00',
     total: 36000,
@@ -351,7 +347,7 @@ export const MOCK_ORDERS = [
     id: 'ORD-2026-079',
     productName: 'Madu Hutan Liar Murni Akasia Lereng (500ml)',
     buyerName: 'Ahmad Fauzi',
-    phone: '085733221100',
+    phone: '081915194171',
     date: '12 Okt 2026',
     createdAt: '2026-10-12T11:15:00+07:00',
     total: 95000,
@@ -383,18 +379,18 @@ export const MOCK_ANNOUNCEMENTS = [
 ];
 
 export const MOCK_USERS = [
-  { id: 'usr-1', name: 'Ibu Sumarsih', email: 'sumarsih@pasardesa.id', phone: '081234567890', role: 'penjual', shopName: 'Griya Tenun Lurik Lestari', status: 'aktif' },
-  { id: 'usr-2', name: 'Bambang Sudiro', email: 'bambang.s@gmail.com', phone: '081399887766', role: 'pembeli', shopName: '-', status: 'aktif' },
-  { id: 'usr-3', name: 'Pak Joko Sukirno', email: 'joko.madu@pasardesa.id', phone: '087812345678', role: 'keduanya', shopName: 'Madu Hutan & Gula Aren', status: 'aktif' },
-  { id: 'usr-4', name: 'Mas Hendra Pratama', email: 'hendra.kopi@pasardesa.id', phone: '089533344455', role: 'penjual', shopName: 'Kopi Robusta Jatinangor', status: 'menunggu_verifikasi' },
-  { id: 'usr-5', name: 'Admin Perangkat Desa', email: 'admin@pasardesa.go.id', phone: '081122334455', role: 'admin', shopName: 'Pemerintah Desa', status: 'aktif' },
+  { id: 'usr-1', name: 'Ibu Sumarsih', email: 'sumarsih@pasardesa.id', phone: '081915194171', role: 'penjual', shopName: 'Griya Tenun Lurik Lestari', status: 'aktif' },
+  { id: 'usr-2', name: 'Bambang Sudiro', email: 'bambang.s@gmail.com', phone: '081915194171', role: 'pembeli', shopName: '-', status: 'aktif' },
+  { id: 'usr-3', name: 'Pak Joko Sukirno', email: 'joko.madu@pasardesa.id', phone: '081915194171', role: 'keduanya', shopName: 'Madu Hutan & Gula Aren', status: 'aktif' },
+  { id: 'usr-4', name: 'Mas Hendra Pratama', email: 'hendra.kopi@pasardesa.id', phone: '081915194171', role: 'penjual', shopName: 'Kopi Robusta Jatinangor', status: 'menunggu_verifikasi' },
+  { id: 'usr-5', name: 'Admin Perangkat Desa', email: 'admin@pasardesa.go.id', phone: '081915194171', role: 'admin', shopName: 'Pemerintah Desa', status: 'aktif' },
 ];
 export const INITIAL_USER_ADDRESSES = [
   {
     id: 'addr-1',
     label: 'Rumah Utama (Kecamatan Sumedang Utara)',
     receiverName: 'Bambang Sudiro',
-    phone: '0813-9988-7766',
+    phone: '0819-1519-4171',
     kecamatan: 'Kecamatan Sumedang Utara',
     rtRw: 'RT 03 / RW 01',
     fullAddress: 'Kecamatan Sumedang Utara, Kabupaten Sumedang, Jawa Barat',
@@ -407,7 +403,7 @@ export const INITIAL_USER_ADDRESSES = [
     id: 'addr-2',
     label: 'Kantor BUMDes & Workshop',
     receiverName: 'Bambang Sudiro',
-    phone: '0813-9988-7766',
+    phone: '0819-1519-4171',
     kecamatan: 'Kecamatan Sumedang Selatan',
     rtRw: 'RT 02 / RW 03',
     fullAddress: 'Kecamatan Sumedang Selatan, Kabupaten Sumedang, Jawa Barat',

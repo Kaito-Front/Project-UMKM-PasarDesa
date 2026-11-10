@@ -46,6 +46,14 @@ export function AppProvider({ children }) {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [checkoutDirectItem, setCheckoutDirectItem] = useState(null);
   const [isAiTyping, setIsAiTyping] = useState(false);
+  const [hasSeenIntro, setHasSeenIntro] = useState(false);
+  const [authMode, setAuthMode] = useState('masuk');
+
+  const openAuth = (mode = 'masuk') => {
+    setAuthMode(mode);
+    setWebPage('auth');
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  };
 
   useEffect(() => {
     let active = true;
@@ -204,7 +212,7 @@ export function AppProvider({ children }) {
       id: fallbackOrderId,
       productName: items.length === 1 ? items[0].product.name : `${items[0].product.name} (+${items.length - 1} produk lainnya)`,
       buyerName: address?.receiverName || currentUser?.name || 'Warga Desa',
-      phone: address?.phone || currentUser?.phone || '08123456789',
+      phone: address?.phone || currentUser?.phone || '081915194171',
       date: 'Hari ini',
       total: grandTotal,
       qty: totalItems,
@@ -461,13 +469,13 @@ export function AppProvider({ children }) {
       setMobileTab('detail');
     } else {
       setWebPage('product-detail');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
   };
   const viewShop = (shopId) => {
     setSelectedShopId(shopId);
     setWebPage('shop-detail');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   };
   const addProduct = async (newProd) => {
     if (!currentUser?.shopId && currentUser?.role !== 'admin') {
@@ -674,6 +682,11 @@ export function AppProvider({ children }) {
       connectToShopFromBot,
       isConnectingSeller,
       isAiTyping,
+      hasSeenIntro,
+      setHasSeenIntro,
+      authMode,
+      setAuthMode,
+      openAuth,
       addProduct,
       toggleProductStatus,
       updateProductNumbers,

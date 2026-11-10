@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import { 
@@ -22,17 +22,60 @@ export default function Navbar() {
     webPage, setWebPage, 
     currentUser, isLoggedIn, logout,
     cartCount, setIsCartOpen,
-    setIsChatOpen
+    setIsChatOpen,
+    openAuth
   } = useApp();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [helpModalOpen, setHelpModalOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const isNavigatingRef = useRef(false);
 
+  // Instantly reset scroll state and lock scroll events during page transitions to prevent navbar oscillation
   useEffect(() => {
+    isNavigatingRef.current = true;
+    setIsScrolled(false);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
+    if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    // Keep scroll handler locked until exit/enter transitions (AnimatePresence) and page DOM fully settle
+    const timer = setTimeout(() => {
+      isNavigatingRef.current = false;
+      const y = window.scrollY || 0;
+      setIsScrolled(y > 80);
+    }, 450);
+
+    return () => clearTimeout(timer);
+  }, [webPage]);
+
+  // Robust scroll listener with hysteresis: shrink past 80px, expand only near top (< 30px)
+  useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      if (isNavigatingRef.current) return;
+
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (isNavigatingRef.current) {
+            ticking = false;
+            return;
+          }
+          const y = window.scrollY || 0;
+          setIsScrolled((prev) => {
+            if (y > 80) return true;
+            if (y < 30) return false;
+            return prev;
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -40,19 +83,29 @@ export default function Navbar() {
   const handleNavClick = (page) => {
     setWebPage(page);
     setMobileMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   };
 
   return (
     <>
-      {/* Floating Pill Header Bar (Reference: Shoe Product Showcase Hero) */}
-      <header className="sticky top-0 z-40 transition-all duration-300 py-3 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-screen-2xl mx-auto">
+      {/* Dynamic Floating Capsule Navbar with Smooth Shrink on Scroll */}
+      <motion.header 
+        className="sticky top-0 z-40 transition-colors py-2 sm:py-2.5"
+        layout={false}
+      >
+        <motion.div 
+          className="mx-auto px-3 sm:px-6"
+          animate={{
+            // Smooth transition from full-width 2xl (96rem / 1536px) to sleek compact capsule (58rem / 928px)
+            maxWidth: isScrolled ? '58rem' : '96rem',
+          }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        >
           <nav 
-            className={`transition-all duration-300 rounded-full px-4 sm:px-6 py-2.5 flex items-center justify-between border ${
+            className={`rounded-full flex items-center justify-between border transition-all px-3 sm:px-5 lg:px-6 py-1.5 sm:py-2.5 ${
               isScrolled 
-                ? 'bg-white/90 backdrop-blur-md border-desa-border shadow-md' 
-                : 'bg-white/75 backdrop-blur-sm border-desa-border/70 shadow-xs'
+                ? 'bg-[#FBF8F3]/90 backdrop-blur-2xl border-white/95 shadow-[0_16px_40px_rgba(22,51,36,0.1),inset_0_1px_1.5px_rgba(255,255,255,0.95)]' 
+                : 'bg-[#FBF8F3]/75 backdrop-blur-xl border-white/80 shadow-[0_4px_25px_rgba(22,51,36,0.04),inset_0_1px_1px_rgba(255,255,255,0.85)]'
             }`}
           >
             {/* Brand Pill (Left) */}
@@ -60,29 +113,33 @@ export default function Navbar() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => handleNavClick('home')}
-              className="flex items-center gap-2.5 cursor-pointer group select-none"
+              className="flex items-center gap-2.5 cursor-pointer group select-none shrink-0"
             >
-              <div className="w-9 h-9 rounded-full bg-desa-primary text-white flex items-center justify-center shadow-xs transition-colors duration-200 group-hover:bg-desa-accent group-hover:text-desa-primary">
+              <div className="w-8.5 h-8.5 rounded-full bg-desa-primary text-[#FBF8F3] flex items-center justify-center shadow-xs transition-colors duration-300 group-hover:bg-desa-accent group-hover:text-white shrink-0">
                 <Store className="w-4 h-4 transition-transform group-hover:scale-110" />
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col justify-center min-h-[32px]">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-heading text-base font-bold tracking-tight text-desa-primary leading-none">
+                  <span className="font-heading font-black tracking-tight text-desa-primary text-sm sm:text-base leading-none">
                     Pasar Desa
                   </span>
                   <span className="w-1.5 h-1.5 rounded-full bg-desa-accent hidden sm:inline-block" />
                 </div>
-                <span className="text-[10px] text-desa-muted font-medium tracking-wide leading-tight">
+                <span className="text-[10px] text-desa-muted font-medium tracking-wide leading-tight hidden sm:block">
                   Sumedang Mandiri
                 </span>
               </div>
             </motion.div>
 
-            {/* Desktop Navigation Links (Center Capsule) */}
-            <div className="hidden lg:flex items-center bg-desa-surface/80 rounded-full p-1 border border-desa-border/60">
+            {/* Desktop Navigation Links (Center Capsule - Liquid Glass) */}
+            <div className={`hidden lg:flex items-center bg-white/60 backdrop-blur-md rounded-full border border-white/80 shadow-2xs transition-all ${
+              isScrolled ? 'p-0.5' : 'p-1'
+            }`}>
               <button
                 onClick={() => handleNavClick('home')}
-                className={`relative px-4 py-1.5 rounded-full text-xs font-semibold tracking-tight transition-all ${
+                className={`relative rounded-full text-xs font-bold tracking-tight transition-all ${
+                  isScrolled ? 'px-3.5 py-1' : 'px-4 py-1.5'
+                } ${
                   webPage === 'home'
                     ? 'text-white'
                     : 'text-desa-muted hover:text-desa-primary'
@@ -100,7 +157,9 @@ export default function Navbar() {
 
               <button
                 onClick={() => handleNavClick('catalog')}
-                className={`relative px-4 py-1.5 rounded-full text-xs font-semibold tracking-tight transition-all ${
+                className={`relative rounded-full text-xs font-bold tracking-tight transition-all ${
+                  isScrolled ? 'px-3.5 py-1' : 'px-4 py-1.5'
+                } ${
                   webPage === 'catalog'
                     ? 'text-white'
                     : 'text-desa-muted hover:text-desa-primary'
@@ -118,7 +177,9 @@ export default function Navbar() {
 
               <button
                 onClick={() => handleNavClick('about')}
-                className={`relative px-4 py-1.5 rounded-full text-xs font-semibold tracking-tight transition-all ${
+                className={`relative rounded-full text-xs font-bold tracking-tight transition-all ${
+                  isScrolled ? 'px-3.5 py-1' : 'px-4 py-1.5'
+                } ${
                   webPage === 'about'
                     ? 'text-white'
                     : 'text-desa-muted hover:text-desa-primary'
@@ -136,35 +197,39 @@ export default function Navbar() {
 
               <button
                 onClick={() => setHelpModalOpen(true)}
-                className="px-3.5 py-1.5 rounded-full text-xs font-medium text-desa-muted hover:text-desa-primary transition-colors"
+                className={`rounded-full text-xs font-semibold text-desa-muted hover:text-desa-primary transition-colors ${
+                  isScrolled ? 'px-3 py-1' : 'px-3.5 py-1.5'
+                }`}
               >
                 Bantuan
               </button>
             </div>
 
             {/* Right Action Icons & Controls (Right Pill Group) */}
-            <div className="hidden lg:flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-1.5 shrink-0">
               
               {/* PWA Mode Trigger */}
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => setCurrentView('mobile')}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-desa-muted hover:text-desa-primary hover:bg-desa-surface transition-all border border-transparent hover:border-desa-border/70"
+                className={`flex items-center gap-1.5 rounded-full text-xs font-bold text-desa-muted hover:text-desa-primary hover:bg-white/60 transition-all border border-transparent hover:border-desa-border/70 ${
+                  isScrolled ? 'px-2.5 py-1' : 'px-3 py-1.5'
+                }`}
                 title="Buka Pratinjau Mobile PWA"
               >
                 <Smartphone className="w-3.5 h-3.5 text-desa-primary" />
-                <span>PWA Mobile</span>
+                <span className="hidden xl:inline">PWA Mobile</span>
               </motion.button>
 
-              <div className="h-4 w-px bg-desa-border/80 mx-1" />
+              <div className="h-3.5 w-px bg-desa-border/80 mx-0.5" />
 
               {/* Chat Button */}
               <motion.button
                 whileHover={{ scale: 1.06 }}
                 whileTap={{ scale: 0.94 }}
                 onClick={() => setIsChatOpen(true)}
-                className="relative p-2 rounded-full text-desa-primary hover:bg-desa-surface transition-colors border border-transparent hover:border-desa-border/70"
+                className="relative p-1.5 sm:p-2 rounded-full text-desa-primary hover:bg-white/60 transition-colors border border-transparent hover:border-desa-border/70"
                 title="Chat Asisten Desa & Toko"
                 aria-label="Chat Asisten Desa"
               >
@@ -172,12 +237,12 @@ export default function Navbar() {
                 <span className="absolute top-1 right-1 w-2 h-2 bg-desa-accent rounded-full ring-2 ring-white" />
               </motion.button>
 
-              {/* Cart Button with Sunbeam Yellow Count Badge */}
+              {/* Cart Button with Tomato Red Count Badge */}
               <motion.button
                 whileHover={{ scale: 1.06 }}
                 whileTap={{ scale: 0.94 }}
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2 rounded-full text-desa-primary hover:bg-desa-surface transition-colors border border-transparent hover:border-desa-border/70"
+                className="relative p-1.5 sm:p-2 rounded-full text-desa-primary hover:bg-white/60 transition-colors border border-transparent hover:border-desa-border/70"
                 title="Keranjang Belanja"
                 aria-label="Keranjang Belanja"
               >
@@ -188,7 +253,7 @@ export default function Navbar() {
                     initial={{ scale: 0.4 }}
                     animate={{ scale: [1, 1.25, 1] }}
                     transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-                    className="absolute -top-1 -right-1 min-w-4.5 h-4.5 px-1 bg-desa-accent text-desa-primary text-[10px] font-bold rounded-full flex items-center justify-center shadow-xs ring-2 ring-white"
+                    className="absolute -top-1 -right-1 min-w-4.5 h-4.5 px-1 bg-desa-accent text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-xs ring-2 ring-[#FBF8F3]"
                   >
                     {cartCount}
                   </motion.span>
@@ -197,13 +262,13 @@ export default function Navbar() {
 
               {/* User Account / Auth Button */}
               {isLoggedIn ? (
-                <div className="flex items-center gap-1.5 ml-1">
+                <div className="flex items-center gap-1.5 ml-0.5">
                   {currentUser?.role === 'admin' && (
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.96 }}
                       onClick={() => setCurrentView('admin')}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-desa-primary text-white text-xs font-semibold shadow-xs hover:bg-desa-primary/90 transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-desa-primary text-white text-xs font-bold shadow-xs hover:bg-desa-primary/90 transition-colors"
                       title="Buka Dashboard Admin"
                     >
                       <Store className="w-3.5 h-3.5 text-desa-accent" />
@@ -214,7 +279,7 @@ export default function Navbar() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.96 }}
                     onClick={() => logout()}
-                    className="flex items-center gap-1.5 pl-3 pr-3.5 py-1.5 rounded-full border border-desa-border bg-desa-surface text-desa-primary text-xs font-semibold hover:border-desa-primary/40 transition-colors shadow-2xs"
+                    className="flex items-center gap-1.5 pl-3 pr-3.5 py-1.5 rounded-full border border-desa-border bg-white/70 backdrop-blur-sm text-desa-primary text-xs font-bold hover:border-desa-primary/40 transition-colors shadow-2xs"
                   >
                     <User className="w-3.5 h-3.5 text-desa-muted" />
                     <span>{currentUser ? currentUser.name.split(' ')[0] : 'Akun'}</span>
@@ -224,10 +289,12 @@ export default function Navbar() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.96 }}
-                  onClick={() => handleNavClick('auth')}
-                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-desa-primary text-white text-xs font-semibold hover:bg-desa-primary/90 transition-all shadow-xs ml-1"
+                  onClick={() => openAuth('masuk')}
+                  className={`flex items-center gap-1.5 rounded-full bg-desa-accent text-white text-xs font-bold hover:bg-desa-highlight transition-all shadow-xs ml-0.5 ${
+                    isScrolled ? 'px-3.5 py-1.5' : 'px-4 py-1.5'
+                  }`}
                 >
-                  <User className="w-3.5 h-3.5 text-desa-accent" />
+                  <User className="w-3.5 h-3.5 text-white" />
                   <span>Masuk</span>
                 </motion.button>
               )}
@@ -247,7 +314,7 @@ export default function Navbar() {
                     key={cartCount}
                     initial={{ scale: 0.4 }}
                     animate={{ scale: [1, 1.25, 1] }}
-                    className="absolute top-0 right-0 min-w-4 h-4 px-1 bg-desa-accent text-desa-primary text-[9px] font-bold rounded-full flex items-center justify-center ring-2 ring-white"
+                    className="absolute top-0 right-0 min-w-4 h-4 px-1 bg-desa-accent text-white text-[9px] font-bold rounded-full flex items-center justify-center ring-2 ring-white"
                   >
                     {cartCount}
                   </motion.span>
@@ -260,11 +327,11 @@ export default function Navbar() {
                 className="p-2 text-desa-primary hover:bg-black/5 rounded-full transition-colors"
                 aria-label="Toggle Menu"
               >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {mobileMenuOpen ? <X className="w-5 h-5 text-desa-accent" /> : <Menu className="w-5 h-5" />}
               </motion.button>
             </div>
           </nav>
-        </div>
+        </motion.div>
 
         {/* Mobile Navigation Drawer */}
         <AnimatePresence>
@@ -274,157 +341,150 @@ export default function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="lg:hidden mt-2 bg-white/95 backdrop-blur-md border border-desa-border rounded-2xl px-4 pt-3 pb-5 space-y-3 shadow-lg overflow-hidden"
+              className="lg:hidden mt-2 mx-4 bg-[#FBF8F3]/95 backdrop-blur-xl border border-white/80 rounded-2xl px-4 pt-3 pb-5 space-y-3 shadow-xl overflow-hidden"
             >
               <div className="flex flex-col gap-1">
                 <button
                   onClick={() => handleNavClick('home')}
-                  className={`text-left px-3 py-2 rounded-xl font-medium text-xs ${
-                    webPage === 'home' ? 'bg-desa-primary text-white font-semibold' : 'text-desa-text hover:bg-desa-surface'
+                  className={`text-left px-3 py-2 rounded-xl text-sm font-semibold ${
+                    webPage === 'home' ? 'bg-desa-primary text-white' : 'text-desa-text hover:bg-black/5'
                   }`}
                 >
-                  Beranda
+                  Beranda Pasar
                 </button>
                 <button
                   onClick={() => handleNavClick('catalog')}
-                  className={`text-left px-3 py-2 rounded-xl font-medium text-xs ${
-                    webPage === 'catalog' ? 'bg-desa-primary text-white font-semibold' : 'text-desa-text hover:bg-desa-surface'
+                  className={`text-left px-3 py-2 rounded-xl text-sm font-semibold ${
+                    webPage === 'catalog' ? 'bg-desa-primary text-white' : 'text-desa-text hover:bg-black/5'
                   }`}
                 >
-                  Katalog Produk
+                  Katalog Semua Produk
                 </button>
                 <button
                   onClick={() => handleNavClick('about')}
-                  className={`text-left px-3 py-2 rounded-xl font-medium text-xs ${
-                    webPage === 'about' ? 'bg-desa-primary text-white font-semibold' : 'text-desa-text hover:bg-desa-surface'
+                  className={`text-left px-3 py-2 rounded-xl text-sm font-semibold ${
+                    webPage === 'about' ? 'bg-desa-primary text-white' : 'text-desa-text hover:bg-black/5'
                   }`}
                 >
-                  Tentang Desa
+                  Tentang Desa & Sentra
                 </button>
                 <button
-                  onClick={() => {
-                    setHelpModalOpen(true);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="text-left px-3 py-2 rounded-xl font-medium text-xs text-desa-muted hover:bg-desa-surface"
+                  onClick={() => { setHelpModalOpen(true); setMobileMenuOpen(false); }}
+                  className="text-left px-3 py-2 rounded-xl text-sm font-semibold text-desa-text hover:bg-black/5 flex items-center justify-between"
                 >
-                  Bantuan & Layanan
+                  <span>Bantuan & Panduan</span>
+                  <HelpCircle className="w-4 h-4 text-desa-muted" />
                 </button>
               </div>
 
-              <div className="pt-2 border-t border-desa-border flex flex-col gap-2">
+              <div className="pt-2 border-t border-desa-border/50 flex flex-col gap-2">
                 <button
-                  onClick={() => {
-                    setCurrentView('mobile');
-                    setMobileMenuOpen(false);
-                  }}
-                  className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-desa-surface text-desa-primary text-xs font-semibold border border-desa-border"
+                  onClick={() => { setCurrentView('mobile'); setMobileMenuOpen(false); }}
+                  className="w-full py-2 px-3 rounded-xl border border-desa-border text-xs font-semibold text-desa-primary flex items-center justify-center gap-2 hover:bg-black/5"
                 >
-                  <Smartphone className="w-4 h-4 text-desa-primary" />
+                  <Smartphone className="w-4 h-4" />
                   <span>Buka Mode Mobile PWA</span>
                 </button>
 
-                <button
-                  onClick={() => {
-                    setIsChatOpen(true);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="w-full flex items-center justify-center gap-2 py-2 rounded-xl bg-desa-surface text-desa-primary text-xs font-semibold border border-desa-border"
-                >
-                  <MessageSquare className="w-4 h-4 text-desa-accent" />
-                  <span>Chat Asisten Virtual Desa</span>
-                </button>
-
                 {isLoggedIn ? (
-                  <button
-                    onClick={() => {
-                      logout();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="w-full py-2 rounded-xl bg-desa-surface text-desa-muted text-xs font-semibold border border-desa-border hover:text-desa-primary"
-                  >
-                    Keluar ({currentUser?.name.split(' ')[0]})
-                  </button>
+                  <div className="space-y-1.5 pt-1">
+                    {currentUser?.role === 'admin' && (
+                      <button
+                        onClick={() => { setCurrentView('admin'); setMobileMenuOpen(false); }}
+                        className="w-full py-2 px-3 rounded-xl bg-desa-primary text-white text-xs font-semibold flex items-center justify-center gap-1.5"
+                      >
+                        <Store className="w-3.5 h-3.5 text-desa-accent" />
+                        <span>Panel Admin Desa</span>
+                      </button>
+                    )}
+                    <button
+                      onClick={() => { logout(); setMobileMenuOpen(false); }}
+                      className="w-full py-2 px-3 rounded-xl border border-red-200 text-red-600 text-xs font-semibold hover:bg-red-50"
+                    >
+                      Keluar ({currentUser?.name})
+                    </button>
+                  </div>
                 ) : (
                   <button
-                    onClick={() => handleNavClick('auth')}
-                    className="w-full py-2.5 rounded-xl bg-desa-primary text-white text-xs font-semibold hover:bg-desa-primary/90 flex items-center justify-center gap-2 shadow-xs"
+                    onClick={() => { openAuth('masuk'); setMobileMenuOpen(false); }}
+                    className="w-full py-2.5 px-3 rounded-xl bg-desa-accent text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs"
                   >
-                    <User className="w-3.5 h-3.5 text-desa-accent" />
-                    <span>Masuk / Daftar Akun</span>
+                    <User className="w-3.5 h-3.5 text-white" />
+                    <span>Masuk ke Akun</span>
                   </button>
                 )}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </header>
+      </motion.header>
 
       {/* Help Modal */}
       <AnimatePresence>
         {helpModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-desa-primary/60 backdrop-blur-xs">
-            <motion.div 
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+            <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-desa-border space-y-5"
+              className="bg-white rounded-3xl p-6 sm:p-7 max-w-md w-full border border-desa-border shadow-2xl space-y-5"
             >
-              <div className="flex items-center justify-between pb-3 border-b border-desa-border">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-desa-surface flex items-center justify-center text-desa-primary">
-                    <HelpCircle className="w-4 h-4 text-desa-primary" />
+                  <div className="w-8 h-8 rounded-full bg-desa-accent/15 text-desa-accent flex items-center justify-center">
+                    <HelpCircle className="w-4 h-4 text-desa-accent" />
                   </div>
-                  <div>
-                    <h3 className="font-heading font-bold text-desa-primary text-base">
-                      Pusat Informasi & Bantuan
-                    </h3>
-                    <p className="text-xs text-desa-muted">
-                      Layanan resmi BUMDes Pasar Desa Sumedang
-                    </p>
-                  </div>
+                  <h3 className="font-heading font-bold text-lg text-desa-primary">
+                    Pusat Bantuan Warga
+                  </h3>
                 </div>
                 <button
                   onClick={() => setHelpModalOpen(false)}
-                  className="p-1 rounded-full text-desa-muted hover:bg-desa-surface transition-colors"
-                  aria-label="Tutup Modal"
+                  className="p-1 rounded-full text-desa-muted hover:text-desa-primary hover:bg-black/5"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
-              <div className="space-y-3 text-xs text-desa-muted">
-                <div className="p-3.5 rounded-xl bg-desa-surface border border-desa-border/70 space-y-1.5">
-                  <div className="flex items-center gap-2 font-semibold text-desa-primary">
-                    <Clock className="w-3.5 h-3.5 text-desa-accent" />
-                    <span>Jam Operasional Pelayanan</span>
+              <div className="space-y-3 text-xs text-desa-muted leading-relaxed">
+                <div className="p-3 rounded-xl bg-desa-bg/70 border border-desa-border space-y-1">
+                  <div className="font-semibold text-desa-primary flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-desa-accent" />
+                    <span>Platform Resmi BUMDes</span>
                   </div>
-                  <p>Senin – Sabtu: 08.00 – 16.30 WIB. Pesanan di luar jam kerja diproses hari berikutnya.</p>
+                  <p className="text-[11px]">
+                    Semua transaksi belanja terhubung langsung ke pengrajin lokal tanpa potongan komisi perantara.
+                  </p>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-desa-surface border border-desa-border/70 space-y-1.5">
-                  <div className="flex items-center gap-2 font-semibold text-desa-primary">
-                    <Phone className="w-3.5 h-3.5 text-desa-accent" />
-                    <span>Kontak Helpdesk Desa</span>
+                <div className="space-y-2 pt-1 text-desa-text font-medium">
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-3.5 h-3.5 text-desa-accent shrink-0" />
+                    <span>Sekretariat: 0819-1519-4171</span>
                   </div>
-                  <p>WhatsApp BUMDes: +62 821-1234-5678 • Email: bumdes@pasardesa.sumedangkab.go.id</p>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-desa-surface border border-desa-border/70 space-y-1.5">
-                  <div className="flex items-center gap-2 font-semibold text-desa-primary">
-                    <ShieldCheck className="w-3.5 h-3.5 text-desa-primary" />
-                    <span>Jaminan Keaslian Produk</span>
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-3.5 h-3.5 text-desa-accent shrink-0" />
+                    <span>Layanan: Senin - Sabtu (08.00 - 16.00 WIB)</span>
                   </div>
-                  <p>Setiap produk diproduksi langsung oleh pengrajin & petani terverifikasi dari 5 sentra kecamatan di Sumedang.</p>
                 </div>
               </div>
 
-              <div className="pt-2 flex justify-end">
+              <div className="pt-2 flex gap-2">
+                <button
+                  onClick={() => {
+                    setHelpModalOpen(false);
+                    setIsChatOpen(true);
+                  }}
+                  className="flex-1 py-2.5 px-3 rounded-xl bg-desa-primary text-white text-xs font-semibold hover:bg-desa-primary/90 flex items-center justify-center gap-1.5"
+                >
+                  <MessageSquare className="w-3.5 h-3.5" />
+                  <span>Tanya Asisten AI</span>
+                </button>
                 <button
                   onClick={() => setHelpModalOpen(false)}
-                  className="px-4 py-2 rounded-full bg-desa-primary text-white text-xs font-semibold hover:bg-desa-primary/90 transition-colors"
+                  className="py-2.5 px-4 rounded-xl border border-desa-border text-xs font-semibold text-desa-muted hover:text-desa-primary"
                 >
-                  Tutup Informasi
+                  Tutup
                 </button>
               </div>
             </motion.div>

@@ -26,12 +26,28 @@ export default function ChatWidget() {
     connectToShopFromBot,
     isConnectingSeller,
     isAiTyping,
-    shops
+    shops,
+    webPage
   } = useApp();
 
   const [inputMessage, setInputMessage] = useState('');
   const [showShopSelector, setShowShopSelector] = useState(false);
+  const [isScrolledPastHero, setIsScrolledPastHero] = useState(false);
   const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (webPage === 'home') {
+        setIsScrolledPastHero(window.scrollY > 80);
+      } else {
+        setIsScrolledPastHero(true);
+      }
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [webPage]);
   const currentShop = activeChatShopId !== 'general-bot' 
     ? shops.find(s => s.id === activeChatShopId) || shops[0]
     : null;
@@ -83,31 +99,35 @@ export default function ChatWidget() {
   return (
     <>
       
-      {!isChatOpen && (
-        <motion.div
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="fixed bottom-6 right-6 z-40 flex items-center gap-2"
-        >
-          <div className="hidden md:flex items-center gap-2 bg-desa-primary text-desa-light px-3.5 py-1.5 rounded-full border border-white/20 text-xs">
-            <span className="w-2 h-2 rounded-full bg-[#C1CCB3]" />
-            <span>Chat Asisten Desa & Toko</span>
-          </div>
-
-          <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.94 }}
-            onClick={() => setIsChatOpen(true)}
-            className="w-14 h-14 rounded-full bg-desa-accent text-desa-primary shadow-xl flex items-center justify-center relative overflow-hidden group border-2 border-white/60"
-            aria-label="Buka Chatbox Desa"
+      {/* Floating Trigger Button - Hidden on Landing Page until Scrolled Down */}
+      <AnimatePresence>
+        {!isChatOpen && (webPage !== 'home' || isScrolledPastHero) && (
+          <motion.div
+            initial={{ scale: 0, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0, opacity: 0, y: 20 }}
+            transition={{ type: 'spring', stiffness: 360, damping: 26 }}
+            className="fixed bottom-6 right-6 z-40 flex items-center gap-2"
           >
-            
-            <div className="absolute inset-0 bg-lurik-stripes-light opacity-20" />
-            <MessageSquare className="w-6 h-6 text-white relative z-10 group-hover:scale-110 transition-transform" />
-            <span className="absolute top-2 right-2 w-3 h-3 bg-desa-highlight rounded-full border-2 border-white" />
-          </motion.button>
-        </motion.div>
-      )}
+            <div className="hidden md:flex items-center gap-2 bg-desa-primary text-desa-light px-3.5 py-1.5 rounded-full border border-white/20 text-xs shadow-md">
+              <span className="w-2 h-2 rounded-full bg-[#C1CCB3]" />
+              <span>Chat Asisten Desa & Toko</span>
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.94 }}
+              onClick={() => setIsChatOpen(true)}
+              className="w-14 h-14 rounded-full bg-desa-accent text-desa-primary shadow-xl flex items-center justify-center relative overflow-hidden group border-2 border-white/60"
+              aria-label="Buka Chatbox Desa"
+            >
+              <div className="absolute inset-0 bg-lurik-stripes-light opacity-20" />
+              <MessageSquare className="w-6 h-6 text-white relative z-10 group-hover:scale-110 transition-transform" />
+              <span className="absolute top-2 right-2 w-3 h-3 bg-desa-highlight rounded-full border-2 border-white" />
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       
       <AnimatePresence>

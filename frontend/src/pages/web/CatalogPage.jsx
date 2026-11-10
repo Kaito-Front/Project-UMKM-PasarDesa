@@ -88,7 +88,8 @@ export default function CatalogPage() {
   return (
     <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       
-      <div className="bg-white rounded-xl p-4 sm:p-5 border border-desa-border shadow-xs">
+      {/* Top Search & Filter Bar with Liquid Glass */}
+      <div className="bg-white/75 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           
           <div className="relative flex-1">
@@ -101,12 +102,12 @@ export default function CatalogPage() {
                 setSearchQuery(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full pl-10 pr-16 py-2.5 bg-desa-bg/50 border border-desa-border rounded-lg text-sm text-desa-text placeholder:text-desa-subtle focus:outline-none focus:border-desa-primary focus:bg-white transition-colors"
+              className="w-full pl-10 pr-16 py-2.5 bg-white/60 border border-desa-border rounded-xl text-sm text-desa-text placeholder:text-desa-subtle focus:outline-none focus:border-desa-accent focus:ring-2 focus:ring-desa-accent/20 focus:bg-white transition-all shadow-inner"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-desa-subtle hover:text-desa-text font-medium"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-desa-subtle hover:text-desa-accent font-medium px-1.5 py-0.5 rounded bg-desa-bg/80"
               >
                 Hapus
               </button>
@@ -117,7 +118,7 @@ export default function CatalogPage() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowMobileFilter(!showMobileFilter)}
-              className="lg:hidden flex items-center gap-1.5 px-3 py-2 rounded-lg border border-desa-border bg-desa-bg text-desa-primary text-xs font-semibold"
+              className="lg:hidden flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-white/80 bg-white/80 backdrop-blur-md text-desa-primary text-xs font-semibold shadow-xs"
             >
               <Filter className="w-3.5 h-3.5 text-desa-accent" />
               <span>Filter {hasActiveFilter ? 'Aktif' : ''}</span>
@@ -131,7 +132,7 @@ export default function CatalogPage() {
                   setSortBy(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="bg-desa-bg/70 border border-desa-border rounded-lg px-3 py-2 text-xs text-desa-primary font-semibold focus:outline-none focus:border-desa-primary cursor-pointer"
+                className="bg-white/80 backdrop-blur-md border border-desa-border rounded-xl px-3 py-2 text-xs text-desa-primary font-semibold focus:outline-none focus:border-desa-accent cursor-pointer shadow-2xs"
               >
                 <option value="terbaru">Terbaru</option>
                 <option value="termurah">Harga Terendah</option>
@@ -150,7 +151,7 @@ export default function CatalogPage() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="flex flex-wrap items-center gap-2 pt-3.5 mt-3.5 border-t border-desa-border text-xs overflow-hidden"
+              className="flex flex-wrap items-center gap-2 pt-3.5 mt-3.5 border-t border-desa-border/50 text-xs overflow-hidden"
             >
               <span className="text-desa-muted font-medium">Filter aktif:</span>
               {selectedCategory !== 'semua' && (
@@ -159,7 +160,7 @@ export default function CatalogPage() {
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.8, opacity: 0 }}
-                  className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-desa-accent/10 text-desa-accent font-medium"
+                  className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-desa-accent/10 border border-desa-accent/20 text-desa-accent font-semibold"
                 >
                   {categories.find(c => c.id === selectedCategory)?.name || selectedCategory}
                   <button onClick={() => setSelectedCategory('semua')} className="hover:text-desa-primary ml-0.5"><X className="w-3 h-3" /></button>
@@ -171,7 +172,7 @@ export default function CatalogPage() {
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.8, opacity: 0 }}
-                  className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-desa-primary/10 text-desa-primary font-medium"
+                  className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-desa-primary/10 border border-desa-primary/20 text-desa-primary font-semibold"
                 >
                   {selectedKecamatan}
                   <button onClick={() => setSelectedKecamatan('Semua Kecamatan')} className="hover:text-desa-accent ml-0.5"><X className="w-3 h-3" /></button>
@@ -183,9 +184,9 @@ export default function CatalogPage() {
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.8, opacity: 0 }}
-                  className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-700 font-medium"
+                  className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-desa-accent/10 border border-desa-accent/20 text-desa-accent font-semibold"
                 >
-                  <Star className="w-3 h-3 fill-amber-500 text-amber-500 inline mr-0.5" />
+                  <Star className="w-3 h-3 fill-desa-accent text-desa-accent inline mr-0.5" />
                   <span>{minRating}+ Bintang</span>
                   <button onClick={() => setMinRating(0)} className="hover:text-desa-primary ml-0.5"><X className="w-3 h-3" /></button>
                 </motion.span>
@@ -206,9 +207,10 @@ export default function CatalogPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-7 items-start">
         
-        <aside className={`lg:col-span-1 bg-white rounded-xl p-5 border border-desa-border shadow-xs space-y-6 ${showMobileFilter ? 'block' : 'hidden lg:block'}`}>
+        {/* Sidebar Filter with Liquid Glass */}
+        <aside className={`lg:col-span-1 bg-white/75 backdrop-blur-xl rounded-2xl p-5 border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-6 ${showMobileFilter ? 'block' : 'hidden lg:block'}`}>
           
-          <div className="flex items-center justify-between pb-3">
+          <div className="flex items-center justify-between pb-3 border-b border-desa-border/50">
             <div className="flex items-center gap-2">
               <SlidersHorizontal className="w-4 h-4 text-desa-accent" />
               <h3 className="font-heading font-bold text-sm text-desa-primary">
@@ -226,7 +228,7 @@ export default function CatalogPage() {
           </div>
 
           <div className="space-y-2">
-            <h4 className="text-xs font-bold text-desa-muted">
+            <h4 className="text-xs font-bold text-desa-muted uppercase tracking-wider">
               Kategori
             </h4>
             <div className="space-y-1">
@@ -238,22 +240,22 @@ export default function CatalogPage() {
                     setSelectedCategory(cat.id);
                     setCurrentPage(1);
                   }}
-                  className={`relative w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center justify-between ${
+                  className={`relative w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all flex items-center justify-between ${
                     selectedCategory === cat.id
-                      ? 'text-white font-semibold'
-                      : 'text-desa-text hover:bg-desa-bg'
+                      ? 'text-white font-semibold shadow-xs'
+                      : 'text-desa-text hover:bg-white/80'
                   }`}
                 >
                   {selectedCategory === cat.id && (
                     <motion.div
                       layoutId="catalogCategoryActivePill"
-                      className="absolute inset-0 bg-desa-primary rounded-lg z-0"
+                      className="absolute inset-0 bg-desa-primary rounded-xl z-0"
                       transition={{ type: 'spring', stiffness: 500, damping: 32 }}
                     />
                   )}
                   <span className="relative z-10">{cat.name}</span>
-                  <span className={`relative z-10 text-[10px] px-1.5 py-0.2 rounded ${
-                    selectedCategory === cat.id ? 'bg-white/20 text-white' : 'text-desa-subtle'
+                  <span className={`relative z-10 text-[10px] px-1.5 py-0.5 rounded-full ${
+                    selectedCategory === cat.id ? 'bg-white/20 text-white' : 'bg-desa-bg text-desa-muted'
                   }`}>
                     {cat.count}
                   </span>
@@ -262,10 +264,8 @@ export default function CatalogPage() {
             </div>
           </div>
 
-          <div className="h-3" />
-
-          <div className="space-y-2">
-            <h4 className="text-xs font-bold text-desa-muted">
+          <div className="space-y-2 pt-2 border-t border-desa-border/40">
+            <h4 className="text-xs font-bold text-desa-muted uppercase tracking-wider">
               Wilayah Kecamatan
             </h4>
             <div className="space-y-1">
@@ -277,16 +277,16 @@ export default function CatalogPage() {
                     setSelectedKecamatan(kecamatan);
                     setCurrentPage(1);
                   }}
-                  className={`relative w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center justify-between ${
+                  className={`relative w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-all flex items-center justify-between ${
                     selectedKecamatan === kecamatan
-                      ? 'text-white font-semibold'
-                      : 'text-desa-text hover:bg-desa-bg'
+                      ? 'text-white font-semibold shadow-xs'
+                      : 'text-desa-text hover:bg-white/80'
                   }`}
                 >
                   {selectedKecamatan === kecamatan && (
                     <motion.div
                       layoutId="catalogKecamatanActivePill"
-                      className="absolute inset-0 bg-desa-accent rounded-lg z-0"
+                      className="absolute inset-0 bg-desa-accent rounded-xl z-0 shadow-sm"
                       transition={{ type: 'spring', stiffness: 500, damping: 32 }}
                     />
                   )}
@@ -297,11 +297,9 @@ export default function CatalogPage() {
             </div>
           </div>
 
-          <div className="h-3" />
-
-          <div className="space-y-2.5">
+          <div className="space-y-2.5 pt-2 border-t border-desa-border/40">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold text-desa-muted">
+              <h4 className="text-xs font-bold text-desa-muted uppercase tracking-wider">
                 Batas Harga
               </h4>
               <span className="text-xs font-semibold text-desa-accent">
@@ -326,10 +324,8 @@ export default function CatalogPage() {
             </div>
           </div>
 
-          <div className="h-3" />
-
-          <div className="space-y-2">
-            <h4 className="text-xs font-bold text-desa-muted">
+          <div className="space-y-2 pt-2 border-t border-desa-border/40">
+            <h4 className="text-xs font-bold text-desa-muted uppercase tracking-wider">
               Rating Pembeli
             </h4>
             <div className="flex flex-wrap gap-1.5">
@@ -341,10 +337,10 @@ export default function CatalogPage() {
                     setMinRating(minRating === star ? 0 : star);
                     setCurrentPage(1);
                   }}
-                  className={`px-2.5 py-1 rounded-md text-xs font-medium flex items-center gap-1 border transition-colors ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 border transition-all ${
                     minRating === star
-                      ? 'bg-amber-500 text-white border-amber-600 font-semibold'
-                      : 'bg-white text-desa-text border-desa-border hover:border-amber-400'
+                      ? 'bg-desa-accent text-white border-desa-accent font-semibold shadow-xs'
+                      : 'bg-white/80 text-desa-text border-desa-border hover:border-desa-accent/40'
                   }`}
                 >
                   <Star className="w-3 h-3 fill-current" />
@@ -356,13 +352,14 @@ export default function CatalogPage() {
 
         </aside>
 
+        {/* Product Cards Grid with Liquid Glass cards */}
         <main className="lg:col-span-3 space-y-6">
           
           <div className="flex items-center justify-between text-sm text-desa-muted">
             <span>
-              Menampilkan <strong>{filteredProducts.length}</strong> produk lokal terkurasi
+              Menampilkan <strong className="text-desa-primary">{filteredProducts.length}</strong> produk lokal terkurasi
             </span>
-            <span>Halaman {currentPage} dari {totalPages}</span>
+            <span className="text-xs font-medium">Halaman {currentPage} dari {totalPages}</span>
           </div>
 
           {paginatedProducts.length > 0 ? (
@@ -383,8 +380,8 @@ export default function CatalogPage() {
               </AnimatePresence>
             </motion.div>
           ) : (
-            <div className="bg-white rounded-xl p-12 text-center border border-desa-border space-y-4">
-              <div className="w-12 h-12 rounded-full bg-desa-bg flex items-center justify-center mx-auto text-desa-accent">
+            <div className="bg-white/75 backdrop-blur-xl rounded-2xl p-12 text-center border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-desa-accent/10 border border-desa-accent/20 flex items-center justify-center mx-auto text-desa-accent">
                 <Search className="w-6 h-6" />
               </div>
               <h3 className="font-heading font-bold text-base text-desa-primary">
@@ -395,7 +392,7 @@ export default function CatalogPage() {
               </p>
               <button
                 onClick={resetFilters}
-                className="px-4 py-2 rounded-lg bg-desa-primary text-white text-xs font-semibold hover:bg-desa-primary/90 transition-colors inline-flex items-center gap-2 shadow-2xs"
+                className="px-5 py-2.5 rounded-xl bg-desa-primary text-white text-xs font-semibold hover:bg-forest-surface transition-all inline-flex items-center gap-2 shadow-sm"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Reset Filter</span>
@@ -412,7 +409,7 @@ export default function CatalogPage() {
                   setCurrentPage(p => Math.max(1, p - 1));
                   window.scrollTo({ top: 180, behavior: 'smooth' });
                 }}
-                className="px-3.5 py-1.5 rounded-lg border border-desa-border text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-desa-bg transition-colors"
+                className="px-3.5 py-1.5 rounded-xl border border-desa-border bg-white/70 backdrop-blur-md text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white transition-colors shadow-2xs"
               >
                 Sebelumnya
               </motion.button>
@@ -425,10 +422,10 @@ export default function CatalogPage() {
                     setCurrentPage(num);
                     window.scrollTo({ top: 180, behavior: 'smooth' });
                   }}
-                  className={`w-8 h-8 rounded-lg text-xs font-bold transition-colors ${
+                  className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
                     currentPage === num
-                      ? 'bg-desa-primary text-white shadow-xs'
-                      : 'border border-desa-border text-desa-text hover:bg-desa-bg'
+                      ? 'bg-desa-accent text-white shadow-xs'
+                      : 'border border-desa-border bg-white/70 backdrop-blur-md text-desa-text hover:bg-white'
                   }`}
                 >
                   {num}
@@ -442,7 +439,7 @@ export default function CatalogPage() {
                   setCurrentPage(p => Math.min(totalPages, p + 1));
                   window.scrollTo({ top: 180, behavior: 'smooth' });
                 }}
-                className="px-3.5 py-1.5 rounded-lg border border-desa-border text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-desa-bg transition-colors"
+                className="px-3.5 py-1.5 rounded-xl border border-desa-border bg-white/70 backdrop-blur-md text-xs font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white transition-colors shadow-2xs"
               >
                 Selanjutnya
               </motion.button>

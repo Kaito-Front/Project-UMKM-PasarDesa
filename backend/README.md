@@ -51,5 +51,5 @@ API berjalan di `http://127.0.0.1:8000/api`. Frontend sudah memakai alamat terse
 
 | Peran | Identifier (Email / No HP) | Kata Sandi Default | Sumber Konfigurasi |
 | :--- | :--- | :--- | :--- |
-| **Admin Desa** | `admin@pasardesa.go.id` / `081122334455` | `DesaMandiri@2026!` | `ADMIN_PASSWORD` di `.env` |
-| **Penjual (Demo)** | `sumarsih@pasardesa.id` / `081234567890` | `PasarLurik@2026!` | `DEMO_SELLER_PASSWORD` di `.env` |
+| **Admin Desa** | `admin@pasardesa.go.id` / `081915194171` | `DesaMandiri@2026!` | `ADMIN_PASSWORD` di `.env` |
+| **Penjual (Demo)** | `sumarsih@pasardesa.id` / `081915194171` | `PasarLurik@2026!` | `DEMO_SELLER_PASSWORD` di `.env` |

@@ -1,3 +1,4 @@
+/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./index.html",
@@ -6,38 +7,43 @@ export default {
   theme: {
     extend: {
       colors: {
-        // 60% Sage Mist Ground & Surfaces
-        'desa-bg': '#E8ECE6',
-        'desa-surface': '#F2F5F0',
-        'desa-border': '#D1D8CE',
-        'desa-light': '#F8FAF7',
-        'sage-mist': '#E8ECE6',
-        'sage-surface': '#F2F5F0',
-        'sage-border': '#D1D8CE',
+        // 60% Oatmilk Main Canvas, Ground & Surface
+        'desa-bg': '#FBF8F3',
+        'desa-surface': '#F4EFE6',
+        'desa-card': '#FFFFFF',
+        'desa-border': '#E8E0D5',
+        'desa-light': '#FFFFFF',
+        'oatmilk': '#FBF8F3',
+        'oatmilk-surface': '#F4EFE6',
+        'oatmilk-border': '#E8E0D5',
+        'oatmilk-dark': '#EDE5D8',
 
-        // 30% Deep Forest Ink, Structure & Typography
-        'desa-primary': '#1C2D22',
-        'desa-text': '#18251C',
-        'desa-muted': '#506154',
-        'desa-subtle': '#758579',
-        'deep-forest': '#1C2D22',
-        'forest-dark': '#142119',
-        'forest-muted': '#506154',
+        // 30% Forest Green Second Color (Typography, Headings, Structure & Dark Cards)
+        'desa-primary': '#163324',
+        'desa-text': '#183324',
+        'desa-muted': '#4A6B59',
+        'desa-subtle': '#6D8F7D',
+        'forest-green': '#163324',
+        'forest-surface': '#1F4532',
+        'forest-border': '#2E5E45',
+        'forest-muted': '#4A6B59',
+        'forest-dark': '#0E2117',
 
-        // 10% Sunbeam Yellow Eye-Catching Accent & Highlights
-        'desa-accent': '#F5B731',
-        'desa-highlight': '#E5A51E',
-        'sunbeam': '#F5B731',
-        'sunbeam-glow': '#FEF9EE',
+        // 10% Tomato Red Loud Accent / Attention Grabber
+        'desa-accent': '#E83D23',
+        'desa-highlight': '#CF3018',
+        'tomato-red': '#E83D23',
+        'tomato-hover': '#CF3018',
+        'tomato-glow': 'rgba(232, 61, 35, 0.25)',
       },
       fontFamily: {
         serif: ['Fraunces', 'serif'],
         sans: ['"Work Sans"', 'sans-serif'],
       },
       backgroundImage: {
-        'lurik-stripes': 'repeating-linear-gradient(90deg, #2F2F2D 0px, #2F2F2D 1.5px, transparent 1.5px, transparent 8px)',
-        'lurik-stripes-light': 'repeating-linear-gradient(90deg, rgba(239, 237, 230, 0.4) 0px, rgba(239, 237, 230, 0.4) 1.5px, transparent 1.5px, transparent 8px)',
-        'lurik-stripes-accent': 'repeating-linear-gradient(90deg, #9E5335 0px, #9E5335 1.5px, transparent 1.5px, transparent 7px)',
+        'lurik-stripes': 'repeating-linear-gradient(90deg, #163324 0px, #163324 1.5px, transparent 1.5px, transparent 8px)',
+        'lurik-stripes-light': 'repeating-linear-gradient(90deg, rgba(251, 248, 243, 0.5) 0px, rgba(251, 248, 243, 0.5) 1.5px, transparent 1.5px, transparent 8px)',
+        'lurik-stripes-accent': 'repeating-linear-gradient(90deg, #E83D23 0px, #E83D23 1.5px, transparent 1.5px, transparent 7px)',
       }
     },
   },

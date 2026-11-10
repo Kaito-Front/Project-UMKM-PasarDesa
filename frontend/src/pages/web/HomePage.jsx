@@ -23,9 +23,7 @@ import {
   Award,
   Sparkles,
   ShoppingBag,
-  Eye,
-  Play,
-  CheckCircle2
+  Eye
 } from 'lucide-react';
 
 function Counter({ value, suffix = '' }) {
@@ -66,17 +64,19 @@ export default function HomePage() {
     viewShop,
     viewProduct,
     setCurrentView,
-    openDirectCheckout
+    openDirectCheckout,
+    hasSeenIntro,
+    setHasSeenIntro,
+    openAuth
   } = useApp();
 
-  // Always show intro loading animation on page load and on every refresh
-  const [showIntro, setShowIntro] = useState(true);
+  // Show intro only on fresh load/refresh; do not show when clicking "Beranda" or navigating in-app
+  const [showIntro, setShowIntro] = useState(!hasSeenIntro);
 
-  useEffect(() => {
-    try {
-      sessionStorage.removeItem('hasSeenPasarIntro');
-    } catch {}
-  }, []);
+  const handleIntroComplete = () => {
+    setHasSeenIntro(true);
+    setShowIntro(false);
+  };
 
   const [heroSearch, setHeroSearch] = useState('');
   const [carouselIndex, setCarouselIndex] = useState(0);
@@ -101,13 +101,13 @@ export default function HomePage() {
     if (!heroSearch.trim()) return;
     setSearchQuery(heroSearch);
     setWebPage('catalog');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   };
 
   const handleCategorySelect = (categoryId) => {
     setSelectedCategory(categoryId);
     setWebPage('catalog');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   };
 
   const scrollToContent = () => {
@@ -129,122 +129,85 @@ export default function HomePage() {
     <>
       {/* 0. INTRO PORTAL: Gerbang Pasar Desa (Sebelum Masuk Web) */}
       {showIntro && (
-        <MarketIntroPortal onComplete={() => setShowIntro(false)} />
+        <MarketIntroPortal onComplete={handleIntroComplete} />
       )}
 
       {/* Whole Landing Page Smooth Fade-in from Bottom */}
       <motion.div 
-        initial={{ opacity: 0, y: 45 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        className="space-y-16 lg:space-y-24 overflow-hidden pb-16"
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="overflow-hidden pb-16 relative"
       >
+        {/* Subtle Ambient Liquid Glass Lighting Mesh across Landing Page */}
+        <div className="fixed inset-0 pointer-events-none -z-20 overflow-hidden">
+          <div className="absolute top-[20%] left-[-10%] w-[45rem] h-[45rem] rounded-full bg-gradient-to-br from-amber-200/25 via-emerald-100/15 to-transparent blur-[140px]" />
+          <div className="absolute top-[60%] right-[-10%] w-[50rem] h-[50rem] rounded-full bg-gradient-to-tl from-[#163324]/8 via-[#E83D23]/6 to-transparent blur-[150px]" />
+        </div>
         
         {/* =========================================================================
-            FASE 1: PRE-SCROLL FULLSCREEN 100vh SHOWCASE
-            Persis Gambar Referensi (Adidas Yeezy Product Showcase)
-            Bebas dari elemen lain sebelum di-scroll!
+            FASE 1: PRE-SCROLL FULLSCREEN 100vh SHOWCASE (EDGE-TO-EDGE LIQUID GLASS)
+            True edge-to-edge fullscreen hero stage, distinct from the marketplace page below
            ========================================================================= */}
-        <section className="relative w-full min-h-[calc(100vh-5rem)] lg:h-[calc(100vh-5rem)] flex flex-col justify-between px-4 sm:px-6 lg:px-8 pt-2 pb-6">
-          <div className="max-w-screen-2xl mx-auto w-full h-full flex flex-col justify-between rounded-3xl bg-white/70 backdrop-blur-md border border-desa-border/80 shadow-md p-6 sm:p-8 lg:p-10 relative overflow-hidden flex-1">
-            
-            {/* Soft Ambient Clay/Sunbeam Glow in Background */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] sm:w-[560px] lg:w-[680px] h-[380px] sm:h-[560px] lg:h-[680px] bg-desa-accent/15 rounded-full blur-[110px] pointer-events-none" />
-            <div className="absolute top-12 right-12 w-80 h-80 bg-desa-primary/5 rounded-full blur-3xl pointer-events-none" />
+        <section className="relative w-full min-h-[100dvh] lg:h-[100dvh] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#FBF8F3] via-white/50 to-[#F4EFE6]/90 border-b border-[#E8E0D5]">
+          
+          {/* Full-Bleed Multi-tier Ambient Liquid Light Beams */}
+          <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[42rem] h-[42rem] bg-gradient-to-br from-amber-200/35 via-emerald-100/25 to-transparent rounded-full blur-[130px] pointer-events-none -z-10" />
+          <div className="absolute bottom-1/4 right-1/4 translate-x-1/3 translate-y-1/3 w-[45rem] h-[45rem] bg-gradient-to-tl from-[#163324]/12 via-[#E83D23]/8 to-transparent rounded-full blur-[140px] pointer-events-none -z-10" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 bg-radial from-white/75 via-[#FBF8F3]/35 to-transparent rounded-full blur-[95px] pointer-events-none -z-10" />
 
-            {/* Top Stage Header (Authenticity Tag) */}
-            <div className="relative z-10 flex items-center justify-between pb-3 border-b border-desa-border/50">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-desa-accent animate-pulse" />
-                <span className="text-xs font-bold uppercase tracking-wider text-desa-primary">
-                  Kurasi Unggulan Pengrajin Sumedang
-                </span>
-              </div>
-              <div className="hidden sm:flex items-center gap-2 text-xs text-desa-muted font-medium">
-                <span>Sentra Terdaftar:</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-desa-surface border border-desa-border text-desa-primary font-semibold">
-                  5 Kecamatan Binaan BUMDes
-                </span>
-              </div>
+          {/* Full-Width Specular Rim Light */}
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent pointer-events-none" />
+
+          {/* Constrained Inner Content Area for Clean Layout & Alignment */}
+          <div className="max-w-screen-2xl mx-auto w-full h-full flex flex-col justify-between px-4 sm:px-8 lg:px-12 pt-3 pb-4 sm:pt-4 sm:pb-6 lg:py-6 flex-1 relative z-10">
+            
+            {/* Top Stage Header (Subtle & Quiet) */}
+            <div className="flex items-center justify-between pb-2.5 sm:pb-3 border-b border-[#E8E0D5]/70 text-xs text-desa-muted relative z-10">
+              <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-desa-accent font-black">
+                0{activeHeroIndex + 1} / 0{heroShowcaseList.length}
+              </span>
+              <span className="text-[10px] sm:text-[11px] text-[#163324] font-bold truncate ml-2">
+                Katalog Unggulan Pengrajin Sumedang
+              </span>
             </div>
 
-            {/* Middle Grid: Left Rail, Center 3D Tactile Product, Right Title & CTA */}
-            <div className="relative z-10 py-4 sm:py-6 lg:py-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center flex-1 my-auto">
+            {/* Middle Grid: Left Rail on desktop / stacked on mobile, Center 3D Tactile Product, Right Title & CTA */}
+            <div className="relative z-10 py-2 sm:py-4 lg:py-6 grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center flex-1 my-auto">
               
-              {/* 1. LEFT RAIL: Vertical Slider 01-04 + Artisan Media Preview Card */}
-              <div className="lg:col-span-3 flex flex-row lg:flex-col justify-between items-start gap-6 order-2 lg:order-1">
-                
-                {/* Vertical Slider Navigation Rail */}
-                <div className="flex flex-row lg:flex-col items-center gap-2 bg-desa-surface/90 backdrop-blur-xs p-1.5 rounded-full border border-desa-border/70 shadow-2xs">
+              {/* 1. LEFT RAIL (DESKTOP ONLY): Vertical Slider 01-04 (Liquid Glass Capsule) */}
+              <div className="hidden lg:flex lg:col-span-2 flex-col justify-start items-start gap-3 order-1">
+                <div className="flex flex-col items-center gap-2 p-1.5 rounded-full bg-white/50 backdrop-blur-2xl border border-white/90 shadow-[0_4px_20px_rgba(0,0,0,0.04),inset_0_1px_1px_rgba(255,255,255,0.9)]">
                   {heroShowcaseList.map((item, idx) => (
                     <button
                       key={item.id}
                       onClick={() => setActiveHeroIndex(idx)}
                       className={`relative transition-all duration-300 rounded-full flex items-center justify-center ${
                         activeHeroIndex === idx 
-                          ? 'w-8 h-8 lg:w-7 lg:h-9 bg-desa-primary text-white shadow-xs' 
-                          : 'w-7 h-7 lg:w-7 lg:h-7 text-desa-muted hover:text-desa-primary hover:bg-black/5'
+                          ? 'w-7 h-9 bg-desa-primary text-white shadow-xs' 
+                          : 'w-7 h-7 text-desa-muted hover:text-desa-primary hover:bg-black/5'
                       }`}
                       title={item.name}
                       aria-label={`Pilih produk ${item.name}`}
                     >
                       <span className="text-[11px] font-bold">0{idx + 1}</span>
                       {activeHeroIndex === idx && (
-                        <span className="absolute -top-1 -right-1 w-2 h-2 bg-desa-accent rounded-full" />
+                        <span className="absolute -top-1 -right-1 w-2 h-2 bg-desa-accent rounded-full ring-2 ring-white" />
                       )}
                     </button>
                   ))}
                 </div>
-
-                {/* Artisan Media Thumbnail Card (Bottom-Left) */}
-                {activeHeroProduct && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    key={`media-${activeHeroProduct.id}`}
-                    transition={{ duration: 0.4 }}
-                    onClick={() => viewShop(activeHeroProduct.shopId)}
-                    className="group bg-white/95 rounded-2xl p-3 border border-desa-border/80 shadow-xs hover:border-desa-primary/40 hover:shadow-md transition-all cursor-pointer max-w-[240px] sm:max-w-[260px]"
-                  >
-                    <div className="relative aspect-16/10 rounded-xl overflow-hidden bg-desa-bg mb-2">
-                      <img
-                        src={activeHeroProduct.images?.[1] || activeHeroProduct.images?.[0] || '/kain-lurik.jpg'}
-                        alt={activeHeroProduct.shopName}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                      />
-                      <div className="absolute inset-0 bg-black/25 flex items-center justify-center">
-                        <div className="w-8 h-8 rounded-full bg-desa-primary/85 text-desa-accent flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
-                          <Play className="w-3.5 h-3.5 fill-desa-accent ml-0.5" />
-                        </div>
-                      </div>
-                      <div className="absolute bottom-1.5 left-1.5 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-[10px] text-white font-medium">
-                        Profil Pengrajin
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-0.5">
-                      <div className="flex items-center justify-between text-[11px] text-desa-muted">
-                        <span className="truncate font-semibold text-desa-primary">{activeHeroProduct.shopName}</span>
-                        <ArrowUpRight className="w-3 h-3 text-desa-muted group-hover:text-desa-accent transition-colors" />
-                      </div>
-                      <p className="text-[10px] text-desa-subtle truncate">
-                        {activeHeroProduct.kecamatan.replace('Kecamatan ', '')} • Sentra Tradisional
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-
               </div>
 
-              {/* 2. CENTERPIECE: 4 Dynamic Three.js 3D Models for 4 Products */}
-              <div className="lg:col-span-5 relative flex flex-col items-center justify-center order-1 lg:order-2 min-h-[400px] sm:min-h-[480px]">
+              {/* 2. CENTERPIECE: 4 Dynamic Three.js 3D Models with Adaptive Mobile Sizing */}
+              <div className="lg:col-span-6 relative flex flex-col items-center justify-center order-1 lg:order-2">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeHeroProduct.id}
-                    initial={{ opacity: 0, scale: 0.92 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.92 }}
-                    transition={{ duration: 0.45 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.4 }}
                     className="w-full flex items-center justify-center"
                   >
                     {activeHeroProduct.id === 'prod-1' && (
@@ -267,90 +230,99 @@ export default function HomePage() {
                     )}
                   </motion.div>
                 </AnimatePresence>
+
+                {/* MOBILE-ONLY HORIZONTAL SLIDER PILL (Centered below 3D model) */}
+                <div className="flex lg:hidden items-center justify-center mt-2 select-none">
+                  <div className="flex items-center gap-1.5 p-1 rounded-full bg-white/75 backdrop-blur-xl border border-white/90 shadow-xs">
+                    {heroShowcaseList.map((item, idx) => (
+                      <button
+                        key={`m-hero-${item.id}`}
+                        onClick={() => setActiveHeroIndex(idx)}
+                        className={`relative transition-all duration-300 rounded-full flex items-center justify-center text-xs font-bold ${
+                          activeHeroIndex === idx 
+                            ? 'px-3 py-1 bg-desa-primary text-white shadow-xs' 
+                            : 'px-2.5 py-1 text-desa-muted hover:text-desa-primary'
+                        }`}
+                        title={item.name}
+                        aria-label={`Pilih produk ${item.name}`}
+                      >
+                        <span>0{idx + 1}</span>
+                        {activeHeroIndex === idx && (
+                          <span className="w-1.5 h-1.5 ml-1 bg-desa-accent rounded-full" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              {/* 3. RIGHT COLUMN: Apple Minimal - No Description, Compact Bottom-Right Actions */}
-              <div className="lg:col-span-4 flex flex-col justify-between h-full space-y-6 order-3">
+              {/* 3. RIGHT COLUMN: Apple Minimal - Strong Type, Clean Mobile/Desktop Actions */}
+              <div className="lg:col-span-4 flex flex-col justify-between h-full space-y-4 sm:space-y-6 order-2 lg:order-3 text-center lg:text-left">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={`title-${activeHeroProduct.id}`}
-                    initial={{ opacity: 0, y: 15 }}
+                    initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -15 }}
-                    transition={{ duration: 0.35 }}
-                    className="space-y-3"
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{ duration: 0.3 }}
+                    className="space-y-1.5 sm:space-y-2.5"
                   >
-                    {/* Origin & Category Tag */}
-                    <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-0.5 rounded-full bg-desa-surface border border-desa-border text-[10px] font-bold uppercase tracking-wider text-desa-muted">
-                        {activeHeroProduct.categoryName}
-                      </span>
-                      <span className="text-[11px] text-desa-subtle font-medium">
-                        {activeHeroProduct.shopName}
-                      </span>
-                    </div>
+                    <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-desa-muted block">
+                      {activeHeroProduct.categoryName} • {activeHeroProduct.shopName}
+                    </span>
 
-                    {/* Massive Apple Minimal Display Title */}
                     <h1 
                       onClick={() => viewProduct(activeHeroProduct.id)}
-                      className="font-heading text-3xl sm:text-4xl lg:text-[2.6rem] font-black text-desa-primary leading-tight hover:text-desa-muted cursor-pointer transition-colors flex items-start gap-2 group tracking-tight"
+                      className="font-heading text-2xl xs:text-3xl sm:text-4xl lg:text-[2.75rem] font-black text-desa-primary leading-tight hover:text-desa-muted cursor-pointer transition-colors tracking-tight line-clamp-2"
                     >
-                      <span className="line-clamp-2">{activeHeroProduct.name}</span>
-                      <ArrowUpRight className="w-6 h-6 text-desa-accent shrink-0 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                      {activeHeroProduct.name}
                     </h1>
                   </motion.div>
                 </AnimatePresence>
 
-                {/* Compact Bottom-Right Cluster (Harga, Beli Sekarang, Detail) */}
+                {/* Compact Action Cluster (Harga, Beli Sekarang, Detail) */}
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={`act-${activeHeroProduct.id}`}
-                    initial={{ opacity: 0, y: 15 }}
+                    initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 15 }}
-                    transition={{ duration: 0.35 }}
-                    className="pt-2 flex flex-col items-start lg:items-end gap-3 self-end w-full lg:w-auto"
+                    exit={{ opacity: 0, y: 12 }}
+                    transition={{ duration: 0.3 }}
+                    className="pt-1 sm:pt-2 flex flex-col items-center lg:items-end gap-3 self-center lg:self-end w-full lg:w-auto"
                   >
-                    {/* Compact Price */}
                     <div className="flex items-baseline gap-2">
-                      <span className="text-[10px] font-mono uppercase text-desa-muted tracking-wider">
+                      <span className="text-[10px] font-mono uppercase text-[#163324] font-bold tracking-wider">
                         Harga
                       </span>
-                      <span className="font-heading font-black text-2xl lg:text-3xl text-desa-primary tracking-tight">
+                      <span className="font-heading font-black text-2xl sm:text-3xl text-desa-primary tracking-tight">
                         Rp {Number(activeHeroProduct.price || 0).toLocaleString('id-ID')}
                       </span>
                     </div>
 
-                    {/* Compact Action Buttons */}
-                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <div className="flex items-center gap-2 w-full sm:w-auto max-w-sm mx-auto lg:mx-0">
                       <motion.button
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => openDirectCheckout(activeHeroProduct, 1)}
-                        className="flex-1 sm:flex-initial px-4 py-2 rounded-full bg-desa-accent hover:bg-desa-highlight text-desa-primary font-bold text-xs tracking-wide shadow-xs transition-all flex items-center justify-center gap-1.5"
+                        className="flex-1 sm:flex-initial px-5 py-2.5 sm:py-3 rounded-full bg-desa-accent hover:bg-desa-highlight text-white font-bold text-xs sm:text-sm tracking-wide transition-colors flex items-center justify-center gap-2 shadow-sm min-h-[44px]"
                       >
-                        <ShoppingBag className="w-3.5 h-3.5" />
+                        <ShoppingBag className="w-4 h-4" />
                         <span>Beli Sekarang</span>
                       </motion.button>
 
                       <motion.button
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => {
                           viewProduct(activeHeroProduct.id);
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                         }}
-                        className="px-3.5 py-2 rounded-full bg-white hover:bg-desa-surface text-desa-primary border border-desa-border font-semibold text-xs transition-colors flex items-center justify-center gap-1 shadow-2xs"
+                        className="px-4 sm:px-5 py-2.5 sm:py-3 rounded-full bg-white/70 hover:bg-white/95 backdrop-blur-2xl text-desa-primary border border-white/90 font-bold text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 shadow-2xs min-h-[44px]"
                         title="Lihat Rincian Produk"
                       >
-                        <Eye className="w-3.5 h-3.5 text-desa-muted" />
+                        <Eye className="w-4 h-4 text-desa-muted" />
                         <span>Detail</span>
                       </motion.button>
-                    </div>
-
-                    <div className="flex items-center gap-1.5 text-[11px] text-desa-muted">
-                      <CheckCircle2 className="w-3 h-3 text-desa-primary" />
-                      <span>Karya Asli Pengrajin Desa</span>
                     </div>
                   </motion.div>
                 </AnimatePresence>
@@ -359,13 +331,13 @@ export default function HomePage() {
             </div>
 
             {/* Bottom Animated Scroll Cue Indicator (Guide to Stage 2) */}
-            <div className="relative z-10 pt-3 border-t border-desa-border/50 flex items-center justify-center">
+            <div className="pt-2 sm:pt-3 border-t border-[#E8E0D5]/70 flex items-center justify-center">
               <button
                 onClick={scrollToContent}
-                className="group flex flex-col items-center gap-1 text-xs font-semibold text-desa-muted hover:text-desa-primary transition-colors cursor-pointer select-none"
+                className="group flex items-center gap-1.5 text-xs text-desa-muted hover:text-desa-primary transition-colors cursor-pointer select-none py-1"
               >
-                <span>Gulir untuk eksplorasi katalog pasar</span>
-                <ChevronDown className="w-4 h-4 text-desa-accent animate-bounce transition-transform group-hover:scale-110" />
+                <span className="text-xs font-bold text-[#163324]">Eksplorasi Pasar</span>
+                <ChevronDown className="w-3.5 h-3.5 text-desa-accent transition-transform group-hover:translate-y-0.5 animate-bounce" />
               </button>
             </div>
 
@@ -376,153 +348,126 @@ export default function HomePage() {
             FASE 2: HERO PAGE & KONTEN LENGKAP (SETELAH SCROLL)
             Muncul di bawah fold layar fullscreen pertama
            ========================================================================= */}
-        <div id="pasar-content" className="space-y-16 lg:space-y-24 scroll-mt-24">
+        <div id="pasar-content" className="space-y-16 lg:space-y-24 scroll-mt-20 pt-8 sm:pt-12">
           
           {/* 1. Hero Section Multi-Card Grid (Sesuai Referensi Foto 2 - Studio Keffi) */}
           <KeffiProductGrid />
 
-          {/* 2. Section Pencarian Terintegrasi & Tag Populer */}
-          <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-desa-border shadow-xs">
-              <form onSubmit={handleHeroSearchSubmit} className="max-w-3xl mx-auto space-y-3">
-                <div className="text-center space-y-1 mb-4">
-                  <h3 className="font-heading text-xl sm:text-2xl font-bold text-desa-primary">
-                    Cari Produk & Komoditas Desa
-                  </h3>
-                  <p className="text-xs sm:text-sm text-desa-muted">
-                    Temukan kain tenun ATBM, olahan pangan, madu hutan, dan kerajinan tangan khas Sumedang
-                  </p>
+          {/* 2. Section Pencarian Terpadu (Liquid Glass Search Pill) */}
+          <section className="max-w-3xl mx-auto px-4 sm:px-6">
+            <form onSubmit={handleHeroSearchSubmit} className="space-y-3">
+              <div className="flex items-center gap-2 p-1.5 sm:p-2 bg-white/85 backdrop-blur-xl rounded-full border border-white/90 shadow-[0_4px_25px_rgba(22,51,36,0.06)] focus-within:border-desa-accent transition-all">
+                <div className="flex items-center gap-2.5 px-3 sm:px-4 py-1.5 sm:py-2 flex-1 min-w-0">
+                  <Search className="w-4 h-4 text-desa-accent shrink-0" />
+                  <input
+                    type="text"
+                    placeholder="Cari produk tenun, kripik, madu, anyaman..."
+                    value={heroSearch}
+                    onChange={(e) => setHeroSearch(e.target.value)}
+                    className="w-full bg-transparent text-xs sm:text-sm text-desa-text placeholder:text-desa-subtle focus:outline-none"
+                  />
                 </div>
+                <button
+                  type="submit"
+                  className="px-5 sm:px-6 py-2.5 rounded-full bg-desa-accent hover:bg-desa-highlight text-white font-bold text-xs transition-colors flex items-center justify-center gap-2 shrink-0 shadow-xs min-h-[40px]"
+                >
+                  <span className="hidden xs:inline">Cari</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
 
-                <div className="flex flex-col sm:flex-row items-stretch gap-2 p-1.5 bg-desa-surface rounded-full shadow-xs border border-desa-border focus-within:border-desa-primary focus-within:ring-2 focus-within:ring-desa-accent/20 transition-all">
-                  <div className="flex items-center gap-3 px-4 py-2 flex-1">
-                    <Search className="w-4 h-4 text-desa-accent shrink-0" />
-                    <input
-                      type="text"
-                      placeholder="Ketik nama produk, pengrajin, atau kecamatan..."
-                      value={heroSearch}
-                      onChange={(e) => setHeroSearch(e.target.value)}
-                      className="w-full bg-transparent text-xs sm:text-sm text-desa-text placeholder:text-desa-subtle focus:outline-none"
-                    />
-                  </div>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
-                    type="submit"
-                    className="px-6 py-2.5 rounded-full bg-desa-primary hover:bg-desa-primary/90 text-white font-semibold text-xs tracking-wide shadow-xs transition-colors flex items-center justify-center gap-2 shrink-0"
+              {/* Popular Search Tags - Glass Badges */}
+              <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-xs text-desa-muted pt-1">
+                <span className="text-[11px] text-desa-subtle">Populer:</span>
+                {['Kain Lurik ATBM', 'Kripik Tempe', 'Madu Hutan', 'Anyaman Bambu'].map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery(tag);
+                      setWebPage('catalog');
+                      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+                    }}
+                    className="px-3 py-1 rounded-full bg-white/75 backdrop-blur-sm text-[#163324] hover:bg-desa-primary hover:text-white transition-colors text-[11px] font-bold border border-white/80 shadow-2xs"
                   >
-                    <span>Cari Sekarang</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </motion.button>
-                </div>
-
-                {/* Popular Search Tags */}
-                <div className="flex flex-wrap items-center justify-center gap-2 pt-1 text-xs text-desa-muted">
-                  <span className="font-semibold text-desa-primary text-[11px]">Paling dicari:</span>
-                  {['Kain Lurik ATBM', 'Kripik Tempe', 'Madu Hutan', 'Anyaman Bambu'].map((tag) => (
-                    <button
-                      key={tag}
-                      type="button"
-                      onClick={() => {
-                        setSearchQuery(tag);
-                        setWebPage('catalog');
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className="px-3 py-1 rounded-full bg-white hover:bg-desa-primary hover:text-white transition-colors text-[11px] font-medium border border-desa-border/70 shadow-2xs"
-                    >
-                      {tag}
-                    </button>
-                  ))}
-                </div>
-              </form>
-            </div>
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </form>
           </section>
 
-          {/* Section Kategori Produk */}
+          {/* 3. Section Kategori Produk (Glassy Chips with Mobile Touch Swipe) */}
           <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-end justify-between mb-6">
+            <div className="flex items-end justify-between mb-4 sm:mb-6">
               <div>
-                <div className="flex items-center gap-2 text-xs font-bold text-desa-accent uppercase tracking-wider mb-1">
-                  <span>Rumpun Komoditas</span>
-                </div>
-                <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
+                <h2 className="font-heading text-2xl sm:text-3xl font-black text-[#163324] tracking-tight">
                   Kategori Produk Desa
                 </h2>
-                <p className="text-sm text-desa-muted mt-0.5">
-                  Jelajahi komoditas unggulan menurut rumpun kerajinan dan pangan khas Sumedang
+                <p className="text-xs sm:text-sm font-medium text-[#4A6B59] mt-1">
+                  Komoditas pangan, kerajinan tangan, dan herbal asli Sumedang
                 </p>
               </div>
               <button
                 onClick={() => {
                   setSelectedCategory('semua');
                   setWebPage('catalog');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                 }}
-                className="text-xs font-semibold text-desa-primary hover:text-desa-accent transition-colors flex items-center gap-1 group"
+                className="text-xs font-bold text-desa-accent hover:underline transition-colors flex items-center gap-1 group shrink-0"
               >
                 <span>Semua Kategori</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
 
-            <div className="flex flex-wrap gap-2.5">
-              {categories.map((cat, idx) => (
-                <motion.button
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar sm:flex-wrap pb-1">
+              {categories.map((cat) => (
+                <button
                   key={cat.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.03, duration: 0.3 }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.96 }}
                   onClick={() => handleCategorySelect(cat.id)}
-                  className="relative px-4 py-2.5 rounded-full bg-white hover:bg-desa-primary hover:text-white text-xs sm:text-sm font-medium text-desa-primary cursor-pointer transition-colors duration-180 group shadow-2xs border border-desa-border/80 hover:border-desa-primary flex items-center gap-1.5"
+                  className="shrink-0 px-4 py-2 rounded-full bg-white/80 backdrop-blur-md hover:bg-desa-primary hover:text-white text-xs sm:text-sm font-bold text-[#163324] cursor-pointer transition-colors border border-white/90 hover:border-desa-primary flex items-center gap-1.5 shadow-2xs min-h-[40px]"
                 >
-                  <span className="relative z-10">{cat.name}</span>
-                  <span className="relative z-10 px-1.5 py-0.2 rounded-full bg-desa-surface group-hover:bg-white/20 text-desa-muted group-hover:text-white text-[11px] font-semibold">
+                  <span>{cat.name}</span>
+                  <span className="text-desa-subtle text-[11px] font-mono font-medium">
                     {cat.count}
                   </span>
-                </motion.button>
+                </button>
               ))}
             </div>
           </section>
 
-          {/* Section Produk Pilihan & Terlaris (Carousel) */}
+          {/* 4. Section Produk Pilihan & Terlaris (Carousel) */}
           <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4">
               <div>
-                <div className="flex items-center gap-2 text-xs font-bold text-desa-accent uppercase tracking-wider mb-1">
-                  <span>Kurasi Terpercaya</span>
-                </div>
-                <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
+                <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary tracking-tight">
                   Produk Pilihan & Terlaris
                 </h2>
-                <p className="text-sm text-desa-muted mt-0.5">
-                  Karya asli bermutu tinggi yang dibuat dan dipanen langsung oleh warga desa
+                <p className="text-sm text-desa-muted mt-1">
+                  Karya asli bermutu tinggi buatan tangan pengrajin dan petani desa
                 </p>
               </div>
 
               <div className="flex items-center gap-2 self-end sm:self-auto">
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
+                <button
                   onClick={prevCarousel}
-                  className="p-2.5 rounded-full bg-white border border-desa-border hover:border-desa-primary text-desa-primary transition-colors shadow-2xs"
+                  className="p-2.5 rounded-full bg-white/75 backdrop-blur-sm border border-white/80 hover:border-desa-primary text-desa-primary transition-colors shadow-2xs"
                   aria-label="Sebelumnya"
                 >
                   <ChevronLeft className="w-4 h-4" />
-                </motion.button>
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
+                </button>
+                <button
                   onClick={nextCarousel}
-                  className="p-2.5 rounded-full bg-white border border-desa-border hover:border-desa-primary text-desa-primary transition-colors shadow-2xs"
+                  className="p-2.5 rounded-full bg-white/75 backdrop-blur-sm border border-white/80 hover:border-desa-primary text-desa-primary transition-colors shadow-2xs"
                   aria-label="Selanjutnya"
                 >
                   <ChevronRight className="w-4 h-4" />
-                </motion.button>
+                </button>
               </div>
             </div>
 
-            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               <AnimatePresence mode="popLayout">
                 {featuredProducts.slice(carouselIndex, carouselIndex + 4).map((product) => (
                   <motion.div
@@ -537,212 +482,187 @@ export default function HomePage() {
                   </motion.div>
                 ))}
               </AnimatePresence>
-            </motion.div>
+            </div>
           </section>
 
-          {/* Section Wirausaha & Pengrajin Desa */}
-          <section className="bg-white/60 border-y border-desa-border/80 py-14">
-            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
-                <div>
-                  <div className="flex items-center gap-2 text-xs font-bold text-desa-accent uppercase tracking-wider mb-1">
-                    <span>Sentra Produksi</span>
-                  </div>
-                  <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
-                    Wirausaha & Pengrajin Desa
-                  </h2>
-                  <p className="text-sm text-desa-muted mt-0.5">
-                    Dukung kemandirian pelaku usaha mandiri dari berbagai kecamatan Kabupaten Sumedang
-                  </p>
-                </div>
+          {/* 5. Section Wirausaha & Pengrajin Desa (Glassy Shop Cards) */}
+          <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4">
+              <div>
+                <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary tracking-tight">
+                  Wirausaha & Pengrajin Desa
+                </h2>
+                <p className="text-sm text-desa-muted mt-1">
+                  Pelaku usaha mandiri binaan BUMDes Kabupaten Sumedang
+                </p>
+              </div>
 
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => {
-                    setWebPage('auth');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="px-4 py-2.5 rounded-full bg-desa-primary text-white text-xs font-semibold hover:bg-desa-primary/90 transition-colors flex items-center gap-2 self-start sm:self-auto shadow-2xs"
+              <button
+                onClick={() => openAuth('daftar_umkm')}
+                className="px-4 py-2 rounded-full bg-desa-accent text-white text-xs font-bold hover:bg-desa-highlight transition-colors flex items-center gap-2 self-start sm:self-auto shadow-sm"
+              >
+                <span>Daftarkan Usaha Anda</span>
+                <ArrowRight className="w-3.5 h-3.5 text-white" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {newUmkmShops.map((shop) => (
+                <div
+                  key={shop.id}
+                  onClick={() => viewShop(shop.id)}
+                  className="group bg-white rounded-2xl overflow-hidden border border-[#E8E0D5] hover:border-desa-accent hover:shadow-[0_14px_35px_rgba(22,51,36,0.1)] cursor-pointer transition-all flex flex-col justify-between shadow-[0_4px_16px_rgba(22,51,36,0.05)]"
                 >
-                  <span>Daftarkan Usaha Anda</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-desa-accent" />
-                </motion.button>
-              </div>
+                  <div>
+                    <div className="h-32 overflow-hidden relative bg-desa-surface">
+                      <img
+                        src={shop.banner}
+                        alt={shop.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                      />
+                      <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-white text-[#163324] text-[10px] font-black border border-[#E8E0D5] shadow-xs">
+                        {shop.category}
+                      </div>
+                    </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                {newUmkmShops.map((shop, i) => (
-                  <motion.div
-                    key={shop.id}
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.08, duration: 0.35 }}
-                    whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                    onClick={() => viewShop(shop.id)}
-                    className="group bg-white rounded-2xl overflow-hidden border border-desa-border hover:border-desa-primary/40 cursor-pointer transition-all shadow-2xs flex flex-col justify-between"
-                  >
-                    <div>
-                      <div className="h-32 overflow-hidden relative bg-desa-bg">
+                    <div className="p-4 space-y-2.5">
+                      <div className="flex items-center gap-2.5">
                         <img
-                          src={shop.banner}
-                          alt={shop.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                          src={shop.avatar}
+                          alt={shop.owner}
+                          className="w-10 h-10 rounded-full border border-[#E8E0D5] object-cover"
                         />
-                        <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-white/95 text-desa-primary text-[10px] font-bold shadow-xs">
-                          {shop.category}
+                        <div className="overflow-hidden">
+                          <h3 className="font-heading font-black text-[#163324] text-base truncate group-hover:text-desa-accent transition-colors">
+                            {shop.name}
+                          </h3>
+                          <p className="text-xs font-bold text-[#163324] truncate">
+                            {shop.kecamatan.replace('Kecamatan ', '')}
+                          </p>
                         </div>
                       </div>
 
-                      <div className="p-4 space-y-2">
-                        <div className="flex items-center gap-2.5">
-                          <img
-                            src={shop.avatar}
-                            alt={shop.owner}
-                            className="w-9 h-9 rounded-full border border-desa-border object-cover"
-                          />
-                          <div className="overflow-hidden">
-                            <h3 className="font-heading font-semibold text-desa-primary text-sm truncate group-hover:text-desa-muted transition-colors">
-                              {shop.name}
-                            </h3>
-                            <p className="text-[11px] text-desa-muted truncate">
-                              {shop.kecamatan.replace('Kecamatan ', '')}
-                            </p>
-                          </div>
-                        </div>
-
-                        <p className="text-xs text-desa-muted line-clamp-2 font-normal leading-relaxed">
-                          {shop.description}
-                        </p>
-                      </div>
+                      <p className="text-xs text-[#163324]/85 line-clamp-2 font-medium leading-relaxed">
+                        {shop.description}
+                      </p>
                     </div>
+                  </div>
 
-                    <div className="p-4 pt-2 border-t border-desa-border/70 flex items-center justify-between text-xs">
-                      <span className="text-desa-muted text-[11px]">Pengelola: {shop.owner}</span>
-                      <span className="text-desa-primary font-bold flex items-center gap-1 group-hover:underline">
-                        Kunjungi Toko
-                      </span>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+                  <div className="p-4 pt-2.5 border-t border-[#E8E0D5] flex items-center justify-between text-xs">
+                    <span className="text-[#163324] text-xs font-bold">Pengelola: {shop.owner}</span>
+                    <span className="text-desa-accent font-black flex items-center gap-1 group-hover:underline">
+                      Kunjungi Toko
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
 
-          {/* Section Statistik Ekosistem Pasar Desa */}
+          {/* 6. Section Statistik Ekosistem Pasar Desa (30% Forest Green Dominant with Glass Metrics) */}
           <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-desa-primary text-white rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-md">
-              <div className="absolute top-0 right-0 w-80 h-80 bg-desa-accent/15 rounded-full blur-3xl pointer-events-none" />
+            <div className="bg-[#163324] text-[#FBF8F3] rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-xl">
+              <div className="text-center max-w-xl mx-auto mb-10">
+                <h2 className="font-heading text-2xl sm:text-3xl font-bold text-[#FBF8F3] tracking-tight">
+                  Statistik Ekosistem Pasar Desa
+                </h2>
+                <p className="text-xs sm:text-sm text-[#FBF8F3]/75 mt-2 font-normal">
+                  Sinergi aktif pengrajin, petani mandiri, dan warga dalam membangun ekonomi lokal
+                </p>
+              </div>
 
-              <div className="relative z-10">
-                <div className="text-center max-w-xl mx-auto mb-10">
-                  <span className="text-xs font-bold uppercase tracking-wider text-desa-accent">
-                    Dampak Nyata Kemandirian Desa
-                  </span>
-                  <h2 className="font-heading text-2xl sm:text-3xl font-bold text-white mt-1.5">
-                    Statistik Ekosistem Pasar Desa
-                  </h2>
-                  <p className="text-xs sm:text-sm text-desa-border mt-2 font-normal">
-                    Sinergi aktif pengrajin, petani mandiri, dan warga dalam membangun ekonomi lokal
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 text-center">
+                <div className="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+                  <Users className="w-5 h-5 text-desa-accent mx-auto mb-2" />
+                  <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
+                    <Counter value={stats.totalUmkm} suffix="+" />
+                  </div>
+                  <p className="text-xs text-[#FBF8F3]/80 mt-1 font-medium">
+                    UMKM Binaan
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 text-center">
-                  <div className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
-                    <Users className="w-6 h-6 text-desa-accent mx-auto mb-2" />
-                    <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
-                      <Counter value={stats.totalUmkm} suffix="+" />
-                    </div>
-                    <p className="text-xs sm:text-sm text-desa-border mt-1 font-medium">
-                      UMKM Binaan
-                    </p>
+                <div className="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+                  <Package className="w-5 h-5 text-desa-accent mx-auto mb-2" />
+                  <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
+                    <Counter value={stats.totalProducts} suffix="+" />
                   </div>
+                  <p className="text-xs text-[#FBF8F3]/80 mt-1 font-medium">
+                    Produk Terkurasi
+                  </p>
+                </div>
 
-                  <div className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
-                    <Package className="w-6 h-6 text-desa-accent mx-auto mb-2" />
-                    <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
-                      <Counter value={stats.totalProducts} suffix="+" />
-                    </div>
-                    <p className="text-xs sm:text-sm text-desa-border mt-1 font-medium">
-                      Produk Terkurasi
-                    </p>
+                <div className="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+                  <TrendingUp className="w-5 h-5 text-desa-accent mx-auto mb-2" />
+                  <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
+                    <Counter value={stats.totalTransactions} />
                   </div>
+                  <p className="text-xs text-[#FBF8F3]/80 mt-1 font-medium">
+                    Pesanan Terlayani
+                  </p>
+                </div>
 
-                  <div className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
-                    <TrendingUp className="w-6 h-6 text-desa-accent mx-auto mb-2" />
-                    <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
-                      <Counter value={stats.totalTransactions} />
-                    </div>
-                    <p className="text-xs sm:text-sm text-desa-border mt-1 font-medium">
-                      Pesanan Terlayani
-                    </p>
+                <div className="p-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15">
+                  <Award className="w-5 h-5 text-desa-accent mx-auto mb-2" />
+                  <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
+                    5 Sentra
                   </div>
-
-                  <div className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
-                    <Award className="w-6 h-6 text-desa-accent mx-auto mb-2" />
-                    <div className="font-heading text-2xl sm:text-3xl font-bold text-white">
-                      5 Sentra
-                    </div>
-                    <p className="text-xs sm:text-sm text-desa-border mt-1 font-medium">
-                      Kecamatan Pengrajin
-                    </p>
-                  </div>
+                  <p className="text-xs text-[#FBF8F3]/80 mt-1 font-medium">
+                    Kecamatan Pengrajin
+                  </p>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Section Akses Mobile PWA */}
+          {/* 7. Section Akses Mobile PWA (Glass Enclosure) */}
           <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-white rounded-3xl border border-desa-border p-8 sm:p-12 shadow-xs">
+            <div className="bg-white/70 backdrop-blur-xl rounded-3xl border border-white/80 p-8 sm:p-12 shadow-[0_10px_40px_rgba(22,51,36,0.05)]">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 
-                <div className="lg:col-span-8 space-y-4">
-                  <div className="flex items-center gap-2 text-xs font-bold text-desa-accent uppercase tracking-wider">
-                    <Smartphone className="w-4 h-4 text-desa-primary" />
-                    <span>Progressive Web App</span>
-                  </div>
+                <div className="lg:col-span-8 space-y-3">
+                  <span className="text-xs font-mono uppercase tracking-wider text-desa-accent font-semibold block">
+                    Progressive Web App
+                  </span>
 
-                  <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary">
-                    Akses Cepat di Layar Utama HP Anda
+                  <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary tracking-tight">
+                    Akses Langsung di Layar HP Anda
                   </h2>
 
                   <p className="text-sm text-desa-muted leading-relaxed max-w-2xl">
-                    Pasar Desa dirancang agar dapat diinstal langsung ke ponsel Anda tanpa perlu download dari toko aplikasi. Sangat hemat kuota, cepat dibuka, dan siap digunakan untuk belanja produk desa kapan saja.
+                    Pasar Desa dapat diinstal langsung ke ponsel Anda tanpa perlu download dari toko aplikasi. Cepat dibuka, hemat memori, dan siap digunakan belanja kapan saja.
                   </p>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                    <div className="p-4 rounded-2xl bg-desa-surface border border-desa-border/70 space-y-1">
-                      <span className="text-xs font-bold text-desa-primary">1. Buka di Browser</span>
-                      <p className="text-xs text-desa-muted">Buka link Pasar Desa melalui Chrome atau Safari di HP Anda.</p>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-3 text-xs text-desa-muted">
+                    <div className="flex items-center gap-2">
+                      <span className="w-5 h-5 rounded-full bg-desa-surface border border-desa-border flex items-center justify-center font-bold text-desa-primary text-[10px]">1</span>
+                      <span className="text-desa-text font-medium">Buka di Browser</span>
                     </div>
-                    <div className="p-4 rounded-2xl bg-desa-surface border border-desa-border/70 space-y-1">
-                      <span className="text-xs font-bold text-desa-primary">2. Tambahkan ke Layar</span>
-                      <p className="text-xs text-desa-muted">Ketuk menu browser dan pilih "Tambahkan ke Layar Utama".</p>
+                    <span className="hidden sm:inline text-desa-border">•</span>
+                    <div className="flex items-center gap-2">
+                      <span className="w-5 h-5 rounded-full bg-desa-surface border border-desa-border flex items-center justify-center font-bold text-desa-primary text-[10px]">2</span>
+                      <span className="text-desa-text font-medium">Tambahkan ke Layar Utama</span>
                     </div>
-                    <div className="p-4 rounded-2xl bg-desa-surface border border-desa-border/70 space-y-1">
-                      <span className="text-xs font-bold text-desa-primary">3. Siap Dipakai</span>
-                      <p className="text-xs text-desa-muted">Ikon Pasar Desa langsung muncul di HP seperti aplikasi resmi.</p>
+                    <span className="hidden sm:inline text-desa-border">•</span>
+                    <div className="flex items-center gap-2">
+                      <span className="w-5 h-5 rounded-full bg-desa-surface border border-desa-border flex items-center justify-center font-bold text-desa-primary text-[10px]">3</span>
+                      <span className="text-desa-text font-medium">Ikon Siap Digunakan</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="lg:col-span-4 flex flex-col items-center justify-center p-6 bg-desa-surface rounded-2xl border border-desa-border space-y-4 text-center">
-                  <div className="w-12 h-12 rounded-2xl bg-desa-primary text-desa-accent flex items-center justify-center shadow-xs">
-                    <Smartphone className="w-6 h-6" />
-                  </div>
+                <div className="lg:col-span-4 flex flex-col items-center justify-center p-6 bg-white/80 backdrop-blur-md rounded-2xl border border-desa-border/70 space-y-3 text-center shadow-xs">
+                  <Smartphone className="w-6 h-6 text-desa-primary" />
                   <div>
-                    <h4 className="font-heading font-bold text-desa-primary text-base">Uji Coba Tampilan Mobile</h4>
-                    <p className="text-xs text-desa-muted mt-1">Rasakan pengalaman belanja responsif dalam simulasi PWA langsung di browser Anda.</p>
+                    <h4 className="font-heading font-bold text-desa-primary text-sm">Simulasi Tampilan HP</h4>
+                    <p className="text-xs text-desa-muted mt-0.5">Uji coba tampilan mobile responsif langsung di browser.</p>
                   </div>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.96 }}
+                  <button
                     onClick={() => setCurrentView('mobile')}
-                    className="w-full py-2.5 px-4 rounded-full bg-desa-accent hover:bg-desa-highlight text-desa-primary font-bold text-xs transition-colors shadow-xs"
+                    className="w-full py-2.5 px-4 rounded-full bg-desa-accent hover:bg-desa-highlight text-white font-bold text-xs transition-colors shadow-xs"
                   >
                     Buka Pratinjau Mobile
-                  </motion.button>
+                  </button>
                 </div>
 
               </div>
