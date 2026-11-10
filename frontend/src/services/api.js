@@ -40,6 +40,32 @@ export const updateProfile = data => request('/auth/profile', {
   body: JSON.stringify(data),
 });
 
+export const updateShopProfileRequest = data => request('/auth/shop', {
+  method: 'PATCH',
+  body: JSON.stringify(data),
+});
+
+export const sendEmailOtpRequest = type => request('/auth/email/send-otp', {
+  method: 'POST',
+  body: JSON.stringify({ type }),
+});
+
+export const verifyEmailOtpRequest = code => request('/auth/email/verify-otp', {
+  method: 'POST',
+  body: JSON.stringify({ code }),
+});
+
+export async function resetPasswordWithOtpRequest(code, new_password) {
+  const result = await request('/auth/password/reset-with-otp', {
+    method: 'POST',
+    body: JSON.stringify({ code, new_password }),
+  });
+  if (result?.token) {
+    localStorage.setItem('pasardesa_token', result.token);
+  }
+  return result;
+}
+
 export async function updatePassword(current_password, new_password) {
   const result = await request('/auth/password', {
     method: 'PATCH',

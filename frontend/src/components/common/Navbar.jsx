@@ -13,7 +13,10 @@ import {
   Phone,
   Clock,
   ShieldCheck,
-  ChevronRight
+  ChevronRight,
+  ChevronDown,
+  Settings,
+  LogOut
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -23,13 +26,32 @@ export default function Navbar() {
     currentUser, isLoggedIn, logout,
     cartCount, setIsCartOpen,
     setIsChatOpen,
-    openAuth
+    openAuth,
+    openSettings,
+    viewShop
   } = useApp();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [helpModalOpen, setHelpModalOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const isNavigatingRef = useRef(false);
+  const userDropdownRef = useRef(null);
+
+  // Close user dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(e.target)) {
+        setUserDropdownOpen(false);
+      }
+    };
+    if (userDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [userDropdownOpen]);
 
   // Instantly reset scroll state and lock scroll events during page transitions to prevent navbar oscillation
   useEffect(() => {
@@ -260,30 +282,132 @@ export default function Navbar() {
                 )}
               </motion.button>
 
-              {/* User Account / Auth Button */}
+              {/* User Account / Auth Dropdown Button */}
               {isLoggedIn ? (
-                <div className="flex items-center gap-1.5 ml-0.5">
+                <div className="relative flex items-center gap-1.5 ml-0.5" ref={userDropdownRef}>
                   {currentUser?.role === 'admin' && (
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.96 }}
                       onClick={() => setCurrentView('admin')}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-desa-primary text-white text-xs font-bold shadow-xs hover:bg-desa-primary/90 transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-desa-primary text-white text-xs font-bold shadow-xs hover:bg-desa-primary/90 transition-colors cursor-pointer"
                       title="Buka Dashboard Admin"
                     >
                       <Store className="w-3.5 h-3.5 text-desa-accent" />
                       <span>Admin</span>
                     </motion.button>
                   )}
+
+                  {/* Profile Dropdown Trigger */}
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.96 }}
-                    onClick={() => logout()}
-                    className="flex items-center gap-1.5 pl-3 pr-3.5 py-1.5 rounded-full border border-desa-border bg-white/70 backdrop-blur-sm text-desa-primary text-xs font-bold hover:border-desa-primary/40 transition-colors shadow-2xs"
+                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                    className="flex items-center gap-2 pl-2 pr-3 py-1 rounded-full border border-desa-border/80 bg-white/80 backdrop-blur-md text-desa-primary text-xs font-bold hover:border-desa-primary/40 transition-all shadow-2xs cursor-pointer select-none"
+                    aria-expanded={userDropdownOpen}
+                    title="Menu Akun & Pengaturan"
                   >
-                    <User className="w-3.5 h-3.5 text-desa-muted" />
-                    <span>{currentUser ? currentUser.name.split(' ')[0] : 'Akun'}</span>
+                    <div className="w-6 h-6 rounded-full overflow-hidden bg-desa-surface border border-desa-border flex items-center justify-center shrink-0">
+                      {currentUser?.avatar ? (
+                        <img src={currentUser.avatar} alt={currentUser.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <User className="w-3.5 h-3.5 text-desa-primary" />
+                      )}
+                    </div>
+                    <span className="max-w-[95px] truncate">{currentUser ? currentUser.name.split(' ')[0] : 'Akun'}</span>
+                    <ChevronDown className={`w-3.5 h-3.5 text-desa-muted transition-transform duration-200 ${userDropdownOpen ? 'rotate-180 text-desa-accent' : ''}`} />
                   </motion.button>
+
+                  {/* Liquid Glass Dropdown Menu */}
+                  <AnimatePresence>
+                    {userDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: 8 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: 8 }}
+                        transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                        className="absolute right-0 top-full mt-2 w-64 bg-[#FBF8F3]/95 backdrop-blur-2xl rounded-2xl border border-white/95 shadow-[0_16px_40px_rgba(22,51,36,0.16),inset_0_1px_1.5px_rgba(255,255,255,0.95)] p-2 z-50 overflow-hidden"
+                      >
+                        {/* Header Profile Identity */}
+                        <div className="p-2.5 bg-white/70 backdrop-blur-sm rounded-xl border border-white/80 mb-1.5 flex items-center gap-2.5">
+                          <div className="w-9 h-9 rounded-xl overflow-hidden bg-desa-surface border border-desa-border shrink-0 flex items-center justify-center shadow-xs">
+                            {currentUser?.avatar ? (
+                              <img src={currentUser.avatar} alt={currentUser.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <User className="w-4 h-4 text-desa-muted" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-bold text-desa-primary truncate">{currentUser?.name}</p>
+                            <p className="text-[10px] text-desa-muted truncate">{currentUser?.email}</p>
+                            <div className="mt-1 flex items-center gap-1">
+                              <span className="text-[9px] px-2 py-0.5 rounded-full bg-desa-primary/10 text-desa-primary font-bold">
+                                {currentUser?.role === 'admin' ? 'Admin Desa' : currentUser?.shopId ? 'Penjual UMKM' : 'Warga Belanja'}
+                              </span>
+                              {currentUser?.isEmailVerified && (
+                                <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold" title="Email Terverifikasi">
+                                  ✓ Verified
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Dropdown Navigation Actions */}
+                        <div className="space-y-0.5 text-xs font-semibold text-desa-text">
+                          <button
+                            onClick={() => {
+                              setUserDropdownOpen(false);
+                              openSettings();
+                            }}
+                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-black/5 hover:text-desa-primary transition-colors cursor-pointer text-left"
+                          >
+                            <Settings className="w-4 h-4 text-desa-accent" />
+                            <span>Pengaturan Akun & Profil</span>
+                          </button>
+
+                          {currentUser?.shopId && (
+                            <button
+                              onClick={() => {
+                                setUserDropdownOpen(false);
+                                viewShop(currentUser.shopId);
+                              }}
+                              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-black/5 hover:text-desa-primary transition-colors cursor-pointer text-left"
+                            >
+                              <Store className="w-4 h-4 text-desa-accent" />
+                              <span>Lihat Toko Saya</span>
+                            </button>
+                          )}
+
+                          {currentUser?.role === 'admin' && (
+                            <button
+                              onClick={() => {
+                                setUserDropdownOpen(false);
+                                setCurrentView('admin');
+                              }}
+                              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-black/5 hover:text-desa-primary transition-colors cursor-pointer text-left"
+                            >
+                              <ShieldCheck className="w-4 h-4 text-desa-accent" />
+                              <span>Panel Dashboard Admin</span>
+                            </button>
+                          )}
+
+                          <div className="my-1 border-t border-desa-border/50" />
+
+                          <button
+                            onClick={() => {
+                              setUserDropdownOpen(false);
+                              logout();
+                            }}
+                            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-red-600 hover:bg-red-50 transition-colors cursor-pointer text-left"
+                          >
+                            <LogOut className="w-4 h-4 text-red-500" />
+                            <span>Keluar dari Akun</span>
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               ) : (
                 <motion.button
@@ -388,20 +512,45 @@ export default function Navbar() {
 
                 {isLoggedIn ? (
                   <div className="space-y-1.5 pt-1">
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        openSettings();
+                      }}
+                      className="w-full py-2.5 px-3 rounded-xl bg-white/80 border border-desa-border text-xs font-bold text-desa-primary flex items-center justify-center gap-2 shadow-2xs"
+                    >
+                      <Settings className="w-3.5 h-3.5 text-desa-accent" />
+                      <span>Pengaturan Akun & Profil</span>
+                    </button>
+
+                    {currentUser?.shopId && (
+                      <button
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          viewShop(currentUser.shopId);
+                        }}
+                        className="w-full py-2 px-3 rounded-xl bg-white/80 border border-desa-border text-xs font-semibold text-desa-primary flex items-center justify-center gap-2"
+                      >
+                        <Store className="w-3.5 h-3.5 text-desa-accent" />
+                        <span>Toko Saya ({currentUser.shopName})</span>
+                      </button>
+                    )}
+
                     {currentUser?.role === 'admin' && (
                       <button
                         onClick={() => { setCurrentView('admin'); setMobileMenuOpen(false); }}
                         className="w-full py-2 px-3 rounded-xl bg-desa-primary text-white text-xs font-semibold flex items-center justify-center gap-1.5"
                       >
-                        <Store className="w-3.5 h-3.5 text-desa-accent" />
+                        <ShieldCheck className="w-3.5 h-3.5 text-desa-accent" />
                         <span>Panel Admin Desa</span>
                       </button>
                     )}
                     <button
                       onClick={() => { logout(); setMobileMenuOpen(false); }}
-                      className="w-full py-2 px-3 rounded-xl border border-red-200 text-red-600 text-xs font-semibold hover:bg-red-50"
+                      className="w-full py-2 px-3 rounded-xl border border-red-200 text-red-600 text-xs font-semibold hover:bg-red-50 flex items-center justify-center gap-1.5"
                     >
-                      Keluar ({currentUser?.name})
+                      <LogOut className="w-3.5 h-3.5 text-red-500" />
+                      <span>Keluar ({currentUser?.name})</span>
                     </button>
                   </div>
                 ) : (

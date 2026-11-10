@@ -22,6 +22,10 @@ Route::middleware('throttle:15,1')->post('/chat/ai', [ChatAiController::class, '
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
     Route::patch('/auth/profile', [AuthController::class, 'updateProfile']);
+    Route::patch('/auth/shop', [AuthController::class, 'updateShopProfile']);
+    Route::post('/auth/email/send-otp', [AuthController::class, 'sendOtp']);
+    Route::post('/auth/email/verify-otp', [AuthController::class, 'verifyEmailOtp']);
+    Route::post('/auth/password/reset-with-otp', [AuthController::class, 'resetPasswordWithOtp']);
     Route::patch('/auth/password', [AuthController::class, 'updatePassword']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
