@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import { KECAMATAN_LIST } from '../../data/mockData';
+import { getDesaByKecamatan } from '../../data/sumedangWilayah';
 import { 
   User, 
   Store, 
@@ -45,6 +46,7 @@ export default function UserSettingsModal() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [kecamatan, setKecamatan] = useState('Kecamatan Sumedang Utara');
+  const [desa, setDesa] = useState('Kotakaler');
   const [avatar, setAvatar] = useState('');
   const [isSavingProfile, setIsSavingProfile] = useState(false);
 
@@ -77,7 +79,9 @@ export default function UserSettingsModal() {
     if (currentUser) {
       setName(currentUser.name || '');
       setPhone(currentUser.phone || '');
-      setKecamatan(currentUser.kecamatan || 'Kecamatan Sumedang Utara');
+      const userKec = currentUser.kecamatan || 'Kecamatan Sumedang Utara';
+      setKecamatan(userKec);
+      setDesa(currentUser.desa || (getDesaByKecamatan(userKec)[0]?.name || 'Kotakaler'));
       setAvatar(currentUser.avatar || userShop?.avatar || '');
     }
     if (userShop) {
@@ -130,6 +134,7 @@ export default function UserSettingsModal() {
         name,
         phone,
         kecamatan,
+        desa,
         avatar
       });
     } finally {
@@ -434,17 +439,42 @@ export default function UserSettingsModal() {
 
                   <div>
                     <label className="block text-xs font-semibold text-desa-primary mb-1">
-                      Kecamatan Domisili
+                      Kecamatan Domisili (26 Kecamatan)
                     </label>
                     <div className="relative">
                       <MapPin className="w-4 h-4 text-desa-subtle absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                       <select
                         value={kecamatan}
-                        onChange={(e) => setKecamatan(e.target.value)}
+                        onChange={(e) => {
+                          const newKec = e.target.value;
+                          setKecamatan(newKec);
+                          const desas = getDesaByKecamatan(newKec);
+                          if (desas.length > 0) setDesa(desas[0].name);
+                        }}
                         className="w-full pl-9 pr-3.5 py-2.5 bg-white/80 border border-desa-border rounded-xl text-xs sm:text-sm text-desa-text focus:outline-none focus:border-desa-primary shadow-2xs"
                       >
                         {KECAMATAN_LIST.filter(k => k !== 'Semua Kecamatan').map(k => (
                           <option key={k} value={k}>{k}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-desa-primary mb-1">
+                      Desa / Kelurahan
+                    </label>
+                    <div className="relative">
+                      <Building2 className="w-4 h-4 text-desa-subtle absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <select
+                        value={desa}
+                        onChange={(e) => setDesa(e.target.value)}
+                        className="w-full pl-9 pr-3.5 py-2.5 bg-white/80 border border-desa-border rounded-xl text-xs sm:text-sm text-desa-text focus:outline-none focus:border-desa-primary shadow-2xs"
+                      >
+                        {getDesaByKecamatan(kecamatan).map(d => (
+                          <option key={d.name} value={d.name}>
+                            {d.type === 'Kelurahan' ? 'Kel. ' : 'Desa '} {d.name}
+                          </option>
                         ))}
                       </select>
                     </div>

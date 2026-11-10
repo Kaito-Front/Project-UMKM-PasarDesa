@@ -266,9 +266,9 @@ export default function CatalogPage() {
 
           <div className="space-y-2 pt-2 border-t border-desa-border/40">
             <h4 className="text-xs font-bold text-desa-muted uppercase tracking-wider">
-              Wilayah Kecamatan
+              Wilayah Kecamatan (26 Kecamatan)
             </h4>
-            <div className="space-y-1">
+            <div className="space-y-1 max-h-64 overflow-y-auto pr-1">
               {KECAMATAN_LIST.map((kecamatan) => (
                 <motion.button
                   key={kecamatan}

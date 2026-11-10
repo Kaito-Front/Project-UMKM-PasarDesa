@@ -542,7 +542,9 @@ export default function CheckoutModal() {
                                 Utama
                               </span>
                             )}
-                            <span className="text-[11px] text-desa-text/60">({addr.kecamatan})</span>
+                            <span className="text-[11px] text-desa-text/60">
+                              ({addr.desa ? `Desa/Kel. ${addr.desa}, ` : ''}{addr.kecamatan})
+                            </span>
                           </div>
                           <p className="text-xs font-semibold text-desa-text mt-1">
                             {addr.receiverName} <span className="font-normal text-desa-text/70">• {addr.phone}</span>

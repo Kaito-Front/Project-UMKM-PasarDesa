@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import { KECAMATAN_LIST } from '../../data/mockData';
+import { getDesaByKecamatan } from '../../data/sumedangWilayah';
 import { 
   Store, 
   User, 
@@ -47,6 +48,7 @@ export default function AuthPage() {
   const [regShopName, setRegShopName] = useState('');
   const [regShopCategory, setRegShopCategory] = useState('Kerajinan Tangan');
   const [regKecamatan, setRegKecamatan] = useState('Kecamatan Sumedang Utara');
+  const [regDesa, setRegDesa] = useState('Kotakaler');
   const [agreedTerms, setAgreedTerms] = useState(true);
 
   // Synchronize tab and role whenever authMode changes
@@ -99,7 +101,10 @@ export default function AuthPage() {
     try {
       const user = await register({
         name: regName, phone: regPhone, password: regPassword, role: regRole,
-        shopName: regShopName, shopCategory: regShopCategory, kecamatan: regKecamatan,
+        shopName: regShopName, 
+        shopCategory: regShopCategory, 
+        kecamatan: regKecamatan,
+        desa: regDesa,
       });
       triggerNotification('Akun Berhasil Dibuat', `Selamat datang di Pasar Desa, ${user.name}!`);
       setWebPage('home');
@@ -446,11 +451,33 @@ export default function AuthPage() {
                             </label>
                             <select
                               value={regKecamatan}
-                              onChange={(e) => setRegKecamatan(e.target.value)}
+                              onChange={(e) => {
+                                const newKec = e.target.value;
+                                setRegKecamatan(newKec);
+                                const desas = getDesaByKecamatan(newKec);
+                                if (desas.length > 0) setRegDesa(desas[0].name);
+                              }}
                               className="w-full px-2.5 py-1.5 bg-white border border-desa-border rounded-lg text-sm text-desa-primary shadow-2xs"
                             >
                               {KECAMATAN_LIST.filter(k => k !== 'Semua Kecamatan').map(k => (
                                 <option key={k} value={k}>{k}</option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div>
+                            <label className="block text-xs font-semibold text-desa-primary mb-1">
+                              Desa / Kelurahan
+                            </label>
+                            <select
+                              value={regDesa}
+                              onChange={(e) => setRegDesa(e.target.value)}
+                              className="w-full px-2.5 py-1.5 bg-white border border-desa-border rounded-lg text-sm text-desa-primary shadow-2xs"
+                            >
+                              {getDesaByKecamatan(regKecamatan).map(d => (
+                                <option key={d.name} value={d.name}>
+                                  {d.type === 'Kelurahan' ? 'Kel. ' : 'Desa '} {d.name}
+                                </option>
                               ))}
                             </select>
                           </div>

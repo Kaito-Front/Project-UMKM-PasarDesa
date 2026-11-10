@@ -8,13 +8,27 @@ export const CATEGORIES = [
   { id: 'fashion', name: 'Pakaian & Tenun', icon: 'Shirt', count: 4, desc: 'Kain lurik ATBM, selendang tenun, kaos desa' },
 ];
 
+import { 
+  SUMEDANG_KECAMATAN_LIST, 
+  SUMEDANG_WILAYAH, 
+  SUMEDANG_KECAMATAN_COORDINATES, 
+  ALL_SUMEDANG_DESA,
+  getDesaByKecamatan,
+  searchDesaSumedang 
+} from './sumedangWilayah';
+
+export { 
+  SUMEDANG_KECAMATAN_LIST, 
+  SUMEDANG_WILAYAH, 
+  SUMEDANG_KECAMATAN_COORDINATES, 
+  ALL_SUMEDANG_DESA,
+  getDesaByKecamatan,
+  searchDesaSumedang 
+};
+
 export const KECAMATAN_LIST = [
   'Semua Kecamatan',
-  'Kecamatan Sumedang Utara',
-  'Kecamatan Sumedang Selatan',
-  'Kecamatan Cimalaka',
-  'Kecamatan Tanjungsari',
-  'Kecamatan Jatinangor',
+  ...SUMEDANG_KECAMATAN_LIST
 ];
 
 export const SHOPS = [
@@ -392,8 +406,9 @@ export const INITIAL_USER_ADDRESSES = [
     receiverName: 'Bambang Sudiro',
     phone: '0819-1519-4171',
     kecamatan: 'Kecamatan Sumedang Utara',
+    desa: 'Kotakaler',
     rtRw: 'RT 03 / RW 01',
-    fullAddress: 'Kecamatan Sumedang Utara, Kabupaten Sumedang, Jawa Barat',
+    fullAddress: 'Kelurahan Kotakaler, Kecamatan Sumedang Utara, Kabupaten Sumedang, Jawa Barat',
     notes: 'Depan gapura bambu ukir khas desa, pagar cat cokelat kayu',
     lat: -6.8293742,
     lng: 107.9116474,
@@ -405,15 +420,24 @@ export const INITIAL_USER_ADDRESSES = [
     receiverName: 'Bambang Sudiro',
     phone: '0819-1519-4171',
     kecamatan: 'Kecamatan Sumedang Selatan',
+    desa: 'Kotakulon',
     rtRw: 'RT 02 / RW 03',
-    fullAddress: 'Kecamatan Sumedang Selatan, Kabupaten Sumedang, Jawa Barat',
+    fullAddress: 'Kelurahan Kotakulon, Kecamatan Sumedang Selatan, Kabupaten Sumedang, Jawa Barat',
     notes: 'Gedung warna krem dekat lapangan voli desa',
     lat: -6.859079,
     lng: 107.9202767,
     isDefault: false
   }
 ];
-export const KECAMATAN_LOCATIONS = {
+export const KECAMATAN_LOCATIONS = Object.entries(SUMEDANG_KECAMATAN_COORDINATES).reduce((acc, [key, val]) => {
+  acc[key] = {
+    lat: val.lat,
+    lng: val.lng,
+    name: key,
+    desc: val.desc || 'Wilayah Binaan UMKM Desa Sumedang'
+  };
+  return acc;
+}, {
   'Kecamatan Sumedang Utara': {
     lat: -6.8293742,
     lng: 107.9116474,
@@ -444,7 +468,7 @@ export const KECAMATAN_LOCATIONS = {
     name: 'Kecamatan Jatinangor',
     desc: 'Perkebunan Kopi Robusta Lereng Pegunungan'
   }
-};
+});
 export const SHIPPING_METHODS = [
   {
     id: 'kurir-desa',
