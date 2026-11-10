@@ -44,7 +44,7 @@ export default function Footer() {
               </div>
               <div>
                 <span className="font-heading text-xl font-bold tracking-tight text-white block">
-                  Pasar Desa
+                  <span className="font-script font-normal text-2xl text-desa-accent mr-0.5">P</span>asar <span className="font-script font-normal text-2xl text-desa-accent mr-0.5">D</span>esa
                 </span>
                 <span className="text-[10px] tracking-widest uppercase font-semibold text-desa-accent">
                   Kabupaten Sumedang

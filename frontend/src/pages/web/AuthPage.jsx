@@ -134,7 +134,7 @@ export default function AuthPage() {
             </div>
             <div>
               <span className="font-heading text-xl font-bold tracking-tight text-desa-primary">
-                Pasar Desa
+                <span className="font-script text-2xl text-desa-accent font-normal mr-0.5 inline-block align-baseline">P</span>asar <span className="font-script text-2xl text-desa-accent font-normal mr-0.5 inline-block align-baseline">D</span>esa
               </span>
               <p className="text-xs text-desa-muted">
                 Ekosistem Digital UMKM Mandiri

@@ -88,6 +88,23 @@ export default function CatalogPage() {
   return (
     <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       
+      {/* Page Title & Narrative */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-desa-border/50 pb-4">
+        <div>
+          <h1 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-desa-primary tracking-tight">
+            Katalog Karya Sumedang
+          </h1>
+          <p className="text-xs sm:text-sm text-desa-muted mt-1 max-w-xl">
+            Jelajahi kerajinan autentik, pangan lokal, dan rempah alami dari 26 kecamatan binaan BUMDes.
+          </p>
+        </div>
+        <div className="text-xs text-desa-muted font-medium shrink-0">
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-desa-primary/5 text-desa-primary border border-desa-primary/10">
+            Terhubung ke 277 Desa & Kelurahan
+          </span>
+        </div>
+      </div>
+
       {/* Top Search & Filter Bar with Liquid Glass */}
       <div className="bg-white/75 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">

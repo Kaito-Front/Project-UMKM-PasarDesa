@@ -69,7 +69,7 @@ export default function MarketIntroPortal({ onComplete }) {
             </div>
             <div className="flex flex-col">
               <span className="font-heading font-bold text-sm sm:text-base tracking-tight text-white leading-tight">
-                Pasar Desa Sumedang
+                <span className="font-script text-base sm:text-lg text-desa-accent font-normal mr-0.5 inline-block align-baseline">P</span>asar <span className="font-script text-base sm:text-lg text-desa-accent font-normal mr-0.5 inline-block align-baseline">D</span>esa Sumedang
               </span>
               <span className="text-[11px] text-desa-border/75 font-mono">
                 Sentra Komoditas & UMKM Warga

@@ -373,7 +373,9 @@ export default function AdminLayout() {
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <h3 className="text-sm font-bold leading-5 text-[#163324]">Pasar Desa</h3>
+                <h3 className="text-sm font-bold leading-5 text-[#163324]">
+                  <span className="font-script text-base text-desa-accent font-normal mr-0.5 inline-block align-baseline">P</span>asar <span className="font-script text-base text-desa-accent font-normal mr-0.5 inline-block align-baseline">D</span>esa
+                </h3>
                 <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800">
                   BUMDes
                 </span>
@@ -521,7 +523,7 @@ export default function AdminLayout() {
               {adminTab === 'dashboard' && (
                 <div className="space-y-6">
                   <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-[#163324]">
+                    <h1 className="font-heading text-2xl font-bold tracking-tight text-[#163324]">
                       Ringkasan Kinerja BUMDes
                     </h1>
                     <p className="mt-1 text-xs text-[#2F2F2D]/70">

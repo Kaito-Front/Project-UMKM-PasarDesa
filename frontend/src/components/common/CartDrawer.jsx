@@ -117,7 +117,7 @@ export default function CartDrawer() {
                       Pasar desa · belanja lokal
                     </p>
                     <h2 id="cart-title" className="font-heading text-[1.7rem] font-bold leading-[1.05] tracking-[-0.035em] text-desa-primary sm:text-[2rem]">
-                      Keranjang
+                      Keranjang Belanja
                     </h2>
                     <p className="mt-1.5 text-xs text-desa-text/70" aria-live="polite">
                       {cartCount} barang dari pilihanmu

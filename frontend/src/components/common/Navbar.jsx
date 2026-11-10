@@ -143,7 +143,7 @@ export default function Navbar() {
               <div className="flex flex-col justify-center min-h-[32px]">
                 <div className="flex items-center gap-1.5">
                   <span className="font-heading font-black tracking-tight text-desa-primary text-sm sm:text-base leading-none">
-                    Pasar Desa
+                    <span className="font-script font-normal text-base sm:text-lg text-desa-accent mr-0.5">P</span>asar <span className="font-script font-normal text-base sm:text-lg text-desa-accent mr-0.5">D</span>esa
                   </span>
                   <span className="w-1.5 h-1.5 rounded-full bg-desa-accent hidden sm:inline-block" />
                 </div>

@@ -37,8 +37,11 @@ export default {
         'tomato-glow': 'rgba(232, 61, 35, 0.25)',
       },
       fontFamily: {
-        serif: ['Fraunces', 'serif'],
-        sans: ['"Work Sans"', 'sans-serif'],
+        sans: ['Aileron', 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ['Aileron', 'system-ui', 'sans-serif'],
+        script: ['"Sloop Script"', 'cursive', 'sans-serif'],
+        display: ['Aileron', 'sans-serif'],
+        serif: ['Aileron', 'serif'],
       },
       backgroundImage: {
         'lurik-stripes': 'repeating-linear-gradient(90deg, #163324 0px, #163324 1.5px, transparent 1.5px, transparent 8px)',

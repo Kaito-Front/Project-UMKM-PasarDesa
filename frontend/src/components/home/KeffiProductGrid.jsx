@@ -241,11 +241,11 @@ export default function KeffiProductGrid() {
       {/* 1. Header Section: Title & High-Contrast Authentic Keffi Rating */}
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-8">
         <div>
-          <span className="text-xs font-mono uppercase tracking-widest text-desa-accent font-bold block mb-2">
-            Kurasi Asli BUMDes Sumedang
+          <span className="text-xs uppercase tracking-widest text-desa-accent font-bold flex items-center gap-1 mb-2 font-heading">
+            <span>Kurasi Asli BUMDes Sumedang</span>
           </span>
           <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-black text-[#163324] tracking-tight">
-            Karya Sentra Terpilih
+            <span className="font-script text-4xl sm:text-5xl lg:text-6xl text-desa-accent font-normal mr-0.5 inline-block align-baseline">K</span>arya Sentra Terpilih
           </h2>
           <p className="text-sm font-medium text-[#4A6B59] mt-2 max-w-xl leading-relaxed">
             Jelajahi karya anyaman, kain tenun, olahan madu, dan rempah binaan pengrajin desa secara langsung.

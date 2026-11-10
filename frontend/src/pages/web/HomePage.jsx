@@ -626,7 +626,7 @@ export default function HomePage() {
                   </span>
 
                   <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary tracking-tight">
-                    Akses Langsung di Layar HP Anda
+                    Akses Langsung di Layar Ponsel
                   </h2>
 
                   <p className="text-sm text-desa-muted leading-relaxed max-w-2xl">

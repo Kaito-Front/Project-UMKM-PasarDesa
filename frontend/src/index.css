@@ -1,11 +1,27 @@
+@import '@fontsource/aileron/300.css';
+@import '@fontsource/aileron/400.css';
+@import '@fontsource/aileron/600.css';
+@import '@fontsource/aileron/700.css';
+@import '@fontsource/aileron/800.css';
+
+@font-face {
+    font-family: 'Sloop Script';
+    src: url('/fonts/sloop-script.woff2') format('woff2'),
+         url('https://db.onlinewebfonts.com/t/b59603b6f55d074fa558185dcc86f5b1.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
     body {
         background-color: #FBF8F3;
         color: #183324;
-        font-family: 'Work Sans', sans-serif;
+        font-family: 'Aileron', system-ui, -apple-system, sans-serif;
         font-size: 15px;
         min-width: 320px;
         letter-spacing: -0.01em;
@@ -15,9 +31,21 @@
     h3,
     h4,
     .font-heading {
-        font-family: 'Fraunces', serif;
-        letter-spacing: -0.025em;
+        font-family: 'Aileron', sans-serif;
+        letter-spacing: -0.02em;
     }
+}
+
+.font-script,
+.font-sloop {
+    font-family: 'Sloop Script', cursive, sans-serif;
+}
+
+.title-script-accent {
+    font-family: 'Sloop Script', cursive;
+    font-weight: 400;
+    display: inline-block;
+    letter-spacing: 0.02em;
 }
 
 ::selection {
@@ -30,7 +58,7 @@
 .font-ui h3,
 .font-ui h4,
 .font-ui .font-heading {
-    font-family: 'Work Sans', sans-serif;
+    font-family: 'Aileron', sans-serif;
 }
 
 
