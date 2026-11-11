@@ -33,7 +33,12 @@ import {
   Edit3,
   LogOut,
   Star,
-  ExternalLink
+  ExternalLink,
+  Phone,
+  CheckCircle2,
+  MapPin,
+  Check,
+  FileText
 } from 'lucide-react';
 
 export default function MobileAppView() {
@@ -54,6 +59,7 @@ export default function MobileAppView() {
     updateOrderStatus,
     pushNotification,
     triggerNotification,
+    shootConfetti,
     setCurrentView
   } = useApp();
   const [deviceFrameMode, setDeviceFrameMode] = useState(true); // phone frame vs full screen
@@ -250,19 +256,19 @@ export default function MobileAppView() {
                   className="w-16 h-16 rounded-2xl bg-desa-bg mx-auto flex items-center justify-center text-desa-accent"
                 >
                   {onboardingSlide === 0 && <ShoppingBag className="w-8 h-8" />}
-                  {onboardingSlide === 1 && <MessageCircle className="w-8 h-8 text-desa-highlight" />}
+                  {onboardingSlide === 1 && <Package className="w-8 h-8 text-desa-highlight" />}
                   {onboardingSlide === 2 && <Store className="w-8 h-8 text-desa-primary" />}
                 </motion.div>
 
                 <div>
                   <h3 className="font-heading font-bold text-lg text-desa-primary">
                     {onboardingSlide === 0 && 'Belanja Produk Asli Desa'}
-                    {onboardingSlide === 1 && 'Pesan Mudah via WhatsApp'}
+                    {onboardingSlide === 1 && 'Pantau Pesanan Real-Time'}
                     {onboardingSlide === 2 && 'Buka Toko UMKM Anda'}
                   </h3>
                   <p className="text-xs text-desa-text/70 mt-1 leading-relaxed">
                     {onboardingSlide === 0 && 'Dapatkan kain lurik, olahan pangan, dan kerajinan langsung dari UMKM Kabupaten Sumedang.'}
-                    {onboardingSlide === 1 && 'Konfirmasi pesanan dan pembayaran langsung ke nomor WhatsApp penjual dengan aman.'}
+                    {onboardingSlide === 1 && 'Lacak pengerjaan produk oleh pengrajin dan perjalanan kurir desa hingga pesanan tiba di rumah Anda.'}
                     {onboardingSlide === 2 && 'Warga desa dapat beralih ke mode penjual untuk memajang produk dan menerima pesanan masuk.'}
                   </p>
                 </div>
@@ -573,25 +579,33 @@ export default function MobileAppView() {
               )}
 
               
+              {/* Tab: Pesanan Saya (Liquid Glass & Apple Minimal Tracker) */}
               {currentTab === 'pesanan' && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-heading font-bold text-base text-desa-primary">
-                      Pesanan Saya
-                    </h3>
-                    <span className="text-xs text-desa-text/60">{orders.length} Transaksi</span>
+                    <div>
+                      <h3 className="font-heading font-black text-base text-desa-primary tracking-tight">
+                        Pesanan <span className="font-script font-normal text-xl text-desa-accent">Saya</span>
+                      </h3>
+                      <p className="text-[11px] text-desa-text/60">
+                        Sinkronisasi real-time dengan status pengerjaan BUMDes
+                      </p>
+                    </div>
+                    <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-desa-primary/10 text-desa-primary">
+                      {orders.length} Transaksi
+                    </span>
                   </div>
 
-                  
-                  <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
+                  {/* Filter Status Pills */}
+                  <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5">
                     {['semua', 'diproses', 'dikirim', 'selesai'].map((st) => (
                       <button
                         key={st}
                         onClick={() => setOrderStatusFilter(st)}
-                        className={`px-3 py-1 rounded-full text-xs font-semibold capitalize shrink-0 transition-all ${
+                        className={`px-3 py-1 rounded-full text-xs font-bold capitalize shrink-0 transition-all ${
                           orderStatusFilter === st
-                            ? 'bg-desa-primary text-desa-light shadow-sm'
-                            : 'bg-white border border-desa-primary/20 text-desa-text/70'
+                            ? 'bg-desa-primary text-white shadow-xs'
+                            : 'bg-white/80 border border-desa-primary/20 text-desa-text/70 hover:bg-white'
                         }`}
                       >
                         {st}
@@ -599,41 +613,138 @@ export default function MobileAppView() {
                     ))}
                   </div>
 
-                  
+                  {/* Orders List */}
                   <div className="space-y-3">
-                    {orders
-                      .filter(o => orderStatusFilter === 'semua' || o.status === orderStatusFilter)
-                      .map((ord) => (
-                        <motion.div 
-                          key={ord.id}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="bg-white rounded-2xl p-4 border border-desa-primary/15 space-y-2.5 shadow-sm"
+                    {orders.filter(o => orderStatusFilter === 'semua' || o.status === orderStatusFilter).length === 0 ? (
+                      <div className="py-12 text-center bg-white/70 backdrop-blur-sm rounded-2xl border border-desa-primary/10 p-5 space-y-2">
+                        <div className="w-12 h-12 rounded-full bg-desa-primary/10 text-desa-primary mx-auto flex items-center justify-center">
+                          <Package className="w-6 h-6 text-desa-accent" />
+                        </div>
+                        <h4 className="font-heading font-bold text-sm text-desa-primary">Tidak Ada Pesanan</h4>
+                        <p className="text-xs text-desa-text/60 max-w-xs mx-auto">
+                          Belum ada transaksi pada status ini. Buka katalog untuk memesan karya UMKM Sumedang.
+                        </p>
+                        <button
+                          onClick={() => setCurrentTab('katalog')}
+                          className="mt-2 px-4 py-1.5 rounded-full bg-desa-accent text-white text-xs font-bold cursor-pointer"
                         >
-                          <div className="flex items-center justify-between text-xs">
-                            <span className="font-mono font-bold text-desa-primary">#{ord.id}</span>
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${
-                              ['selesai', 'diambil'].includes(ord.status) ? 'bg-emerald-100 text-emerald-800' :
-                              ord.status === 'dikirim' ? 'bg-blue-100 text-blue-800' :
-                              ord.status === 'ditolak' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'
-                            }`}>
-                              {{ diproses: 'Diproses', diambil: 'Sudah diambil', dikirim: 'Sedang dikirim', selesai: 'Selesai', ditolak: 'Ditolak' }[ord.status] || ord.status}
-                            </span>
-                          </div>
+                          Buka Katalog
+                        </button>
+                      </div>
+                    ) : (
+                      orders
+                        .filter(o => orderStatusFilter === 'semua' || o.status === orderStatusFilter)
+                        .map((ord) => {
+                          const stepNumber = 
+                            ord.status === 'diproses' ? 2 :
+                            ord.status === 'dikirim' ? 3 :
+                            ['selesai', 'diambil'].includes(ord.status) ? 4 :
+                            ord.status === 'ditolak' ? 0 : 1;
 
-                          <div className="text-xs">
-                            <h4 className="font-semibold text-desa-primary">{ord.productName}</h4>
-                            <p className="text-desa-text/60 text-[11px] mt-0.5">{ord.shopName} • {ord.qty} pcs</p>
-                          </div>
+                          return (
+                            <motion.div 
+                              key={ord.id}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="bg-white/90 backdrop-blur-xl rounded-2xl p-4 border border-white/95 shadow-[0_8px_20px_rgba(22,51,36,0.06)] space-y-3"
+                            >
+                              {/* Order Meta Header */}
+                              <div className="flex items-center justify-between text-xs">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="font-mono font-bold bg-desa-primary/10 text-desa-primary px-2 py-0.5 rounded-md text-[11px]">
+                                    #{ord.id}
+                                  </span>
+                                  <span className="text-desa-text/50">•</span>
+                                  <span className="text-[11px] text-desa-text/70">{ord.date || 'Hari ini'}</span>
+                                </div>
+                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${
+                                  ['selesai', 'diambil'].includes(ord.status) ? 'bg-emerald-100 text-emerald-800' :
+                                  ord.status === 'dikirim' ? 'bg-blue-100 text-blue-800' :
+                                  ord.status === 'ditolak' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'
+                                }`}>
+                                  {{ diproses: 'Diproses Pengrajin', diambil: 'Sudah Diambil', dikirim: 'Dalam Pengiriman', selesai: 'Pesanan Selesai', ditolak: 'Dibatalkan' }[ord.status] || ord.status}
+                                </span>
+                              </div>
 
-                          <div className="flex items-center justify-between pt-2 border-t border-desa-primary/10 text-xs">
-                            <span className="text-desa-text/60">Total Pesanan:</span>
-                            <span className="font-heading font-bold text-desa-primary">
-                              Rp {ord.total.toLocaleString('id-ID')}
-                            </span>
-                          </div>
-                        </motion.div>
-                    ))}
+                              {/* 4-Step Progress Indicator */}
+                              {ord.status !== 'ditolak' && (
+                                <div className="py-2 px-1 bg-desa-bg/40 rounded-xl">
+                                  <div className="relative flex items-center justify-between px-2">
+                                    <div className="absolute top-1/2 left-3 right-3 -translate-y-1/2 h-0.5 bg-gray-200 -z-0" />
+                                    <div 
+                                      className="absolute top-1/2 left-3 -translate-y-1/2 h-0.5 bg-desa-accent transition-all duration-300 -z-0"
+                                      style={{ width: `${((Math.max(1, stepNumber) - 1) / 3) * 100}%` }}
+                                    />
+                                    {[
+                                      { num: 1, label: 'Diterima' },
+                                      { num: 2, label: 'Diproses' },
+                                      { num: 3, label: 'Dikirim' },
+                                      { num: 4, label: 'Selesai' }
+                                    ].map(st => {
+                                      const isDone = st.num < stepNumber;
+                                      const isCurr = st.num === stepNumber;
+                                      return (
+                                        <div key={st.num} className="relative z-10 flex flex-col items-center">
+                                          <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shadow-2xs ${
+                                            isDone ? 'bg-desa-accent text-white' :
+                                            isCurr ? 'bg-desa-primary text-white ring-2 ring-desa-primary/20' :
+                                            'bg-white text-gray-400 border border-gray-200'
+                                          }`}>
+                                            {isDone ? '✓' : st.num}
+                                          </div>
+                                          <span className={`text-[9px] font-bold mt-1 ${isCurr ? 'text-desa-primary' : isDone ? 'text-desa-accent' : 'text-gray-400'}`}>
+                                            {st.label}
+                                          </span>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Product Info */}
+                              <div className="text-xs">
+                                <h4 className="font-semibold text-desa-primary">{ord.productName}</h4>
+                                <p className="text-desa-text/60 text-[11px] mt-0.5">
+                                  {ord.shopName} • {ord.qty} pcs
+                                  {ord.kecamatan && ` • ${ord.kecamatan}`}
+                                </p>
+                              </div>
+
+                              {/* Total & Action */}
+                              <div className="pt-2.5 border-t border-desa-primary/10 flex items-center justify-between text-xs">
+                                <div>
+                                  <span className="text-[10px] text-desa-text/50 block">Total Pesanan</span>
+                                  <span className="font-heading font-black text-sm text-desa-primary">
+                                    Rp {ord.total ? ord.total.toLocaleString('id-ID') : '0'}
+                                  </span>
+                                </div>
+
+                                {ord.status === 'dikirim' ? (
+                                  <motion.button
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={async () => {
+                                      await updateOrderStatus(ord.id, 'selesai');
+                                      shootConfetti();
+                                      triggerNotification('Pesanan Diterima', `Pesanan #${ord.id} telah dikonfirmasi selesai.`);
+                                    }}
+                                    className="px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white font-bold text-xs shadow-xs hover:bg-emerald-700 transition-colors cursor-pointer"
+                                  >
+                                    ✓ Konfirmasi Diterima
+                                  </motion.button>
+                                ) : (
+                                  <button
+                                    onClick={() => triggerNotification('Surat Jalan Desa', `Pesanan #${ord.id} | BUMDes Logistik Sumedang: SMD-EXP-${ord.id.replace('ORD-', '')}`)}
+                                    className="px-2.5 py-1 rounded-lg border border-desa-border bg-white text-[11px] font-medium text-desa-muted hover:text-desa-primary cursor-pointer"
+                                  >
+                                    Info Logistik
+                                  </button>
+                                )}
+                              </div>
+                            </motion.div>
+                          );
+                        })
+                    )}
                   </div>
                 </div>
               )}
@@ -656,14 +767,31 @@ export default function MobileAppView() {
 
                   <div className="bg-white rounded-2xl border border-desa-primary/15 divide-y divide-desa-primary/10 text-xs font-medium shadow-sm">
                     <button 
-                      onClick={() => alert('Fitur Ganti Sandi: Tautan telah dikirim ke nomor WhatsApp Anda.')}
+                      onClick={() => setCurrentTab('pesanan')}
+                      className="w-full p-3.5 flex items-center justify-between hover:bg-black/5 cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Package className="w-4 h-4 text-desa-accent" />
+                        <span className="font-bold text-desa-primary">Pesanan Saya</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        {orders.filter(o => ['diproses', 'dikirim'].includes(o.status)).length > 0 && (
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-desa-accent text-white">
+                            {orders.filter(o => ['diproses', 'dikirim'].includes(o.status)).length} Aktif
+                          </span>
+                        )}
+                        <ChevronRight className="w-4 h-4 text-desa-text/40" />
+                      </div>
+                    </button>
+                    <button 
+                      onClick={() => triggerNotification('Atur Ulang Sandi', 'Tautan verifikasi OTP telah dikirimkan ke email & SMS terdaftar.')}
                       className="w-full p-3.5 flex items-center justify-between hover:bg-black/5"
                     >
                       <span>Ganti Kata Sandi</span>
                       <ChevronRight className="w-4 h-4 text-desa-text/40" />
                     </button>
                     <button 
-                      onClick={() => alert('Aplikasi PWA Pasar Desa telah terinstal di peramban ini (Versi v1.2.0-Lurik).')}
+                      onClick={() => triggerNotification('Status PWA', 'Aplikasi PWA Pasar Desa telah terinstal di peramban ini (Versi v1.2.0-Lurik).')}
                       className="w-full p-3.5 flex items-center justify-between hover:bg-black/5"
                     >
                       <span>Status PWA & Versi Aplikasi</span>
@@ -876,15 +1004,13 @@ export default function MobileAppView() {
                             Tandai Selesai
                           </motion.button>
                         )}
-                        <a
-                          href={`https://wa.me/${ord.phone.replace(/^0/, '62')}?text=${encodeURIComponent(`Halo ${ord.buyerName}, pesanan #${ord.id} Anda sedang kami proses.`)}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-3 py-1.5 rounded-lg bg-desa-highlight text-white text-xs font-semibold flex items-center gap-1 shadow-xs"
+                        <button
+                          onClick={() => triggerNotification('Kontak Warga', `Hubungi ${ord.buyerName}: ${ord.phone}. Alamat: ${ord.address}`)}
+                          className="px-3 py-1.5 rounded-lg bg-desa-primary/10 text-desa-primary text-xs font-semibold flex items-center gap-1 shadow-2xs hover:bg-desa-primary/20 transition-colors cursor-pointer"
                         >
-                          <MessageCircle className="w-3.5 h-3.5" />
-                          <span>Hubungi</span>
-                        </a>
+                          <Phone className="w-3.5 h-3.5 text-desa-accent" />
+                          <span>Info Kontak</span>
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -1000,7 +1126,14 @@ export default function MobileAppView() {
                   currentTab === 'pesanan' ? 'text-desa-accent' : 'text-desa-text/50'
                 }`}
               >
-                <Package className="w-5 h-5" />
+                <div className="relative">
+                  <Package className="w-5 h-5" />
+                  {orders.filter(o => ['diproses', 'dikirim'].includes(o.status)).length > 0 && (
+                    <span className="absolute -top-1 -right-1.5 min-w-3.5 h-3.5 px-0.5 rounded-full bg-desa-accent text-white text-[9px] font-bold flex items-center justify-center">
+                      {orders.filter(o => ['diproses', 'dikirim'].includes(o.status)).length}
+                    </span>
+                  )}
+                </div>
                 <span>Pesanan</span>
                 {currentTab === 'pesanan' && (
                   <motion.div layoutId="mobileNavIndicator" className="absolute -bottom-1 w-4 h-1 rounded-full bg-desa-accent" transition={{ type: "spring", stiffness: 500, damping: 30 }} />

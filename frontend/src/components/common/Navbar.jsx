@@ -16,6 +16,7 @@ import {
   ChevronRight,
   ChevronDown,
   Settings,
+  Package,
   LogOut
 } from 'lucide-react';
 
@@ -28,6 +29,8 @@ export default function Navbar() {
     setIsChatOpen,
     openAuth,
     openSettings,
+    openOrdersModal,
+    orders,
     viewShop
   } = useApp();
 
@@ -37,6 +40,8 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const isNavigatingRef = useRef(false);
   const userDropdownRef = useRef(null);
+
+  const activeOrdersCount = orders ? orders.filter(o => ['diproses', 'dikirim'].includes(o.status)).length : 0;
 
   // Close user dropdown when clicking outside
   useEffect(() => {
@@ -358,6 +363,24 @@ export default function Navbar() {
                           <button
                             onClick={() => {
                               setUserDropdownOpen(false);
+                              openOrdersModal();
+                            }}
+                            className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-black/5 hover:text-desa-primary transition-colors cursor-pointer text-left group"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <Package className="w-4 h-4 text-desa-accent group-hover:scale-110 transition-transform" />
+                              <span className="font-bold">Pesanan Saya</span>
+                            </div>
+                            {activeOrdersCount > 0 && (
+                              <span className="px-1.5 py-0.5 text-[10px] font-bold bg-desa-accent text-white rounded-full">
+                                {activeOrdersCount}
+                              </span>
+                            )}
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              setUserDropdownOpen(false);
                               openSettings();
                             }}
                             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-black/5 hover:text-desa-primary transition-colors cursor-pointer text-left"
@@ -512,6 +535,28 @@ export default function Navbar() {
 
                 {isLoggedIn ? (
                   <div className="space-y-1.5 pt-1">
+                    <button
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        openOrdersModal();
+                      }}
+                      className="w-full py-2.5 px-3 rounded-xl bg-desa-primary text-white text-xs font-bold flex items-center justify-between shadow-xs"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Package className="w-3.5 h-3.5 text-desa-accent" />
+                        <span>Pesanan Saya</span>
+                      </div>
+                      {activeOrdersCount > 0 ? (
+                        <span className="px-2 py-0.5 text-[10px] font-black bg-desa-accent text-white rounded-full">
+                          {activeOrdersCount} Aktif
+                        </span>
+                      ) : (
+                        <span className="text-[10px] text-white/70">
+                          {orders.length} Total
+                        </span>
+                      )}
+                    </button>
+
                     <button
                       onClick={() => {
                         setMobileMenuOpen(false);

@@ -7,6 +7,7 @@ import CartDrawer from './components/common/CartDrawer';
 import CheckoutModal from './components/common/CheckoutModal';
 import AddressModal from './components/common/AddressModal';
 import UserSettingsModal from './components/common/UserSettingsModal';
+import CustomerOrdersModal from './components/common/CustomerOrdersModal';
 import ChatWidget from './components/common/ChatWidget';
 import HomePage from './pages/web/HomePage';
 import CatalogPage from './pages/web/CatalogPage';
@@ -83,6 +84,7 @@ function MainApp() {
       <CheckoutModal />
       <AddressModal />
       <UserSettingsModal />
+      <CustomerOrdersModal />
       {currentView === 'web' && <ChatWidget />}
     </div>
   );

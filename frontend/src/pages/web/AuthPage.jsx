@@ -543,7 +543,7 @@ export default function AuthPage() {
             <div className="space-y-2.5 pt-1 text-sm text-[#FBF8F3]/90">
               {[
                 'Tanpa potongan komisi perantara luar',
-                'Langsung terhubung dengan WhatsApp penjual',
+                'Pantau status pesanan real-time dari BUMDes & pengrajin',
                 'Mendukung pengiriman antar kecamatan dan nasional'
               ].map((item, index) => (
                 <motion.div 

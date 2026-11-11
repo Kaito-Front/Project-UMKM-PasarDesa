@@ -261,7 +261,7 @@ export default function ShopDetailPage() {
                 <p className="text-desa-highlight font-semibold">Telah lulus verifikasi mutu & standar otentik desa</p>
               </div>
               <div>
-                <span className="font-bold text-desa-primary block mb-1">Kontak WhatsApp:</span>
+                <span className="font-bold text-desa-primary block mb-1">Kontak Resmi UMKM:</span>
                 <p className="text-desa-muted">{shop.phone}</p>
               </div>
             </div>

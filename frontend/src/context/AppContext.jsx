@@ -71,9 +71,12 @@ export function AppProvider({ children }) {
   const [hasSeenIntro, setHasSeenIntro] = useState(false);
   const [authMode, setAuthMode] = useState('masuk');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isOrdersModalOpen, setIsOrdersModalOpen] = useState(false);
 
   const openSettings = () => setIsSettingsOpen(true);
   const closeSettings = () => setIsSettingsOpen(false);
+  const openOrdersModal = () => setIsOrdersModalOpen(true);
+  const closeOrdersModal = () => setIsOrdersModalOpen(false);
 
   const openAuth = (mode = 'masuk') => {
     setAuthMode(mode);
@@ -861,6 +864,10 @@ export function AppProvider({ children }) {
       setIsSettingsOpen,
       openSettings,
       closeSettings,
+      isOrdersModalOpen,
+      setIsOrdersModalOpen,
+      openOrdersModal,
+      closeOrdersModal,
       updateUserProfile,
       updateShopProfile,
       sendEmailOtp,
