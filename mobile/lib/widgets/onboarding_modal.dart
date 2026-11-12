@@ -98,20 +98,79 @@ class _OnboardingModalState extends State<OnboardingModal> {
                       letterSpacing: -0.2,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                   Text(
                     slide['desc'] as String,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 12.5,
                       height: 1.45,
                       color: DesaColors.text.withValues(alpha: 0.75),
                     ),
                   ),
+                  const SizedBox(height: 14),
+
+                  // Slide Feature Visual Badge
+                  if (_currentSlide == 0)
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        _buildFeatureTag('Kain Lurik ATBM'),
+                        _buildFeatureTag('Kripik Tempe'),
+                        _buildFeatureTag('Madu Hutan'),
+                        _buildFeatureTag('Besek Bambu'),
+                      ],
+                    )
+                  else if (_currentSlide == 1)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: DesaColors.bg,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: DesaColors.primary.withValues(alpha: 0.12)),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Dipesan', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.bold, color: DesaColors.primary)),
+                          Icon(Icons.arrow_right_alt, size: 14, color: DesaColors.accent),
+                          Text('Diproses', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.bold, color: DesaColors.accent)),
+                          Icon(Icons.arrow_right_alt, size: 14, color: DesaColors.accent),
+                          Text('Dikirim', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.bold, color: DesaColors.highlight)),
+                          Icon(Icons.arrow_right_alt, size: 14, color: DesaColors.accent),
+                          Text('Selesai', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.bold, color: Colors.green)),
+                        ],
+                      ),
+                    )
+                  else
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: DesaColors.primary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: DesaColors.primary.withValues(alpha: 0.15)),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.shopping_bag, size: 13, color: DesaColors.primary),
+                          SizedBox(width: 4),
+                          Text('Mode Belanja', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: DesaColors.primary)),
+                          SizedBox(width: 8),
+                          Icon(Icons.sync_alt, size: 13, color: DesaColors.accent),
+                          SizedBox(width: 8),
+                          Icon(Icons.storefront, size: 13, color: DesaColors.accent),
+                          SizedBox(width: 4),
+                          Text('Mode Jualan UMKM', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: DesaColors.accent)),
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
             // Animated Expanding Indicator Pills
             Row(
@@ -188,6 +247,39 @@ class _OnboardingModalState extends State<OnboardingModal> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildFeatureTag(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: DesaColors.bg,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: DesaColors.primary.withValues(alpha: 0.15)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 5,
+            height: 5,
+            decoration: const BoxDecoration(
+              color: DesaColors.accent,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: DesaColors.primary,
+            ),
+          ),
+        ],
       ),
     );
   }

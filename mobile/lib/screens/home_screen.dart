@@ -51,73 +51,79 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            // Hero Banner: Info Desa & Sentra UMKM 26 Kecamatan
+            // Hero Banner: Info Desa Matching MobileAppView.jsx
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(18),
+                padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [DesaColors.primary, Color(0xFF2C2C2A)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(22),
+                  borderRadius: BorderRadius.circular(18),
                   boxShadow: [
                     BoxShadow(
-                      color: DesaColors.primary.withValues(alpha: 0.25),
-                      blurRadius: 14,
-                      offset: const Offset(0, 5),
+                      color: DesaColors.primary.withValues(alpha: 0.22),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Stack(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: const Text(
-                        '✨ Info Desa • Sentra UMKM 26 Kecamatan',
-                        style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.bold, color: Color(0xFFC1CCB3)),
+                    // Subtle Lurik background stripes simulation
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: 0.12,
+                        child: CustomPaint(
+                          painter: _LurikStripePainter(),
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Karya Otentik Pengrajin\nDesa Sumedang',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.white,
-                        height: 1.25,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'Kain lurik ATBM, keripik tempe Cimalaka, dan madu hutan lereng Tampomas langsung dari warga desa.',
-                      style: TextStyle(fontSize: 11.5, color: Colors.white.withValues(alpha: 0.8), height: 1.4),
-                    ),
-                    const SizedBox(height: 14),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: DesaColors.accent,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        elevation: 0,
-                      ),
-                      onPressed: () => onNavigateTab(1),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('Jelajahi Katalog', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 12)),
-                          SizedBox(width: 6),
-                          Icon(Icons.arrow_forward_rounded, size: 14, color: Colors.white),
-                        ],
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            'INFO DESA',
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 0.8,
+                              color: Color(0xFFC1CCB3),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Pelatihan Sertifikasi Halal Gratis untuk UMKM Desa',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          'Dinas Koperasi dan Desa menyelenggarakan pendampingan sertifikasi...',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 10.5,
+                            color: Colors.white.withValues(alpha: 0.75),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -228,7 +234,7 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // 2-Column Product Grid
+            // 2-Column Product Grid Matching MobileAppView.jsx Staggered Framer Motion Animation
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: GridView.builder(
@@ -236,7 +242,7 @@ class HomeScreen extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 0.64,
+                  childAspectRatio: 0.58,
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
                 ),
@@ -245,150 +251,197 @@ class HomeScreen extends StatelessWidget {
                   final p = provider.products[index];
                   final isFav = provider.favorites.contains(p.id);
 
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => ProductDetailScreen(product: p)),
+                  // Staggered animated entrance matching Framer Motion initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+                  return TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    duration: Duration(milliseconds: 320 + (index * 70)),
+                    curve: Curves.easeOutCubic,
+                    builder: (context, value, child) {
+                      return Transform.translate(
+                        offset: Offset(0, 16 * (1 - value)),
+                        child: Opacity(
+                          opacity: value,
+                          child: child,
+                        ),
                       );
                     },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: DesaColors.primary.withValues(alpha: 0.12)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF3A3A38).withValues(alpha: 0.08),
-                            blurRadius: 10,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Product Image + Favorite Heart Button
-                          Expanded(
-                            flex: 5,
-                            child: Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
-                                  child: SizedBox(
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                    child: DesaImage(imageUrl: p.imageUrl, fit: BoxFit.cover),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => ProductDetailScreen(product: p)),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: DesaColors.primary.withValues(alpha: 0.12)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF3A3A38).withValues(alpha: 0.08),
+                              blurRadius: 10,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Product Image (Square Aspect Ratio) + Floating Favorite Heart
+                            AspectRatio(
+                              aspectRatio: 1.0,
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      child: DesaImage(imageUrl: p.imageUrl, fit: BoxFit.cover),
+                                    ),
                                   ),
-                                ),
-                                Positioned(
-                                  top: 6,
-                                  right: 6,
-                                  child: GestureDetector(
-                                    onTap: () => provider.toggleFavorite(p.id),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withValues(alpha: 0.9),
-                                        shape: BoxShape.circle,
+                                  Positioned(
+                                    top: 6,
+                                    right: 6,
+                                    child: GestureDetector(
+                                      onTap: () => provider.toggleFavorite(p.id),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withValues(alpha: 0.92),
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withValues(alpha: 0.08),
+                                              blurRadius: 4,
+                                            ),
+                                          ],
+                                        ),
+                                        child: Icon(
+                                          isFav ? Icons.favorite : Icons.favorite_border,
+                                          size: 15,
+                                          color: isFav ? Colors.red[600] : DesaColors.primary,
+                                        ),
                                       ),
-                                      child: Icon(
-                                        isFav ? Icons.favorite : Icons.favorite_border,
-                                        size: 15,
-                                        color: isFav ? Colors.red[600] : DesaColors.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // Product Info
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 8, 10, 2),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    p.shopName,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 9.5,
+                                      color: DesaColors.accent,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    p.name,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11.5,
+                                      color: DesaColors.primary,
+                                      height: 1.25,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    currencyFormat.format(p.price),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 13,
+                                      color: DesaColors.primary,
+                                      letterSpacing: -0.2,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            const Spacer(),
+
+                            // Action Buttons: [Keranjang] & [Beli] side-by-side matching MobileAppView.jsx
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                                        side: BorderSide(color: DesaColors.primary.withValues(alpha: 0.2)),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                        minimumSize: Size.zero,
+                                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      ),
+                                      onPressed: () {
+                                        provider.addToCart(p, qty: 1);
+                                        provider.triggerToast('Keranjang', '${p.name} ditambahkan');
+                                      },
+                                      child: const Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.shopping_bag_outlined, size: 12, color: DesaColors.primary),
+                                          SizedBox(width: 3),
+                                          Text(
+                                            'Keranjang',
+                                            style: TextStyle(
+                                              color: DesaColors.primary,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // Product Info
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 8, 10, 4),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  p.shopName,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 9.5, color: DesaColors.accent, fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  p.name,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 11.5,
-                                    color: DesaColors.primary,
-                                    height: 1.25,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  currencyFormat.format(p.price),
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 12.5,
-                                    color: DesaColors.primary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          const Spacer(),
-
-                          // Action Buttons: + Keranjang & Beli
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: OutlinedButton(
-                                    style: OutlinedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 6),
-                                      side: BorderSide(color: DesaColors.primary.withValues(alpha: 0.2)),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                      minimumSize: Size.zero,
-                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  const SizedBox(width: 6),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: DesaColors.accent,
+                                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                        elevation: 0,
+                                        minimumSize: Size.zero,
+                                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      ),
+                                      onPressed: () {
+                                        provider.addToCart(p, qty: 1);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (_) => ProductDetailScreen(product: p)),
+                                        );
+                                      },
+                                      child: const Text(
+                                        'Beli',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10.5,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
-                                    onPressed: () {
-                                      provider.addToCart(p, qty: 1);
-                                      provider.triggerToast('Keranjang', '${p.name} ditambahkan');
-                                    },
-                                    child: const Icon(Icons.shopping_bag_outlined, size: 14, color: DesaColors.primary),
                                   ),
-                                ),
-                                const SizedBox(width: 6),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: DesaColors.accent,
-                                      padding: const EdgeInsets.symmetric(vertical: 6),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                      elevation: 0,
-                                      minimumSize: Size.zero,
-                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    ),
-                                    onPressed: () {
-                                      provider.addToCart(p, qty: 1);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (_) => ProductDetailScreen(product: p)),
-                                      );
-                                    },
-                                    child: const Text('Beli', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -456,4 +509,20 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class _LurikStripePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 1.5;
+
+    for (double x = 0; x < size.width; x += 12) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

@@ -6,7 +6,6 @@ import 'home_screen.dart';
 import 'catalog_screen.dart';
 import 'orders_screen.dart';
 import 'profile_screen.dart';
-import 'cart_screen.dart';
 import 'seller_dashboard_screen.dart';
 import 'chat_ai_screen.dart';
 import '../widgets/splash_overlay.dart';
@@ -270,54 +269,39 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         ],
       ),
 
-      // Floating Action Button: Cart in Buyer mode, Add Product in Seller mode
+      // Floating Action Button: Mode Jual pill in Buyer mode, Add Product button in Seller mode
       floatingActionButton: isPenjual
-          ? FloatingActionButton.extended(
+          ? FloatingActionButton(
               backgroundColor: DesaColors.highlight,
               elevation: 4,
+              shape: const CircleBorder(),
               onPressed: _openAddProduct,
-              icon: const Icon(Icons.add, color: Colors.white, size: 20),
-              label: const Text(
-                'Tambah Produk',
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 13),
-              ),
+              child: const Icon(Icons.add, color: Colors.white, size: 26),
             )
-          : provider.cartCount > 0
-              ? FloatingActionButton.extended(
-                  backgroundColor: DesaColors.primary,
-                  elevation: 4,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const CartScreen()),
-                    );
-                  },
-                  icon: const Icon(Icons.shopping_bag, color: Colors.white, size: 20),
-                  label: Row(
-                    children: [
-                      const Text('Keranjang', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 13)),
-                      const SizedBox(width: 6),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: DesaColors.accent,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          '${provider.cartCount}',
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 11),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : null,
+          : FloatingActionButton.extended(
+              backgroundColor: DesaColors.accent,
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+                side: const BorderSide(color: Colors.white30, width: 1.5),
+              ),
+              onPressed: () {
+                provider.setRole('penjual');
+                setState(() => _sellerIndex = 0);
+                provider.triggerToast('Beralih Mode', 'Sekarang Anda mengelola Toko Penjual.');
+              },
+              icon: const Icon(Icons.sync_alt_rounded, color: Colors.white, size: 16),
+              label: const Text(
+                'Mode Jual',
+                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 12),
+              ),
+            ),
 
-      // Dynamic Bottom Navigation Bar
+      // Dynamic Bottom Navigation Bar Matching MobileAppView.jsx
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: DesaColors.border.withValues(alpha: 0.8))),
+          color: Colors.white.withValues(alpha: 0.96),
+          border: Border(top: BorderSide(color: DesaColors.primary.withValues(alpha: 0.12))),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.04),
@@ -328,7 +312,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: isPenjual
@@ -340,11 +324,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                     ]
                   : [
                       _buildNavItem(0, Icons.home_rounded, Icons.home_outlined, 'Beranda'),
-                      _buildNavItem(1, Icons.category_rounded, Icons.category_outlined, 'Katalog'),
+                      _buildNavItem(1, Icons.shopping_bag_rounded, Icons.shopping_bag_outlined, 'Katalog'),
                       _buildNavItem(
                         2,
-                        Icons.local_shipping_rounded,
-                        Icons.local_shipping_outlined,
+                        Icons.inventory_2_rounded,
+                        Icons.inventory_2_outlined,
                         'Pesanan',
                         badgeCount: provider.activeOrdersCount,
                       ),
@@ -360,19 +344,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget _buildNavItem(int index, IconData activeIcon, IconData inactiveIcon, String label, {int badgeCount = 0, bool isPenjual = false}) {
     final currentIndex = isPenjual ? _sellerIndex : _buyerIndex;
     final isSelected = currentIndex == index;
-    final activeColor = isPenjual ? DesaColors.accent : DesaColors.primary;
+    final activeColor = isPenjual ? DesaColors.accent : DesaColors.accent;
 
     return InkWell(
       onTap: () => isPenjual ? _onSellerTabTapped(index) : _onBuyerTabTapped(index),
-      borderRadius: BorderRadius.circular(16),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? activeColor.withValues(alpha: 0.08) : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Stack(
@@ -380,13 +359,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               children: [
                 Icon(
                   isSelected ? activeIcon : inactiveIcon,
-                  color: isSelected ? activeColor : DesaColors.muted,
+                  color: isSelected ? activeColor : DesaColors.text.withValues(alpha: 0.45),
                   size: 22,
                 ),
                 if (badgeCount > 0)
                   Positioned(
                     top: -4,
-                    right: -6,
+                    right: -7,
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                       decoration: BoxDecoration(
@@ -398,8 +377,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                         '$badgeCount',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 9,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 8.5,
+                          fontWeight: FontWeight.w900,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -407,17 +386,27 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   ),
               ],
             ),
-            if (isSelected) ...[
-              const SizedBox(width: 6),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: activeColor,
-                ),
+            const SizedBox(height: 3),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                color: isSelected ? activeColor : DesaColors.text.withValues(alpha: 0.5),
               ),
-            ],
+            ),
+            const SizedBox(height: 2),
+            // Animated active indicator bar matching motion.div layoutId="mobileNavIndicator"
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOutCubic,
+              width: isSelected ? 16 : 0,
+              height: 3,
+              decoration: BoxDecoration(
+                color: isSelected ? activeColor : Colors.transparent,
+                borderRadius: BorderRadius.circular(3),
+              ),
+            ),
           ],
         ),
       ),
