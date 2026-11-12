@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../core/theme/desa_colors.dart';
+import '../core/widgets/bounceable.dart';
 import '../core/widgets/desa_image.dart';
 import '../core/widgets/lurik_divider.dart';
 import '../providers/app_provider.dart';
-import 'product_detail_screen.dart';
+import '../widgets/product_detail_sheet.dart';
 import 'chat_ai_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -161,12 +162,11 @@ class HomeScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final cat = provider.categories[index];
                   final isSelected = provider.selectedCategory == cat.id;
-                  return InkWell(
+                  return Bounceable(
                     onTap: () {
                       provider.setSelectedCategory(cat.id);
                       onNavigateTab(1);
                     },
-                    borderRadius: BorderRadius.circular(14),
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
@@ -265,13 +265,9 @@ class HomeScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => ProductDetailScreen(product: p)),
-                        );
-                      },
+                    child: Bounceable(
+                      scaleFactor: 0.96,
+                      onTap: () => ProductDetailSheet.show(context, p),
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -304,16 +300,17 @@ class HomeScreen extends StatelessWidget {
                                   Positioned(
                                     top: 6,
                                     right: 6,
-                                    child: GestureDetector(
+                                    child: Bounceable(
+                                      scaleFactor: 0.8,
                                       onTap: () => provider.toggleFavorite(p.id),
                                       child: Container(
                                         padding: const EdgeInsets.all(5),
                                         decoration: BoxDecoration(
                                           color: Colors.white.withValues(alpha: 0.92),
                                           shape: BoxShape.circle,
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
-                                              color: Colors.black.withValues(alpha: 0.08),
+                                              color: Colors.black12,
                                               blurRadius: 4,
                                             ),
                                           ],
@@ -380,59 +377,57 @@ class HomeScreen extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: OutlinedButton(
-                                      style: OutlinedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-                                        side: BorderSide(color: DesaColors.primary.withValues(alpha: 0.2)),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                        minimumSize: Size.zero,
-                                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                      ),
-                                      onPressed: () {
+                                    child: Bounceable(
+                                      onTap: () {
                                         provider.addToCart(p, qty: 1);
                                         provider.triggerToast('Keranjang', '${p.name} ditambahkan');
                                       },
-                                      child: const Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.shopping_bag_outlined, size: 12, color: DesaColors.primary),
-                                          SizedBox(width: 3),
-                                          Text(
-                                            'Keranjang',
-                                            style: TextStyle(
-                                              color: DesaColors.primary,
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: DesaColors.primary.withValues(alpha: 0.2)),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: const Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.shopping_bag_outlined, size: 12, color: DesaColors.primary),
+                                            SizedBox(width: 3),
+                                            Text(
+                                              'Keranjang',
+                                              style: TextStyle(
+                                                color: DesaColors.primary,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
                                   const SizedBox(width: 6),
                                   Expanded(
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: DesaColors.accent,
-                                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                        elevation: 0,
-                                        minimumSize: Size.zero,
-                                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                      ),
-                                      onPressed: () {
+                                    child: Bounceable(
+                                      onTap: () {
                                         provider.addToCart(p, qty: 1);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (_) => ProductDetailScreen(product: p)),
-                                        );
+                                        ProductDetailSheet.show(context, p);
                                       },
-                                      child: const Text(
-                                        'Beli',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10.5,
-                                          fontWeight: FontWeight.bold,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                                        decoration: BoxDecoration(
+                                          color: DesaColors.accent,
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            'Beli',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10.5,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/theme/desa_colors.dart';
+import '../core/widgets/bounceable.dart';
 import '../providers/app_provider.dart';
 import 'home_screen.dart';
 import 'catalog_screen.dart';
@@ -119,7 +120,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Belanja Pill
-                GestureDetector(
+                Bounceable(
+                  scaleFactor: 0.94,
                   onTap: () {
                     provider.setRole('pembeli');
                     setState(() => _buyerIndex = 0);
@@ -165,7 +167,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 ),
 
                 // Jualan Pill
-                GestureDetector(
+                Bounceable(
+                  scaleFactor: 0.94,
                   onTap: () {
                     provider.setRole('penjual');
                     setState(() => _sellerIndex = 0);
@@ -346,9 +349,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final isSelected = currentIndex == index;
     final activeColor = isPenjual ? DesaColors.accent : DesaColors.accent;
 
-    return InkWell(
+    return Bounceable(
+      scaleFactor: 0.92,
       onTap: () => isPenjual ? _onSellerTabTapped(index) : _onBuyerTabTapped(index),
-      borderRadius: BorderRadius.circular(12),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         child: Column(
