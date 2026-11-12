@@ -615,38 +615,38 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* 7. Section Akses Mobile PWA (Glass Enclosure) */}
+          {/* 7. Section Aplikasi Android Native (Glass Enclosure) */}
           <section className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="bg-white/70 backdrop-blur-xl rounded-3xl border border-white/80 p-8 sm:p-12 shadow-[0_10px_40px_rgba(22,51,36,0.05)]">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 
                 <div className="lg:col-span-8 space-y-3">
                   <span className="text-xs font-mono uppercase tracking-wider text-desa-accent font-semibold block">
-                    Progressive Web App
+                    Aplikasi Mobile Android
                   </span>
 
                   <h2 className="font-heading text-2xl sm:text-3xl font-bold text-desa-primary tracking-tight">
-                    Akses Langsung di Layar Ponsel
+                    Pengalaman Belanja Lebih Cepat di HP
                   </h2>
 
                   <p className="text-sm text-desa-muted leading-relaxed max-w-2xl">
-                    Pasar Desa dapat diinstal langsung ke ponsel Anda tanpa perlu download dari toko aplikasi. Cepat dibuka, hemat memori, dan siap digunakan belanja kapan saja.
+                    Pasar Desa kini hadir dalam aplikasi Android native dengan performa kencang, mikro-interaksi sentuhan yang mulus, dan kemudahan belanja serta kelola toko UMKM langsung dari genggaman Anda.
                   </p>
 
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-3 text-xs text-desa-muted">
                     <div className="flex items-center gap-2">
                       <span className="w-5 h-5 rounded-full bg-desa-surface border border-desa-border flex items-center justify-center font-bold text-desa-primary text-[10px]">1</span>
-                      <span className="text-desa-text font-medium">Buka di Browser</span>
+                      <span className="text-desa-text font-medium">Performa Kencang Native</span>
                     </div>
                     <span className="hidden sm:inline text-desa-border">•</span>
                     <div className="flex items-center gap-2">
                       <span className="w-5 h-5 rounded-full bg-desa-surface border border-desa-border flex items-center justify-center font-bold text-desa-primary text-[10px]">2</span>
-                      <span className="text-desa-text font-medium">Tambahkan ke Layar Utama</span>
+                      <span className="text-desa-text font-medium">Animasi Sentuhan Taktil</span>
                     </div>
                     <span className="hidden sm:inline text-desa-border">•</span>
                     <div className="flex items-center gap-2">
                       <span className="w-5 h-5 rounded-full bg-desa-surface border border-desa-border flex items-center justify-center font-bold text-desa-primary text-[10px]">3</span>
-                      <span className="text-desa-text font-medium">Ikon Siap Digunakan</span>
+                      <span className="text-desa-text font-medium">Kelola Toko Kapan Saja</span>
                     </div>
                   </div>
                 </div>
@@ -654,8 +654,8 @@ export default function HomePage() {
                 <div className="lg:col-span-4 flex flex-col items-center justify-center p-6 bg-white/80 backdrop-blur-md rounded-2xl border border-desa-border/70 space-y-3 text-center shadow-xs">
                   <Smartphone className="w-6 h-6 text-desa-primary" />
                   <div>
-                    <h4 className="font-heading font-bold text-desa-primary text-sm">Simulasi Tampilan HP</h4>
-                    <p className="text-xs text-desa-muted mt-0.5">Uji coba tampilan mobile responsif langsung di browser.</p>
+                    <h4 className="font-heading font-bold text-desa-primary text-sm">Pratinjau Aplikasi</h4>
+                    <p className="text-xs text-desa-muted mt-0.5">Lihat simulator antarmuka aplikasi Android langsung di browser.</p>
                   </div>
                   <button
                     onClick={() => setCurrentView('mobile')}

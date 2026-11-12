@@ -127,7 +127,7 @@ export default function MobileAppView() {
       <div className="max-w-md mx-auto mb-4 bg-white p-3 rounded-2xl border border-desa-primary/20 shadow-sm flex flex-wrap items-center justify-between gap-2 text-xs">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-desa-highlight" />
-          <span className="font-bold text-desa-primary">PWA Simulasi Mobile</span>
+          <span className="font-bold text-desa-primary">Simulasi Aplikasi Mobile</span>
         </div>
 
         <div className="flex flex-wrap items-center justify-end gap-2">
@@ -791,10 +791,10 @@ export default function MobileAppView() {
                       <ChevronRight className="w-4 h-4 text-desa-text/40" />
                     </button>
                     <button 
-                      onClick={() => triggerNotification('Status PWA', 'Aplikasi PWA Pasar Desa telah terinstal di peramban ini (Versi v1.2.0-Lurik).')}
+                      onClick={() => triggerNotification('Versi Aplikasi', 'Aplikasi Mobile Pasar Desa (Versi v1.2.0-Lurik).')}
                       className="w-full p-3.5 flex items-center justify-between hover:bg-black/5"
                     >
-                      <span>Status PWA & Versi Aplikasi</span>
+                      <span>Versi Aplikasi Mobile</span>
                       <span className="text-desa-highlight font-bold">Terpasang (v1.2.0)</span>
                     </button>
                     <button 

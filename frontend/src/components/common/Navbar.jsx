@@ -235,7 +235,7 @@ export default function Navbar() {
             {/* Right Action Icons & Controls (Right Pill Group) */}
             <div className="hidden lg:flex items-center gap-1.5 shrink-0">
               
-              {/* PWA Mode Trigger */}
+              {/* Mobile Mode Trigger */}
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
@@ -243,10 +243,10 @@ export default function Navbar() {
                 className={`flex items-center gap-1.5 rounded-full text-xs font-bold text-desa-muted hover:text-desa-primary hover:bg-white/60 transition-all border border-transparent hover:border-desa-border/70 ${
                   isScrolled ? 'px-2.5 py-1' : 'px-3 py-1.5'
                 }`}
-                title="Buka Pratinjau Mobile PWA"
+                title="Buka Pratinjau Tampilan Mobile"
               >
                 <Smartphone className="w-3.5 h-3.5 text-desa-primary" />
-                <span className="hidden xl:inline">PWA Mobile</span>
+                <span className="hidden xl:inline">Mobile App</span>
               </motion.button>
 
               <div className="h-3.5 w-px bg-desa-border/80 mx-0.5" />
@@ -530,7 +530,7 @@ export default function Navbar() {
                   className="w-full py-2 px-3 rounded-xl border border-desa-border text-xs font-semibold text-desa-primary flex items-center justify-center gap-2 hover:bg-black/5"
                 >
                   <Smartphone className="w-4 h-4" />
-                  <span>Buka Mode Mobile PWA</span>
+                  <span>Buka Mode Mobile</span>
                 </button>
 
                 {isLoggedIn ? (
